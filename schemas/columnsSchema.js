@@ -11,8 +11,10 @@ const columnsSchema = new mongoose.Schema({
         ref: 'Board',
         required: true
     },
-    tasks: [{
-        type: String
+    todos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Todo',
+        required: true
     }],
     created: {
         type: Date,

@@ -1,5 +1,6 @@
 const Board = require('../schemas/boardSchema');
 const Columns = require('../schemas/columnsSchema');
+const Todo = require('../schemas/todoSchema');
 
 exports.getAll = async (req, res) => {
     try {
@@ -102,7 +103,12 @@ exports.deleteById = async (req, res) => {
             return res.status(404).json({ message: `Could not find column ${column._id} in board` });
         };
 
-        res.status(200).json({ message: 'Successfully deleted column', column });
+        const deleteTodos = await Todo.deleteMany({ status: id });
+        if (deleteTodos.deletedCount === 0) {
+            return res.status(404).json({ message: 'No todos found to delete' });
+        };
+
+        res.status(200).json({ message: 'Successfully deleted column and associated todos', column });
     } catch (error) {
         console.error('Error deleting column', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -130,6 +136,13 @@ exports.deleteAll = async (req, res) => {
         const updatedBoards = await Promise.all(updateBoardsPromises);
         if (updatedBoards.some(board => !board)) {
             return res.status(404).json({ message: 'Failed to update some boards' });
+        }
+
+        const todoIdsToDelete = await Todo.find({ status: { $in: columns.map(col => col._id) } }).select('_id');
+
+        const deleteTodosResult = await Todo.deleteMany({ _id: { $in: todoIdsToDelete } });
+        if (deleteTodosResult.deletedCount === 0) {
+            console.log('No todos found to delete');
         }
 
         await Columns.deleteMany();
