@@ -14,7 +14,11 @@ const todoSchema = new mongoose.Schema({
         ref: 'Column',
         required: true
     },
-    subtasks: [],
+    subtodos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subtodo',
+        required: true
+    }],
     created: {
         type: Date,
         default: Date.now

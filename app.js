@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const boardRoutes = require('./routes/boardroutes');
 const columnsRoutes = require('./routes/columnsroutes');
 const todoRoutes = require('./routes/todoroutes');
+const subtodoRoutes = require('./routes/subtodoroutes');
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use('/api/boards', boardRoutes);
 app.use('/api/columns', columnsRoutes);
 app.use('/api/todos', todoRoutes);
+app.use('/api/subtodos', subtodoRoutes);
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))

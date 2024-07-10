@@ -1,5 +1,6 @@
 const Columns = require('../schemas/columnsSchema');
 const Todo = require('../schemas/todoSchema');
+const Subtodo = require('../schemas/subtodoSchema');
 
 exports.getAll = async (req, res) => {
     try {
@@ -99,6 +100,8 @@ exports.deleteById = async (req, res) => {
             return res.status(404).json({ message: "Todo not found" });
         }
 
+        await Subtodo.deleteMany({ todoId: id });
+
         const updateColumn = await Columns.findByIdAndUpdate(
             todo.status,
             { $pull: { todos: id } },
@@ -123,6 +126,8 @@ exports.deleteAll = async (req, res) => {
         }
 
         const todoIds = todos.map(todo => todo._id);
+
+        await Subtodo.deleteMany({ todoId: { $in: todoIds } });
 
         await Todo.deleteMany({ _id: { $in: todoIds } });
 
