@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
 
-const boardSchema = new mongoose.Schema({
+const columnsSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
         unique: true
     },
-    columns: [{
+    boardId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Column'
+        ref: 'Board',
+        required: true
+    },
+    tasks: [{
+        type: String
     }],
     created: {
         type: Date,
@@ -16,4 +20,4 @@ const boardSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Board', boardSchema);
+module.exports = mongoose.model('Column', columnsSchema);

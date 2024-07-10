@@ -1,4 +1,5 @@
 const Board = require('../schemas/boardSchema');
+const Columns = require('../schemas/columnsSchema');
 
 exports.getAll = async (req, res) => {
     try {
@@ -82,7 +83,14 @@ exports.deleteById = async (req, res) => {
             return res.status(404).json({ message: 'No board found' });
         }
 
-        res.status(200).json({ message: 'Successfully deleted board', board: deletedBoard });
+        const filteredColumns = await Columns.find({ boardId: id });
+        if (filteredColumns.length === 0) {
+            console.log('No columns to delete');
+        } else {
+            await Columns.deleteMany({ boardId: id });
+        }
+
+        res.status(200).json({ message: 'Successfully deleted board and associated columns', board: deletedBoard });
     } catch (error) {
         console.error('Error deleting board', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -91,16 +99,23 @@ exports.deleteById = async (req, res) => {
 
 exports.deleteAll = async (req, res) => {
     try {
-        const boards = await Board.find();
-        if (boards.length === 0) {
+        const deletedBoards = await Board.find();
+        const deletedBoardIds = deletedBoards.map(board => board._id);
+        
+        for (const boardId of deletedBoardIds) {
+            await Columns.deleteMany({ boardId: boardId });
+        }
+
+        const deleteBoardsResult = await Board.deleteMany();
+        if (deleteBoardsResult.deletedCount === 0) {
             return res.status(404).json({ message: 'No boards found' });
         }
 
-        await Board.deleteMany();
+        console.log(`${deleteBoardsResult.deletedCount} boards deleted.`);
 
-        res.status(200).json({ message: 'Successfully deleted all boards' });
+        res.status(200).json({ message: 'Successfully deleted all boards and associated columns' });
     } catch (error) {
-        console.error('Error deleting boards', error);
+        console.error('Error deleting boards and columns', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
