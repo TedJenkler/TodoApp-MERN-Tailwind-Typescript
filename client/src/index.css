@@ -24,3 +24,8 @@
     @apply font-medium text-[0.813rem];
     line-height: 1.438rem;
 }
+
+.bm {
+    @apply font-bold text-xs;
+    line-height: auto;
+}

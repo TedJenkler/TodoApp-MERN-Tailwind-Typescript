@@ -16,6 +16,12 @@ interface Todo {
   columnId: number;
 }
 
+interface Subtodo {
+  title: string;
+  isCompleted: boolean;
+  todoId: number;
+}
+
 interface SelectedBoardState {
   id: number | null;
 }
@@ -25,6 +31,7 @@ interface State {
   boards: Board[];
   columns: Column[];
   todos: Todo[];
+  subtodos: Subtodo[];
   loading: boolean;
   error: string | null;
 }
@@ -34,6 +41,7 @@ const initialState: State = {
   boards: [],
   columns: [],
   todos: [],
+  subtodos: [],
   loading: true,
   error: null,
 };
@@ -86,6 +94,22 @@ export const getColumns = createAsyncThunk(
     }
   );
 
+  export const getSubtodos = createAsyncThunk(
+    'state/subtodos',
+    async (_, { rejectWithValue }) => {
+      try {
+        const response = await fetch('http://localhost:2000/api/subtodos');
+        if (!response.ok) {
+          throw new Error('Failed to fetch subtodos');
+        }
+        const data = await response.json();
+        return data;
+      } catch (error: any) {
+        return rejectWithValue(error.message);
+      }
+    }
+  );
+
 const stateSlice = createSlice({
   name: 'stateSlice',
   initialState,
@@ -128,6 +152,18 @@ const stateSlice = createSlice({
       state.todos = action.payload;
     });
     builder.addCase(getTodos.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
+    builder.addCase(getSubtodos.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getSubtodos.fulfilled, (state, action) => {
+      state.loading = false;
+      state.subtodos = action.payload;
+    });
+    builder.addCase(getSubtodos.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload as string;
     });

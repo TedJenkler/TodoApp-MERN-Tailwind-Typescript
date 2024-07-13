@@ -1,6 +1,6 @@
 import Nav from "./components/Nav";
 import { useDispatch, useSelector } from "react-redux";
-import { getBoards, getColumns, getTodos } from "./features/state/stateSlice";
+import { getBoards, getColumns, getTodos, getSubtodos } from "./features/state/stateSlice";
 import { AppDispatch, RootState } from "./store";
 import { useEffect } from "react";
 import LoadingPage from "./LoadingPage";
@@ -13,15 +13,17 @@ function App() {
   const boards = useSelector((state: any) => state.stateSlice.boards.boards);
   const columns = useSelector((state: any) => state.stateSlice.columns.columns);
   const todos = useSelector((state: any) => state.stateSlice.todos.todos);
+  const subtodos = useSelector((state: any) => state.stateSlice.subtodos.subtodos);
   const loading = useSelector((state: RootState) => state.stateSlice.loading);
 
   useEffect(() => {
     dispatch(getBoards());
     dispatch(getColumns());
     dispatch(getTodos());
+    dispatch(getSubtodos());
   }, [dispatch]);
 
-  if (loading || !boards || !columns || !todos) {
+  if (loading || !boards || !columns || !todos || !subtodos) {
     return (
       <div className="App">
         <LoadingPage />
