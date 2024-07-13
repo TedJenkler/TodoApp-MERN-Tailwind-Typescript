@@ -1,19 +1,56 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-interface StateSlice {
+interface Board {
+  id: number;
+  title: string;
+}
 
-    value: number;
+interface State {
+  boards: Board[];
+  loading: boolean;
+  error: string | null;
+}
 
+const initialState: State = {
+  boards: [],
+  loading: true,
+  error: null,
 };
 
-const initialState: StateSlice = {
-    value: 0
-};
+export const getBoards = createAsyncThunk(
+  'state/getBoards',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch('http://localhost:2000/api/boards');
+      if (!response.ok) {
+        throw new Error('Failed to fetch boards');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
-const StateSlice = createSlice({
-    name: 'state',
-    initialState,
-    reducers: {}
+const stateSlice = createSlice({
+  name: 'stateSlice',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getBoards.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getBoards.fulfilled, (state, action) => {
+      state.loading = false;
+      state.boards = action.payload;
+    });
+    builder.addCase(getBoards.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
+  },
 });
 
-export default StateSlice.reducer;
+export default stateSlice.reducer;

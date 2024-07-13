@@ -1,9 +1,10 @@
+
 import { configureStore } from '@reduxjs/toolkit';
 import stateReducer from './features/state/stateSlice';
 
 const store = configureStore({
   reducer: {
-    state: stateReducer
+    stateSlice: stateReducer,
   },
 });
 

@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.hl {
+    @apply text-lg font-bold whitespace-nowrap;
+    line-height: auto;
+    word-spacing: 1px;
+}
+
+.bl {
+    @apply font-medium text-[0.813rem];
+    line-height: 1.438rem;
+}
