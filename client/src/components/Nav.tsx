@@ -1,17 +1,26 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import menu from '../assets/menu.png';
 import settings from '../assets/settings.png';
 import plus from '../assets/plus.png';
 import CustomSelect from './CustomSelect';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store';
+import { selectedBoardState } from '../features/state/stateSlice';
 
 function Nav() {
   const boards = useSelector((state: any) => state.stateSlice.boards.boards);
-  const initialSelected = boards && boards.length > 0 ? boards[0]._id : null;
-  const [selectedBoard, setSelectedBoard] = useState<number | null>(initialSelected);
+  const dispatch = useDispatch();
+
+  const initialSelected = boards[0]._id
+  const [selectedBoard, setSelectedBoardLocally] = useState<number>(initialSelected);
+
+  useEffect(() => {
+    setSelectedBoardLocally(initialSelected);
+  }, [initialSelected]);
 
   const onChangeBoard = (boardId: number) => {
-    setSelectedBoard(boardId);
+    setSelectedBoardLocally(boardId);
+    dispatch(selectedBoardState(boardId));
   };
 
   return (

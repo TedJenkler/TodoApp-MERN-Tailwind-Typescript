@@ -3,7 +3,19 @@
 @tailwind utilities;
 
 .hl {
-    @apply text-lg font-bold whitespace-nowrap;
+    @apply text-lg font-bold;
+    line-height: auto;
+    word-spacing: 1px;
+}
+
+.hm {
+    @apply text-[0.938rem] font-bold;
+    line-height: auto;
+    word-spacing: 1px;
+}
+
+.hs {
+    @apply text-xs font-bold tracking-[0.15rem];
     line-height: auto;
     word-spacing: 1px;
 }

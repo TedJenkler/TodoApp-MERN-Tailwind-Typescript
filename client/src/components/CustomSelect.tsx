@@ -8,7 +8,7 @@ interface Option {
 
 interface CustomSelectProps {
   options: Option[];
-  value: number | null;
+  value: number;
   onChange: (option: number) => void;
 }
 
@@ -34,10 +34,15 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ options, value, onChange })
     setIsOpen(false);
   };
 
+  const getNameById = (id: number) => {
+    const option = options.find((option) => option._id === id);
+    return option ? option.name : '';
+  };
+
   return (
     <div ref={selectRef} className="relative">
       <div onClick={() => setIsOpen(!isOpen)} className="flex items-center w-[9.938rem] h-[1.438rem] cursor-pointer">
-        <p className="text-white">{value ? options.find((opt) => opt._id === value)?.name : 'Select'}</p>
+        <p className="text-white hl whitespace-nowrap">{getNameById(value)}</p>
         <img className={`h-2 w-2 ml-2 transform ${isOpen ? 'rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`} src={arrowdown} alt="arrowdown" />
       </div>
       {isOpen && (
