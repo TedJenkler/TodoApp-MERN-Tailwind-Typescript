@@ -25,13 +25,13 @@ interface Subtodo {
 interface SelectedBoardState {
   id: number | null;
 }
-
 interface State {
   selectedBoard: SelectedBoardState;
   boards: Board[];
   columns: Column[];
   todos: Todo[];
   subtodos: Subtodo[];
+  modal: string;
   loading: boolean;
   error: string | null;
 }
@@ -42,6 +42,7 @@ const initialState: State = {
   columns: [],
   todos: [],
   subtodos: [],
+  modal: "",
   loading: true,
   error: null,
 };
@@ -116,7 +117,10 @@ const stateSlice = createSlice({
   reducers: {
     selectedBoardState: (state, action) => {
       state.selectedBoard = action.payload;
-    }
+    },
+    swapModal: (state, action) => {
+      state.modal = action.payload;
+    } 
   },
   extraReducers: (builder) => {
     builder.addCase(getBoards.pending, (state) => {
@@ -170,6 +174,6 @@ const stateSlice = createSlice({
   },
 });
 
-export const { selectedBoardState } = stateSlice.actions;
+export const { selectedBoardState, swapModal } = stateSlice.actions;
 
 export default stateSlice.reducer;

@@ -7,6 +7,7 @@ import LoadingPage from "./LoadingPage";
 import EmptyCol from "./components/EmptyCol";
 import DisplayData from "./components/DisplayData";
 import { selectedBoardState } from "./features/state/stateSlice";
+import CheckTodoModal from "./modals/CheckTodoModal";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,6 +16,8 @@ function App() {
   const todos = useSelector((state: any) => state.stateSlice.todos.todos);
   const subtodos = useSelector((state: any) => state.stateSlice.subtodos.subtodos);
   const loading = useSelector((state: RootState) => state.stateSlice.loading);
+  const modal = useSelector((state: any) => state.stateSlice.modal)
+  console.log(modal)
 
   useEffect(() => {
     dispatch(getBoards());
@@ -22,6 +25,8 @@ function App() {
     dispatch(getTodos());
     dispatch(getSubtodos());
   }, [dispatch]);
+
+  const regex = /^todo[a-zA-Z0-9_-]{5,}$/;
 
   if (loading || !boards || !columns || !todos || !subtodos) {
     return (
@@ -34,8 +39,9 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="App bg-darkbg">
       <Nav />
+      {typeof modal === 'string' && regex.test(modal) ? <CheckTodoModal /> : null }
       {boards.length === 0 ? <EmptyCol /> : <DisplayData />}
     </div>
   );

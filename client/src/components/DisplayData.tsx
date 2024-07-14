@@ -1,7 +1,8 @@
 import blue from '../assets/blue.png';
 import purple from '../assets/purple.png';
 import green from '../assets/green.png';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { swapModal } from '../features/state/stateSlice';
 
 interface Column {
   _id: string;
@@ -28,10 +29,16 @@ function DisplayData() {
   const columns = useSelector((state: any) => state.stateSlice.columns.columns);
   const todos = useSelector((state: any) => state.stateSlice.todos.todos);
   const subtodos = useSelector((state: any) => state.stateSlice.subtodos.subtodos);
+  const dispatch = useDispatch();
 
   const selectedBoardId = useSelector((state: any) => state.stateSlice.selectedBoard);
 
   const filteredColumns: Column[] = columns.filter((column: Column) => column.boardId === selectedBoardId);
+
+  const handleTodoModal = (id: string) => {
+    console.log(id)
+    dispatch(swapModal("todo" + id))
+  } 
 
   return (
     <main className='flex bg-darkbg h-screen px-4 py-6 overflow-x-auto gap-6'>
@@ -46,7 +53,7 @@ function DisplayData() {
                 <h2 className='hs text-mediumgrey'>{column.name.toUpperCase()} ({column.todos.length})</h2>
               </div>
               {todos.filter((todo: Todo) => todo.status === column._id).map((todo: Todo) => (
-                <div key={todo._id} className='flex flex-col w-full mt-5 bg-darkgrey rounded-lg px-4 py-6'>
+                <div key={todo._id} onClick={() => {handleTodoModal(todo._id)}} className='flex flex-col w-full mt-5 bg-darkgrey rounded-lg px-4 py-6'>
                   <h3 className='text-white hm w-full'>{todo.title}</h3>
                   <div className='flex items-center gap-2 text-mediumgrey'>
                     {todo.subtodos.length > 0 && (
@@ -62,6 +69,9 @@ function DisplayData() {
           ))}
         </>
       )}
+        <button className='h-screen min-w-[17.5rem] bg-darkgrey rounded-md mt-[2.188rem] hxl text-mediumgrey'>
+          + New Column
+        </button>
     </main>
   );
 }

@@ -94,3 +94,21 @@ exports.updateByTodoId = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+exports.toggleSubtodo = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const subtodo = await Subtodo.findById(id);
+        if (!subtodo) {
+            return res.status(404).json({ message: `Subtodo with ID ${id} not found` });
+        }
+
+        const updatedSubtodo = await Subtodo.findByIdAndUpdate(id, { isCompleted: !subtodo.isCompleted }, { new: true });
+
+        res.status(200).json({ message: 'Successfully toggled subtodo', subtodo: updatedSubtodo });
+    } catch (error) {
+        console.error('Error toggling subtodo', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};

@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.hxl {
+    @apply text-2xl font-bold;
+    line-height: auto;
+    word-spacing: 1px;
+}
+
 .hl {
     @apply text-lg font-bold;
     line-height: auto;

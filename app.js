@@ -3,19 +3,25 @@ const app = express();
 const PORT = process.env.PORT || 2000;
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
-const cors = require('cors'); // Import the cors package
+const cors = require('cors')
 const boardRoutes = require('./routes/boardroutes');
 const columnsRoutes = require('./routes/columnsroutes');
 const todoRoutes = require('./routes/todoroutes');
 const subtodoRoutes = require('./routes/subtodoroutes');
+const morgan = require('morgan');
 
 dotenv.config();
 
 app.use(express.json());
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
+};
 
 app.use(cors({
   origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
