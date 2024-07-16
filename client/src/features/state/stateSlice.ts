@@ -1,4 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
+import { act } from 'react';
 
 interface Board {
   id: number;
@@ -111,6 +112,54 @@ export const getColumns = createAsyncThunk(
     }
   );
 
+  export const addTodo = createAsyncThunk(
+    'state/addtodo',
+    async ({ title, description, status }, { rejectWithValue }) => {
+      try {
+        const response = await fetch('http://localhost:2000/api/todos/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ title, description, status }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to add todo');
+        }
+  
+        const data = await response.json();
+        return data;
+      } catch (error: any) {
+        return rejectWithValue(error.message);
+      }
+    }
+  );
+
+  export const addSubtodos = createAsyncThunk(
+    'state/addsubtodos',
+    async ({ subTodos, todoId }: { subTodos: any[], todoId: string }, { rejectWithValue }) => {
+      try {
+        const response = await fetch('http://localhost:2000/api/subtodos/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ subTodos, todoId }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to add subtodos');
+        }
+  
+        const data = await response.json();
+        return data;
+      } catch (error: any) {
+        return rejectWithValue(error.message);
+      }
+    }
+  );
+
 const stateSlice = createSlice({
   name: 'stateSlice',
   initialState,
@@ -169,6 +218,18 @@ const stateSlice = createSlice({
     });
     builder.addCase(getSubtodos.rejected, (state, action) => {
       state.loading = false;
+      state.error = action.payload as string;
+    });
+    builder.addCase(addTodo.pending, (state) => {
+      state.loading = true;
+      state.error = null
+    });
+    builder.addCase(addTodo.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(addTodo.rejected, (state, action) => {
+      state.loading = false
       state.error = action.payload as string;
     });
   },

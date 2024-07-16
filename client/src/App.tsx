@@ -8,6 +8,7 @@ import EmptyCol from "./components/EmptyCol";
 import DisplayData from "./components/DisplayData";
 import { selectedBoardState } from "./features/state/stateSlice";
 import CheckTodoModal from "./modals/CheckTodoModal";
+import AddModal from "./modals/AddModal";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -42,6 +43,7 @@ function App() {
     <div className="App bg-darkbg">
       <Nav />
       {typeof modal === 'string' && regex.test(modal) ? <CheckTodoModal /> : null }
+      {typeof modal === 'string' && modal === 'add' ? <AddModal /> : null}
       {boards.length === 0 ? <EmptyCol /> : <DisplayData />}
     </div>
   );
