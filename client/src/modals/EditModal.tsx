@@ -7,7 +7,7 @@ import { swapModal, updateTodo, updateSubtodos } from "../features/state/stateSl
 interface Todo {
   title: string;
   description: string;
-  subTodos: string[]; // Adjusted to lowercase 'subTodos'
+  subTodos: string[];
   status: string;
 }
 
@@ -16,7 +16,7 @@ const EditModal: React.FC = () => {
   const [formData, setFormData] = useState<Todo>({
     title: "",
     description: "",
-    subTodos: [], // Initialize as an empty array
+    subTodos: [],
     status: ""
   });
 
@@ -67,7 +67,7 @@ const EditModal: React.FC = () => {
         const data = await response.json();
         setFormData(prevData => ({
           ...prevData,
-          subTodos: data.subtodos // Adjusted to lowercase 'subtodos'
+          subTodos: data.subtodos
         }));
       } catch (error: any) {
         console.log('Failed to fetch subtodos', error);
@@ -109,10 +109,10 @@ const EditModal: React.FC = () => {
     const { title, description, status, subTodos } = formData;
 
     const selectedColumn = columns.find((column: any) => column.name === status || column._id === status);
-      if (!selectedColumn) {
-        console.error(`Column with name or _id '${status}' not found in columns.`);
-        return;
-      }
+    if (!selectedColumn) {
+      console.error(`Column with name or _id '${status}' not found in columns.`);
+      return;
+    }
 
     const nameToId = selectedColumn._id;
 

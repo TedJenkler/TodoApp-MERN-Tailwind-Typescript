@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import menu from '../assets/menu.png';
 import settings from '../assets/settings.png';
 import plus from '../assets/plus.png';
@@ -9,9 +9,25 @@ import { selectedBoardState, swapModal } from '../features/state/stateSlice';
 function Nav() {
   const boards = useSelector((state: any) => state.stateSlice.boards.boards);
   const dispatch = useDispatch();
+  const choiceRef = useRef<HTMLDivElement>(null);
 
   const initialSelected = boards[0]._id
   const [selectedBoard, setSelectedBoardLocally] = useState<number>(initialSelected);
+  const [choiceBoardPopup, setChoiceBoardPopup] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (choiceRef.current && !choiceRef.current.contains(event.target as Node)) {
+        setChoiceBoardPopup(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     setSelectedBoardLocally(initialSelected);
@@ -26,6 +42,10 @@ function Nav() {
     dispatch(swapModal("add"))
   };
 
+  const handleChoice = () => {
+    setChoiceBoardPopup(!choiceBoardPopup);
+  };
+
   return (
     <nav className='flex justify-between items-center bg-darkgrey h-16 py-5 px-4'>
       <div className='flex items-center gap-4'>
@@ -34,7 +54,15 @@ function Nav() {
       </div>
       <div onClick={() => {addModuleBtn()}} className='flex items-center gap-4'>
         <a className='flex items-center justify-center h-8 w-12 rounded-3xl bg-mainpurple'><img className="h-3 w-3" src={plus} alt='plus' /></a>
-        <img className='h-4 w-1' src={settings} alt='settings'/>
+      </div>
+      <div>
+      <img onClick={handleChoice} className='h-4 w-1' src={settings} alt='settings'/>
+      {choiceBoardPopup ? (
+        <div ref={choiceRef} className='absolute flex flex-col items-center justify-between w-[12rem] h-[5.875rem] p-4 rounded-lg top-[3.75rem] right-6 bg-darkbg'>
+          <p className='text-mediumgrey'>Edit Board</p>
+          <p className='text-red'>Delete Board</p>
+        </div>
+      ) : null}
       </div>
     </nav>
   );

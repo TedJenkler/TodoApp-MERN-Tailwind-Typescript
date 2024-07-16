@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import arrowdown from '../assets/arrowdown.png';
+import whiteboardicon from '../assets/whiteboardicon.png';
+import greyboardicon from '../assets/greyboardicon.png';
+import purpleboardicon from '../assets/purpleboardicon.png';
+import ToggleTheme from './ToggleTheme';
 
 interface Option {
   _id: number;
@@ -46,12 +50,19 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ options, value, onChange })
         <img className={`h-2 w-2 ml-2 transform ${isOpen ? 'rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`} src={arrowdown} alt="arrowdown" />
       </div>
       {isOpen && (
-        <div className="absolute top-[2rem] left-0 bg-white w-[21.875rem] p-4 shadow-md">
+        <div className="absolute top-[3.5rem] left-0 bg-darkgrey w-[16.5rem] rounded-lg">
+          <h1 className='px-6 pt-4 pb-5 text-mediumgrey text-xs font-bold tracking-[0.15rem]'>ALL BOARDS ({options.length})</h1>
           {options.map((option) => (
-            <p key={option._id} className={`cursor-pointer ${option._id === value ? 'font-bold' : ''}`} onClick={() => handleOptionClick(option)}>
-              {option.name}
-            </p>
+            <div key={option._id} className={`flex items-center gap-2 cursor-pointer w-[15rem] h-12 rounded-r-[6.25rem] py-4 px-6 ${option._id === value ? 'font-bold text-white bg-mainpurple' : 'text-mediumgrey'}`} onClick={() => handleOptionClick(option)}>
+              <img src={option._id === value ? whiteboardicon : greyboardicon} alt='icon' />
+              <p className='hm'>{option.name}</p>
+            </div>
           ))}
+          <button className='flex justify-start items-center gap-2 w-[15rem] h-12 py-4 px-6 mb-4'>
+            <img src={purpleboardicon} alt='icon' />
+            <p className='text-mainpurple hm'>+ Create New Board</p>
+          </button>
+          <ToggleTheme />
         </div>
       )}
     </div>

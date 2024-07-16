@@ -12,16 +12,18 @@ interface Todo {
 }
 
 const AddModal: React.FC = () => {
+  const dispatch = useDispatch();
+  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+  const modalRef = React.useRef<HTMLDivElement>(null);
+
+  const initialStatus = columns.length > 0 ? columns[0].name : '';
+
   const [formData, setFormData] = useState<Todo>({
     title: "",
     description: "",
     subTodos: [],
-    status: ""
+    status: initialStatus,
   });
-
-  const dispatch = useDispatch();
-  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
-  const modalRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -62,7 +64,7 @@ const AddModal: React.FC = () => {
   const handleSubmit = () => {
     const { title, description, status, subTodos } = formData;
 
-    const selectedColumn = columns.find((column: any) => column.name === status);
+    const selectedColumn = columns.find((column: any) => column.name === status || column._id === status);
     if (!selectedColumn) {
       console.error(`Column with name '${status}' not found in columns.`);
       return;
@@ -79,7 +81,7 @@ const AddModal: React.FC = () => {
           title: "",
           description: "",
           subTodos: [],
-          status: ""
+          status: initialStatus,
         });
       })
       .catch((error: any) => {

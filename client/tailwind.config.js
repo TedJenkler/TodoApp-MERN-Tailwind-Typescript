@@ -12,6 +12,7 @@ export default {
         'mediumgrey': '#828FA3',
         'mainpurple': '#635FC7',
         'white': '#FFFFFF',
+        'red': '#EA5555'
       }
     },
   },
