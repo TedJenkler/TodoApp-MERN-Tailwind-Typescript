@@ -4,6 +4,8 @@ import whiteboardicon from '../assets/whiteboardicon.png';
 import greyboardicon from '../assets/greyboardicon.png';
 import purpleboardicon from '../assets/purpleboardicon.png';
 import ToggleTheme from './ToggleTheme';
+import { useDispatch } from 'react-redux';
+import { swapModal } from '../features/state/stateSlice';
 
 interface Option {
   _id: number;
@@ -19,6 +21,7 @@ interface CustomSelectProps {
 const CustomSelect: React.FC<CustomSelectProps> = ({ options, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,6 +46,11 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ options, value, onChange })
     return option ? option.name : '';
   };
 
+  const addBoardModal = () => {
+    dispatch(swapModal('addBoard'));
+    setIsOpen(false);
+  }
+
   return (
     <div ref={selectRef} className="relative">
       <div onClick={() => setIsOpen(!isOpen)} className="flex items-center w-[9.938rem] h-[1.438rem] cursor-pointer">
@@ -60,7 +68,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ options, value, onChange })
           ))}
           <button className='flex justify-start items-center gap-2 w-[15rem] h-12 py-4 px-6 mb-4'>
             <img src={purpleboardicon} alt='icon' />
-            <p className='text-mainpurple hm'>+ Create New Board</p>
+            <p onClick={addBoardModal} className='text-mainpurple hm'>+ Create New Board</p>
           </button>
           <ToggleTheme />
         </div>

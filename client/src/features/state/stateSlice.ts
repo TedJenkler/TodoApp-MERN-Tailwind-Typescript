@@ -37,6 +37,11 @@ interface State {
   error: string | null;
 }
 
+interface AddColumnsPayload {
+  columns: [];
+  boardId: string;
+}
+
 const initialState: State = {
   selectedBoard: { id: null },
   boards: [],
@@ -208,6 +213,53 @@ export const getColumns = createAsyncThunk(
     }
   );
 
+  export const addBoard = createAsyncThunk(
+    'state/addBoard',
+    async ({ name }: { name: string }, { rejectWithValue }) => {
+      try {
+        const response = await fetch('http://localhost:2000/api/boards/add', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name }),
+        }); 
+        if(!response.ok) {
+          throw new Error('Failed to add board');
+        }
+
+        const data = await response.json();
+        return data;
+      }catch (error: any) {
+        return rejectWithValue(error.message);
+      }
+    }
+  );
+
+  export const addColumns = createAsyncThunk(
+    'state/addColumns',
+    async ({ columns, boardId }, { rejectWithValue }) => {
+        try {
+            const response = await fetch('http://localhost:2000/api/columns/many', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ columns, boardId }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add columns');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error: any) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 const stateSlice = createSlice({
   name: 'stateSlice',
   initialState,
@@ -301,6 +353,42 @@ const stateSlice = createSlice({
       state.error = null;
     });
     builder.addCase(updateSubtodos.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string;
+    });
+    builder.addCase(addSubtodos.pending, (state) => {
+      state.loading = true;
+      state.error = null
+    });
+    builder.addCase(addSubtodos.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(addSubtodos.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string;
+    });
+    builder.addCase(addBoard.pending, (state) => {
+      state.loading = true;
+      state.error = null
+    });
+    builder.addCase(addBoard.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(addBoard.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string;
+    });
+    builder.addCase(addColumns.pending, (state) => {
+      state.loading = true;
+      state.error = null
+    });
+    builder.addCase(addColumns.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(addColumns.rejected, (state, action) => {
       state.loading = false
       state.error = action.payload as string;
     });

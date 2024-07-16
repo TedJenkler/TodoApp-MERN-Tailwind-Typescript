@@ -36,7 +36,7 @@ exports.addBoard = async (req, res) => {
         const { name } = req.body;
 
         const existingBoard = await Board.findOne({ name: name });
-        if(existingBoard) {
+        if (existingBoard) {
             return res.status(400).json({ message: 'Board already exists' });
         }
 
@@ -44,15 +44,17 @@ exports.addBoard = async (req, res) => {
             name,
         });
 
-        const savedBoard = board.save();
-
-        res.status(201).json({ message: 'Successfully added board', board: savedBoard });
-    }catch (error) {
+        const savedBoard = await board.save();
+        if (!savedBoard) {
+            return res.status(400).json({ message: 'Error saving board' });
+        }
+        
+        res.status(201).json({ message: 'Successfully added board', board: savedBoard, id: savedBoard._id });
+    } catch (error) {
         console.error('Error adding board', error);
-        res.status(500).json({ message: 'Internal Server Error'});
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-
 
 exports.updateById = async (req, res) => {
     try {
