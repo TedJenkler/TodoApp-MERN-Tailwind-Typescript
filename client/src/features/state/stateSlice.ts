@@ -260,6 +260,54 @@ export const getColumns = createAsyncThunk(
     }
 );
 
+export const editBoard = createAsyncThunk(
+  'state/editBoard',
+  async ({ id, name }: { id: string, name: string }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:2000/api/boards/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to edit board');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const editColumns = createAsyncThunk(
+  'state/editColumns',
+  async ({ columns, boardId }: { columns: Column[], boardId: String }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:2000/api/columns`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ columns, boardId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to edit columns');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const stateSlice = createSlice({
   name: 'stateSlice',
   initialState,
@@ -389,6 +437,30 @@ const stateSlice = createSlice({
       state.error = null;
     });
     builder.addCase(addColumns.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string;
+    });
+    builder.addCase(editBoard.pending, (state) => {
+      state.loading = true;
+      state.error = null
+    });
+    builder.addCase(editBoard.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(editBoard.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string;
+    });
+    builder.addCase(editColumns.pending, (state) => {
+      state.loading = true;
+      state.error = null
+    });
+    builder.addCase(editColumns.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(editColumns.rejected, (state, action) => {
       state.loading = false
       state.error = action.payload as string;
     });

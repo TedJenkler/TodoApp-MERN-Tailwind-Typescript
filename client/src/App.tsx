@@ -11,6 +11,7 @@ import CheckTodoModal from "./modals/CheckTodoModal";
 import AddModal from "./modals/AddModal";
 import EditModal from "./modals/EditModal";
 import AddBoard from "./modals/AddBoard";
+import EditBoard from "./modals/EditBoard";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -49,6 +50,7 @@ function App() {
       {typeof modal === 'string' && regex2.test(modal) ? <EditModal /> : null }
       {typeof modal === 'string' && modal === 'add' ? <AddModal /> : null}
       {typeof modal === 'string' && modal === 'addBoard' ? <AddBoard /> : null}
+      {typeof modal === 'string' && modal === 'editBoard' ? <EditBoard /> : null}
       {boards.length === 0 ? <EmptyCol /> : <DisplayData />}
     </div>
   );

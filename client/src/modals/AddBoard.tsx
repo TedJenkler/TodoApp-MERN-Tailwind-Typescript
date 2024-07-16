@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import BoardRepeater from '../components/ColumnRepeater';
 import { addBoard, addColumns } from '../features/state/stateSlice';
+import { swapModal } from '../features/state/stateSlice';
 
 interface Column {
   name: string;
@@ -27,6 +28,21 @@ function AddBoard() {
       name: e.target.value,
     });
   };
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        dispatch(swapModal(""));
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  })
 
   const handleColumnsChange = (columns: Column[]) => {
     setFormData({
@@ -62,7 +78,7 @@ function AddBoard() {
   };
 
   return (
-    <div className="absolute flex flex-col w-[21.438rem] bg-darkgrey rounded-md p-6 right-1/2 translate-x-1/2 top-[17.438rem]">
+    <div ref={modalRef} className="absolute flex flex-col w-[21.438rem] bg-darkgrey rounded-md p-6 right-1/2 translate-x-1/2 top-[17.438rem]">
       <h1 className="text-white hl mb-6">Add New Board</h1>
       <div className="mb-6">
         <label className="text-xs text-white font-bold mb-2">Board Name</label>
@@ -74,7 +90,7 @@ function AddBoard() {
         />
       </div>
       <BoardRepeater value={formData.columns} onChange={handleColumnsChange} />
-      <button onClick={handleSubmit} className="bg-mainpurple text-white py-2 rounded-md mt-4">
+      <button onClick={handleSubmit} className="bg-mainpurple text-white py-2 rounded-[1.25rem] text-[0.813rem] font-bold leading-[1.438rem] mt-4">
         Create New Board
       </button>
     </div>

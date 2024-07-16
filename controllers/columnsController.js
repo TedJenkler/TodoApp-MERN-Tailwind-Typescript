@@ -175,10 +175,43 @@ exports.addMany = async (req, res) => {
             { $push: { columns: { $each: addedColumns.map(col => col._id) } } },
             { new: true }
         );
+        if (!updateBoard) {
+            return res.status(404).json({ message: `Error saving to board with ID ${boardId}` })
+        };
 
         res.status(200).json({ message: 'Successfully added many columns', columns: addedColumns });
     } catch (error) {
         console.error('Error adding many columns', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+exports.updateAll = async (req, res) => {
+    try {
+        const { columns, boardId } = req.body;
+
+        const board = await Board.findById(boardId);
+        if (!board) {
+            return res.status(404).json({ message: 'Board not found' });
+        }
+
+        await Columns.deleteMany({ boardId });
+
+        const columnsToAdd = columns.map(column => ({ ...column, boardId }));
+        const addedColumns = await Columns.insertMany(columnsToAdd);
+        if (!addedColumns) {
+            return res.status(400).json({ message: 'Error adding columns' });
+        }
+
+        const updatedBoard = await Board.findByIdAndUpdate(
+            boardId,
+            { $set: { columns: addedColumns.map(col => col._id) } },
+            { new: true }
+        );
+
+        res.status(200).json({ message: 'Successfully updated columns for the board', board: updatedBoard });
+    } catch (error) {
+        console.error('Error updating columns for the board', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };

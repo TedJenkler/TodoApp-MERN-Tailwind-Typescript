@@ -5,6 +5,7 @@ import plus from '../assets/plus.png';
 import CustomSelect from './CustomSelect';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectedBoardState, swapModal } from '../features/state/stateSlice';
+import EditModal from '../modals/EditModal';
 
 function Nav() {
   const boards = useSelector((state: any) => state.stateSlice.boards.boards);
@@ -42,6 +43,10 @@ function Nav() {
     dispatch(swapModal("add"))
   };
 
+  const EditModal = () => {
+    dispatch(swapModal("editBoard"));
+  };
+
   const handleChoice = () => {
     setChoiceBoardPopup(!choiceBoardPopup);
   };
@@ -59,7 +64,7 @@ function Nav() {
       <img onClick={handleChoice} className='h-4 w-1' src={settings} alt='settings'/>
       {choiceBoardPopup ? (
         <div ref={choiceRef} className='absolute flex flex-col items-center justify-between w-[12rem] h-[5.875rem] p-4 rounded-lg top-[3.75rem] right-6 bg-darkbg'>
-          <p className='text-mediumgrey'>Edit Board</p>
+          <p onClick={EditModal} className='text-mediumgrey'>Edit Board</p>
           <p className='text-red'>Delete Board</p>
         </div>
       ) : null}
