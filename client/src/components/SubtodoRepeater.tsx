@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import x from '../assets/x.png'
+import React, { useEffect, useState } from "react";
+import x from '../assets/x.png';
 
 interface Subtodo {
   title: string;
@@ -12,7 +12,13 @@ interface SubtodoRepeaterProps {
 }
 
 const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange }) => {
-  const [repeater, setRepeater] = useState<Subtodo[]>(subTodos);
+  const [repeater, setRepeater] = useState<Subtodo[]>(subTodos || []);
+
+  useEffect(() => {
+    if (subTodos) {
+      setRepeater(subTodos);
+    }
+  }, [subTodos]);
 
   const addEmpty = () => {
     const newSubTodo: Subtodo = { title: "", isCompleted: false };
@@ -45,12 +51,22 @@ const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange })
             onChange={(e) => handleSubtodoChange(index, e.target.value)}
             className="rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 bg-darkgrey text-mediumgrey"
           />
-          <img src={x} alt="x" onClick={() => handleRemoveSubtodo(index)} className="h-[0.938rem] w-[0.938rem]" />
+          <img
+            src={x}
+            alt="Remove subtask"
+            onClick={() => handleRemoveSubtodo(index)}
+            className="h-[0.938rem] w-[0.938rem] cursor-pointer"
+          />
         </div>
       ))}
-      <button onClick={addEmpty} className="mt-3 text-mainpurple bg-white w-full py-2 rounded-[1.25rem] text-[0.813rem] font-bold leading-[1.438rem]">Add Subtask</button>
+      <button
+        onClick={addEmpty}
+        className="mt-3 text-mainpurple bg-white w-full py-2 rounded-[1.25rem] text-[0.813rem] font-bold leading-[1.438rem]"
+      >
+        Add Subtask
+      </button>
     </div>
   );
-}
+};
 
 export default SubtodoRepeater;

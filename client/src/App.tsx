@@ -9,6 +9,7 @@ import DisplayData from "./components/DisplayData";
 import { selectedBoardState } from "./features/state/stateSlice";
 import CheckTodoModal from "./modals/CheckTodoModal";
 import AddModal from "./modals/AddModal";
+import EditModal from "./modals/EditModal";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,6 +29,7 @@ function App() {
   }, [dispatch]);
 
   const regex = /^todo[a-zA-Z0-9_-]{5,}$/;
+  const regex2 = /^edittodo[a-zA-Z0-9_-]{5,}$/;
 
   if (loading || !boards || !columns || !todos || !subtodos) {
     return (
@@ -43,6 +45,7 @@ function App() {
     <div className="App bg-darkbg">
       <Nav />
       {typeof modal === 'string' && regex.test(modal) ? <CheckTodoModal /> : null }
+      {typeof modal === 'string' && regex2.test(modal) ? <EditModal /> : null }
       {typeof modal === 'string' && modal === 'add' ? <AddModal /> : null}
       {boards.length === 0 ? <EmptyCol /> : <DisplayData />}
     </div>

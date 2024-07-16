@@ -160,6 +160,54 @@ export const getColumns = createAsyncThunk(
     }
   );
 
+  export const updateTodo = createAsyncThunk(
+    'state/updateTodo',
+    async ({ title, description, status, id }: { title: string, description: string, status: string, id: string }, { rejectWithValue }) => {
+      try {
+        const response = await fetch(`http://localhost:2000/api/todos/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ title, description, status })
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to update todo');
+        }
+  
+        const data = await response.json();
+        return data;
+      } catch (error: any) {
+        return rejectWithValue(error.message);
+      }
+    }
+  );
+
+  export const updateSubtodos = createAsyncThunk(
+    'state/updateSubtodos',
+    async ({ subTodos, todoId }: { subTodos: string[], todoId: string }, { rejectWithValue }) => {
+      try {
+        const response = await fetch(`http://localhost:2000/api/subtodos/${todoId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ subTodos }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to update subtodos');
+        }
+  
+        const data = await response.json();
+        return data;
+      } catch (error: any) {
+        return rejectWithValue(error.message);
+      }
+    }
+  );
+
 const stateSlice = createSlice({
   name: 'stateSlice',
   initialState,
@@ -229,6 +277,30 @@ const stateSlice = createSlice({
       state.error = null;
     });
     builder.addCase(addTodo.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string;
+    });
+    builder.addCase(updateTodo.pending, (state) => {
+      state.loading = true;
+      state.error = null
+    });
+    builder.addCase(updateTodo.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(updateTodo.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string;
+    });
+    builder.addCase(updateSubtodos.pending, (state) => {
+      state.loading = true;
+      state.error = null
+    });
+    builder.addCase(updateSubtodos.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(updateSubtodos.rejected, (state, action) => {
       state.loading = false
       state.error = action.payload as string;
     });

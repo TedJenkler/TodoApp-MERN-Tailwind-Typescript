@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusSelect from '../components/StatusSelect';
 import { swapModal } from '../features/state/stateSlice';
+import settings from '../assets/settings.png';
 
 interface Subtodo {
   _id: string;
@@ -101,10 +102,15 @@ function CheckTodoModal() {
     }
   }, []);
 
+  const editModal = () => {
+    dispatch(swapModal("edit" + "todo" + id))
+  };
+
   return (
     <div ref={modalRef} className="w-[21.438rem] absolute bg-darkgrey top-[12.938rem] right-1/2 translate-x-1/2 p-6">
-      <div>
+      <div className='flex justify-between items-center'>
         <h1 className="text-white mb-6 hl">{data ? data.title : null}</h1>
+        <img onClick={editModal} className='h-5 w-[0.289rem]' src={settings} alt='settings' />
       </div>
       <p className="mb-6 text-mediumgrey bl">{data?.description ? data.description : null}</p>
       <h2 className="text-xs font-bold text-white mb-4">

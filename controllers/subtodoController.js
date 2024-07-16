@@ -63,14 +63,15 @@ exports.updateByTodoId = async (req, res) => {
     try {
         const { id } = req.params;
         const { subTodos } = req.body;
-
         if (!Array.isArray(subTodos)) {
             return res.status(400).json({ message: 'subTodos should be an array' });
         }
 
+        const subTodoIds = subTodos.map(subTodo => subTodo._id);
+
         const updatedTodo = await Todo.findByIdAndUpdate(
             id,
-            { subtodos: subTodos.map(subTodo => subTodo._id) },
+            { subtodos: subTodoIds },
             { new: true }
         );
         if (!updatedTodo) {
@@ -78,12 +79,14 @@ exports.updateByTodoId = async (req, res) => {
         }
 
         await Subtodo.deleteMany({ todoId: id });
-
         if (subTodos.length > 0) {
             const insertedSubtodos = await Subtodo.insertMany(subTodos.map(subTodo => ({
                 ...subTodo,
                 todoId: id
             })));
+
+            updatedTodo.subtodos = insertedSubtodos.map(sub => sub._id);
+            await updatedTodo.save();
 
             res.status(200).json({ message: 'Successfully updated todo and subtodos', updatedTodo, subtodos: insertedSubtodos });
         } else {
