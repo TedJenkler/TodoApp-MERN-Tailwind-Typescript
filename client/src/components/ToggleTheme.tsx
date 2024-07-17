@@ -1,17 +1,39 @@
 import moon from "../assets/moon.png";
 import sun from "../assets/sun.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { toggleDarkmode } from "../features/state/stateSlice";
 
 function ToggleTheme() {
   const [isChecked, setIsChecked] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setIsChecked(true);
+      dispatch(toggleDarkmode(true));
+    } else {
+      setIsChecked(false);
+      dispatch(toggleDarkmode(false));
+    }
+  }, [dispatch]);
 
   const toggleTheme = () => {
-    setIsChecked(!isChecked);
+    const newChecked = !isChecked;
+    setIsChecked(newChecked);
+    if (newChecked) {
+      localStorage.setItem("theme", "dark");
+      dispatch(toggleDarkmode(true));
+    } else {
+      localStorage.setItem("theme", "light");
+      dispatch(toggleDarkmode(false));
+    }
   };
 
   return (
     <div className="flex justify-center pb-4 px-4">
-      <div className="flex items-center justify-center bg-darkbg h-12 w-full rounded-md gap-6">
+      <div className={`flex items-center justify-center ${isChecked ? 'bg-darkbg' : 'bg-lightbg'} h-12 w-full rounded-md gap-6`}>
         <img src={sun} alt="lightmode" />
         <div className="flex items-center">
           <input

@@ -22,6 +22,7 @@ const EditModal: React.FC = () => {
 
   const dispatch = useDispatch();
   const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const modalRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -74,7 +75,7 @@ const EditModal: React.FC = () => {
         setFormData(prevData => ({
           ...prevData,
           subTodos: []
-        }))
+        }));
       }
     };
 
@@ -134,26 +135,29 @@ const EditModal: React.FC = () => {
   };
 
   return (
-    <div ref={modalRef} className="absolute top-[9.75rem] w-[21.438rem] p-6 bg-darkgrey translate-x-1/2 right-1/2 rounded-md">
-      <h1 className="hl text-white mb-6">Edit Task</h1>
+    <div
+      ref={modalRef}
+      className={`absolute top-[9.75rem] w-[21.438rem] p-6 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} translate-x-1/2 right-1/2 rounded-md`}
+    >
+      <h1 className={`hl mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>Edit Task</h1>
       <div className="flex flex-col mb-6">
-        <label htmlFor="title" className="text-xs font-bold text-white mb-2">Title</label>
+        <label htmlFor="title" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Title</label>
         <input
           id="title"
           name="title"
           value={formData.title}
           onChange={handleChange}
-          className="rounded-[0.25rem] h-10 px-4 py-2 border border-mediumgrey/25 bg-darkgrey text-mediumgrey"
+          className={`rounded-[0.25rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}
         />
       </div>
       <div className="flex flex-col mb-6">
-        <label htmlFor="description" className="text-xs font-bold text-white mb-2">Description</label>
+        <label htmlFor="description" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Description</label>
         <textarea
           id="description"
           name="description"
           value={formData.description}
           onChange={handleChange}
-          className="rounded-[0.25rem] h-[7rem] px-4 py-2 border border-mediumgrey/25 bg-darkgrey text-mediumgrey"
+          className={`rounded-[0.25rem] h-[7rem] px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}
         />
       </div>
       <div className="mb-6">
@@ -162,7 +166,12 @@ const EditModal: React.FC = () => {
       <div className="mb-6">
         <StatusSelectNew handleStatus={handleStatus} />
       </div>
-      <button onClick={handleSubmit} className="flex items-center justify-center bg-mainpurple text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem]">Save Changes</button>
+      <button
+        onClick={handleSubmit}
+        className={`flex items-center justify-center ${isDarkMode ? 'bg-mainpurple text-white' : 'bg-mainpurple text-white'} text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem]`}
+      >
+        Save Changes
+      </button>
     </div>
   );
 };

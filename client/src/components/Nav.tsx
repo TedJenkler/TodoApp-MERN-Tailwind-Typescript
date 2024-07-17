@@ -9,6 +9,7 @@ import { selectedBoardState, swapModal } from '../features/state/stateSlice';
 function Nav() {
   const boards = useSelector((state: any) => state.stateSlice.boards.boards);
   const columns = useSelector((state: any) => state.stateSlice.columns)
+  const theme = useSelector((state: any) => state.stateSlice.darkmode);
   const dispatch = useDispatch();
   const choiceRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +60,7 @@ function Nav() {
   };
 
   return (
-    <nav className='flex justify-between items-center bg-darkgrey h-16 py-5 px-4'>
+    <nav className={`flex justify-between items-center ${theme ? "bg-darkgrey" : "bg-white"}  h-16 py-5 px-4`}>
       <div className='flex items-center gap-4'>
         <img className='h-6 w-6' src={menu} alt='mobilemenu'/>
         <CustomSelect options={boards} value={selectedBoard} onChange={onChangeBoard} />

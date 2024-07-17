@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import BoardRepeater from '../components/ColumnRepeater';
-import { addBoard, addColumns } from '../features/state/stateSlice';
-import { swapModal } from '../features/state/stateSlice';
+import { addBoard, addColumns, swapModal } from '../features/state/stateSlice';
 
 interface Column {
   name: string;
@@ -14,21 +13,15 @@ interface Board {
   columns: Column[];
 }
 
-function AddBoard() {
-  const [formData, setFormData] = useState<Board>({
-    name: '',
-    columns: [],
-  });
-
+const AddBoard: React.FC = () => {
+  const [formData, setFormData] = useState<Board>({ name: '', columns: [] });
   const dispatch = useDispatch();
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleBoardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      name: e.target.value,
-    });
+    setFormData({ ...formData, name: e.target.value });
   };
-  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -42,48 +35,34 @@ function AddBoard() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  })
+  }, [dispatch]);
 
   const handleColumnsChange = (columns: Column[]) => {
-    setFormData({
-      ...formData,
-      columns: columns,
-    });
+    setFormData({ ...formData, columns: columns });
   };
 
   const handleSubmit = async () => {
     try {
       const action = await dispatch(addBoard({ name: formData.name }));
-  
-      console.log(action);
-  
       if (addBoard.fulfilled.match(action)) {
         const boardId = action.payload.board._id;
-        console.log('Board created:', boardId);
-  
-        const columnsWithBoardId = formData.columns.map(column => ({
-          ...column,
-          boardId: boardId
-        }));
-  
+        const columnsWithBoardId = formData.columns.map(column => ({ ...column, boardId: boardId }));
         await dispatch(addColumns({ columns: columnsWithBoardId, boardId }));
       } else {
         console.error('Failed to create board', action.payload);
       }
     } catch (error) {
       console.error('An error occurred while creating the board:', error);
-    } finally {
-      console.log(formData);
     }
   };
 
   return (
-    <div ref={modalRef} className="absolute flex flex-col w-[21.438rem] bg-darkgrey rounded-md p-6 right-1/2 translate-x-1/2 top-[17.438rem]">
-      <h1 className="text-white hl mb-6">Add New Board</h1>
+    <div ref={modalRef} className={`absolute flex flex-col w-[21.438rem] rounded-md p-6 right-1/2 translate-x-1/2 top-[17.438rem] ${isDarkMode ? 'bg-darkgrey' : 'bg-white'}`}>
+      <h1 className={`${isDarkMode ? 'text-white' : 'text-black'} hl mb-6`}>Add New Board</h1>
       <div className="mb-6">
-        <label className="text-xs text-white font-bold mb-2">Board Name</label>
+        <label className={`${isDarkMode ? 'text-white' : 'text-black'} text-xs font-bold mb-2`}>Board Name</label>
         <input
-          className="w-full h-10 border border-mediumgrey/25 rounded bl bg-darkgrey px-4 py-2 text-white"
+          className={`w-full h-10 border border-mediumgrey/25 rounded bl px-4 py-2 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}
           type="text"
           value={formData.name}
           onChange={handleBoardNameChange}

@@ -22,8 +22,9 @@ function EditBoard() {
 
   const selectedBoard = useSelector((state: any) => state.stateSlice.modal).slice(9)
   const columns = useSelector((state: any) => state.stateSlice.columns.columns);
-  const selectedColumns = columns.filter((column: Column) => column.boardId === selectedBoard);
+  const selectedColumns = columns?.filter((column: Column) => column.boardId === selectedBoard);
   const selectedBoardData = useSelector((state: any) => state.stateSlice.boards.boards.find((board: any) => board._id === selectedBoard));
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const dispatch = useDispatch();
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -88,12 +89,12 @@ function EditBoard() {
   console.log('formData:', formData);
 
   return (
-    <div ref={modalRef} className="absolute flex flex-col w-[21.438rem] bg-darkgrey rounded-md p-6 right-1/2 translate-x-1/2 top-[15.563rem]">
-      <h1 className="text-white hl mb-6">Edit Board</h1>
+    <div ref={modalRef} className={`absolute flex flex-col w-[21.438rem] ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} rounded-md p-6 right-1/2 translate-x-1/2 top-[15.563rem]`}>
+      <h1 className={`${isDarkMode ? 'text-white' : 'text-black'} hl mb-6`}>Edit Board</h1>
       <div className="mb-6">
-        <label className="text-xs text-white font-bold mb-2">Board Name</label>
+        <label className={`text-xs ${isDarkMode ? 'text-white' : 'text-black'} font-bold mb-2`}>Board Name</label>
         <input
-          className="w-full h-10 border border-mediumgrey/25 rounded bl bg-darkgrey px-4 py-2 text-white"
+          className={`w-full h-10 border border-mediumgrey/25 rounded bl ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} px-4 py-2`}
           type="text"
           value={formData.name}
           onChange={handleBoardNameChange}

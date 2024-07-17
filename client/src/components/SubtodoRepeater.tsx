@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import x from '../assets/x.png';
 
 interface Subtodo {
@@ -13,6 +14,7 @@ interface SubtodoRepeaterProps {
 
 const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange }) => {
   const [repeater, setRepeater] = useState<Subtodo[]>(subTodos || []);
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
 
   useEffect(() => {
     if (subTodos) {
@@ -42,14 +44,14 @@ const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange })
 
   return (
     <div>
-      <label className="text-xs font-bold text-white mb-2">Subtasks</label>
+      <label className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Subtasks</label>
       {repeater.map((subTodo, index) => (
         <div key={index} className="flex items-center justify-between mb-2 w-full">
           <input
             type="text"
             value={subTodo.title}
             onChange={(e) => handleSubtodoChange(index, e.target.value)}
-            className="rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 bg-darkgrey text-mediumgrey"
+            className={`rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}
           />
           <img
             src={x}
@@ -61,7 +63,7 @@ const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange })
       ))}
       <button
         onClick={addEmpty}
-        className="mt-3 text-mainpurple bg-white w-full py-2 rounded-[1.25rem] text-[0.813rem] font-bold leading-[1.438rem]"
+        className={`mt-3 ${isDarkMode ? 'text-mainpurple bg-white' : 'text-mainpurple bg-lightbg'} w-full py-2 rounded-[1.25rem] text-[0.813rem] font-bold leading-[1.438rem]`}
       >
         Add Subtask
       </button>

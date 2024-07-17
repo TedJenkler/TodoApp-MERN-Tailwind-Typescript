@@ -12,7 +12,9 @@ export default {
         'mediumgrey': '#828FA3',
         'mainpurple': '#635FC7',
         'white': '#FFFFFF',
-        'red': '#EA5555'
+        'red': '#EA5555',
+        'black': '#000112',
+        'lightbg': '#F4F7FD',
       }
     },
   },

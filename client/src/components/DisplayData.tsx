@@ -30,7 +30,7 @@ function DisplayData() {
   const todos = useSelector((state: any) => state.stateSlice.todos.todos);
   const subtodos = useSelector((state: any) => state.stateSlice.subtodos.subtodos);
   const dispatch = useDispatch();
-
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const selectedBoardId = useSelector((state: any) => state.stateSlice.selectedBoard);
 
   const filteredColumns: Column[] = columns?.filter((column: Column) => column.boardId === selectedBoardId);
@@ -45,7 +45,7 @@ function DisplayData() {
   };
 
   return (
-    <main className='flex bg-darkbg h-screen px-4 py-6 overflow-x-auto gap-6'>
+    <main className={`flex ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} h-screen px-4 py-6 overflow-x-auto gap-6`}>
       {filteredColumns?.length > 0 && (
         <>
           {filteredColumns.map((column: Column, index: number) => (
@@ -56,12 +56,12 @@ function DisplayData() {
                 {index === 2 && <img className='h-4 w-4' src={green} alt='dot' />}
                 <h2 className='hs text-mediumgrey'>{column.name.toUpperCase()} ({column.todos.length})</h2>
               </div>
-              {todos.filter((todo: Todo) => todo.status === column._id).map((todo: Todo) => (
-                <div key={todo._id} onClick={() => {handleTodoModal(todo._id)}} className='flex flex-col w-full mt-5 bg-darkgrey rounded-lg px-4 py-6'>
-                  <h3 className='text-white hm w-full'>{todo.title}</h3>
+              {todos?.filter((todo: Todo) => todo.status === column._id).map((todo: Todo) => (
+                <div key={todo._id} onClick={() => {handleTodoModal(todo._id)}} className={`flex flex-col w-full mt-5 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} rounded-lg px-4 py-6`}>
+                  <h3 className={`${isDarkMode ? 'text-white' : 'text-black'} hm w-full`}>{todo.title}</h3>
                   <div className='flex items-center gap-2 text-mediumgrey'>
                     {todo.subtodos.length > 0 && (
-                      <p>{subtodos.filter((subtodo: Subtodo) => todo.subtodos.includes(subtodo._id) && subtodo.isCompleted).length} of {todo.subtodos.length} subtasks</p>
+                      <p>{subtodos?.filter((subtodo: Subtodo) => todo.subtodos.includes(subtodo._id) && subtodo.isCompleted).length} of {todo.subtodos.length} subtasks</p>
                     )}
                     {todo.subtodos.length === 0 && (
                       <p>No subtasks</p>
@@ -74,7 +74,7 @@ function DisplayData() {
         </>
       )}
         {columns ? 
-          <button onClick={handleColumn} className='h-screen min-w-[17.5rem] bg-darkgrey rounded-md mt-[2.188rem] hxl text-mediumgrey'>
+          <button onClick={handleColumn} className={`h-screen min-w-[17.5rem] ${isDarkMode ? 'bg-darkgrey' : 'bg-lightbg'} rounded-md mt-[2.188rem] hxl text-mediumgrey`}>
             + New Column
           </button>
           : null}

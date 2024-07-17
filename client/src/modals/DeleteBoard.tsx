@@ -6,6 +6,7 @@ function DeleteBoard() {
   const modalRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
   const id = useSelector((state: any) => state.stateSlice.selectedBoard);
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -26,11 +27,33 @@ function DeleteBoard() {
   };
 
   return (
-    <div ref={modalRef} className="absolute w-[21.438rem] p-6 bg-darkgrey rounded-md right-1/2 translate-x-1/2 top-[21.438rem]">
-      <h1 className="text-red hl mb-6">Delete this board?</h1>
-      <p className="text-mediumgrey bl mb-6">Are you sure you want to delete this board? This action will remove all columns and tasks and cannot be reversed.</p>
-      <button onClick={handleDelete} className="bg-red h-10 w-full rounded-[1.25rem] text-white font-bold mb-4">Delete</button>
-      <button onClick={() => { dispatch(swapModal("")) }} className="bg-white h-10 w-full rounded-[1.25rem] text-mainpurple font-bold">Cancel</button>
+    <div
+      ref={modalRef}
+      className={`absolute w-[21.438rem] p-6 rounded-md right-1/2 translate-x-1/2 top-[21.438rem] ${
+        isDarkMode ? 'bg-darkgrey' : 'bg-white'
+      }`}
+    >
+      <h1 className={`${isDarkMode ? 'text-red' : 'text-black'} hl mb-6`}>
+        Delete this board?
+      </h1>
+      <p className="text-mediumgrey bl mb-6">
+        Are you sure you want to delete this board? This action will remove all
+        columns and tasks and cannot be reversed.
+      </p>
+      <button
+        onClick={handleDelete}
+        className={`bg-red h-10 w-full rounded-[1.25rem] text-white font-bold mb-4`}
+      >
+        Delete
+      </button>
+      <button
+        onClick={() => {
+          dispatch(swapModal(''));
+        }}
+        className={`bg-${isDarkMode ? 'white' : 'lightbg'} h-10 w-full rounded-[1.25rem] text-mainpurple font-bold`}
+      >
+        Cancel
+      </button>
     </div>
   );
 }

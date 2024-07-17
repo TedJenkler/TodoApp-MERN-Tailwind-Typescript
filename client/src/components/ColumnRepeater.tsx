@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import x from "../assets/x.png";
 
 interface Column {
@@ -13,7 +14,7 @@ interface ColumnRepeaterProps {
 
 const ColumnRepeater: React.FC<ColumnRepeaterProps> = ({ value, onChange }) => {
   const [repeater, setRepeater] = useState<Column[]>(value || []);
-  console.log(value);
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
 
   const handleRepeat = () => {
     const newColumn: Column = { name: "", boardId: "" };
@@ -24,7 +25,7 @@ const ColumnRepeater: React.FC<ColumnRepeaterProps> = ({ value, onChange }) => {
 
   return (
     <div>
-      <label className="text-xs font-bold text-white mb-2">Columns</label>
+      <label className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Columns</label>
       {repeater.map((column, index) => (
         <div key={index} className="flex items-center justify-between mb-2 w-full">
           <input
@@ -36,7 +37,7 @@ const ColumnRepeater: React.FC<ColumnRepeaterProps> = ({ value, onChange }) => {
               setRepeater(newRepeater);
               onChange(newRepeater);
             }}
-            className="rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 bg-darkgrey text-mediumgrey"
+            className={`rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}
           />
           <button
             onClick={() => {
@@ -52,7 +53,7 @@ const ColumnRepeater: React.FC<ColumnRepeaterProps> = ({ value, onChange }) => {
       ))}
       <button
         onClick={handleRepeat}
-        className="mt-3 text-mainpurple bg-white w-full py-2 rounded-[1.25rem] text-[0.813rem] font-bold leading-[1.438rem]"
+        className={`mt-3 ${isDarkMode ? 'text-mainpurple bg-white' : 'text-mainpurple bg-lightbg'} w-full py-2 rounded-[1.25rem] text-[0.813rem] font-bold leading-[1.438rem]`}
       >
         + Add New Column
       </button>

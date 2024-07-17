@@ -33,6 +33,7 @@ interface State {
   todos: Todo[];
   subtodos: Subtodo[];
   modal: string;
+  darkmode: boolean;
   loading: boolean;
   error: string | null;
 }
@@ -49,6 +50,7 @@ const initialState: State = {
   todos: [],
   subtodos: [],
   modal: "",
+  darkmode: false,
   loading: true,
   error: null,
 };
@@ -356,7 +358,10 @@ const stateSlice = createSlice({
     },
     swapModal: (state, action) => {
       state.modal = action.payload;
-    } 
+    },
+    toggleDarkmode: (state, action) => {
+      state.darkmode = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getBoards.pending, (state) => {
@@ -518,6 +523,6 @@ const stateSlice = createSlice({
   },
 });
 
-export const { selectedBoardState, swapModal } = stateSlice.actions;
+export const { selectedBoardState, swapModal, toggleDarkmode } = stateSlice.actions;
 
 export default stateSlice.reducer;
