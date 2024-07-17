@@ -38,11 +38,11 @@ function App() {
 
   useEffect(() => {
     if (boards?.length > 0) {
-      dispatch(selectedBoardState(boards[0]._id));
+      dispatch(selectedBoardState(boards[0]?._id));
     }
   }, [boards]);
 
-  if (loading || !boards || !columns || !todos || !subtodos) {
+  if (loading || !boards) {
     return (
       <div className="App">
         <LoadingPage />
@@ -60,7 +60,7 @@ function App() {
       {typeof modal === 'string' && modal.includes('editBoard') ? <EditBoard /> : null}
       {typeof modal === 'string' && modal.includes('deleteBoard') ? <DeleteBoard /> : null}
       {typeof modal === 'string' && regex3.test(modal) ? <DeleteTodo /> : null}
-      {boards.length === 0 ? <EmptyCol /> : <DisplayData />}
+      {!columns || columns.length === 0 ? <EmptyCol /> : <DisplayData />}
     </div>
   );
 }

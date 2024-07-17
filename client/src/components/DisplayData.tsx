@@ -33,7 +33,7 @@ function DisplayData() {
 
   const selectedBoardId = useSelector((state: any) => state.stateSlice.selectedBoard);
 
-  const filteredColumns: Column[] = columns.filter((column: Column) => column.boardId === selectedBoardId);
+  const filteredColumns: Column[] = columns?.filter((column: Column) => column.boardId === selectedBoardId);
 
   const handleTodoModal = (id: string) => {
     console.log(id)
@@ -46,7 +46,7 @@ function DisplayData() {
 
   return (
     <main className='flex bg-darkbg h-screen px-4 py-6 overflow-x-auto gap-6'>
-      {filteredColumns.length > 0 && (
+      {filteredColumns?.length > 0 && (
         <>
           {filteredColumns.map((column: Column, index: number) => (
             <section className='min-w-[17.5rem]' key={index}>
@@ -73,9 +73,11 @@ function DisplayData() {
           ))}
         </>
       )}
-        <button onClick={handleColumn} className='h-screen min-w-[17.5rem] bg-darkgrey rounded-md mt-[2.188rem] hxl text-mediumgrey'>
-          + New Column
-        </button>
+        {columns ? 
+          <button onClick={handleColumn} className='h-screen min-w-[17.5rem] bg-darkgrey rounded-md mt-[2.188rem] hxl text-mediumgrey'>
+            + New Column
+          </button>
+          : null}
     </main>
   );
 }

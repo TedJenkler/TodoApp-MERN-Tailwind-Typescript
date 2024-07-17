@@ -5,10 +5,10 @@ import plus from '../assets/plus.png';
 import CustomSelect from './CustomSelect';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectedBoardState, swapModal } from '../features/state/stateSlice';
-import EditModal from '../modals/EditModal';
 
 function Nav() {
   const boards = useSelector((state: any) => state.stateSlice.boards.boards);
+  const columns = useSelector((state: any) => state.stateSlice.columns)
   const dispatch = useDispatch();
   const choiceRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +40,7 @@ function Nav() {
   };
 
   const addModuleBtn = () => {
+    if(columns.length === 0) return;
     dispatch(swapModal("add"))
   };
 
@@ -54,7 +55,7 @@ function Nav() {
   };
 
   const handleChoice = () => {
-    setChoiceBoardPopup(!choiceBoardPopup);
+      setChoiceBoardPopup(!choiceBoardPopup);
   };
 
   return (
@@ -64,7 +65,7 @@ function Nav() {
         <CustomSelect options={boards} value={selectedBoard} onChange={onChangeBoard} />
       </div>
       <div onClick={() => {addModuleBtn()}} className='flex items-center gap-4'>
-        <a className='flex items-center justify-center h-8 w-12 rounded-3xl bg-mainpurple'><img className="h-3 w-3" src={plus} alt='plus' /></a>
+        <a className={`flex items-center justify-center h-8 w-12 rounded-3xl ${columns.length !== 0 ? "bg-mainpurple" : "bg-gray-500 cursor-not-allowed"}`}><img className="h-3 w-3" src={plus} alt='plus' /></a>
       </div>
       <div>
       <img onClick={handleChoice} className='h-4 w-1' src={settings} alt='settings'/>
