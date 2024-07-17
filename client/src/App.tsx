@@ -12,6 +12,8 @@ import AddModal from "./modals/AddModal";
 import EditModal from "./modals/EditModal";
 import AddBoard from "./modals/AddBoard";
 import EditBoard from "./modals/EditBoard";
+import DeleteBoard from "./modals/DeleteBoard";
+import DeleteTodo from "./modals/DeleteTodo";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,6 +34,7 @@ function App() {
 
   const regex = /^todo[a-zA-Z0-9_-]{5,}$/;
   const regex2 = /^edittodo[a-zA-Z0-9_-]{5,}$/;
+  const regex3 = /^deletetodo[a-zA-Z0-9_-]{5,}$/;
 
   if (loading || !boards || !columns || !todos || !subtodos) {
     return (
@@ -51,6 +54,8 @@ function App() {
       {typeof modal === 'string' && modal === 'add' ? <AddModal /> : null}
       {typeof modal === 'string' && modal === 'addBoard' ? <AddBoard /> : null}
       {typeof modal === 'string' && modal === 'editBoard' ? <EditBoard /> : null}
+      {typeof modal === 'string' && modal === 'deleteBoard' ? <DeleteBoard /> : null}
+      {typeof modal === 'string' && regex3.test(modal) ? <DeleteTodo /> : null}
       {boards.length === 0 ? <EmptyCol /> : <DisplayData />}
     </div>
   );

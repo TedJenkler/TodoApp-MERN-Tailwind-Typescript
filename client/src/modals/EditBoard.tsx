@@ -21,6 +21,9 @@ function EditBoard() {
   });
 
   const selectedBoard = useSelector((state: any) => state.stateSlice.selectedBoard);
+  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+  const selectedColumns = columns.filter((column: Column) => column.boardId === selectedBoard);
+  const selectedBoardData = useSelector((state: any) => state.stateSlice.boards.boards.find((board: any) => board._id === selectedBoard));
   const dispatch = useDispatch();
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -36,27 +39,16 @@ function EditBoard() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  });
+  }, [dispatch]);
 
   useEffect(() => {
-    const fetchBoardData = async () => {
-      try {
-        const response = await fetch(`http://localhost:2000/api/boards/${selectedBoard}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch board data');
-        }
-        const boardData = await response.json();
-        setFormData({
-          name: boardData.name,
-          columns: boardData.columns,
-        });
-      } catch (error) {
-        console.error('Error fetching board data:', error);
-      }
-    };
-
-    fetchBoardData();
-  }, [selectedBoard]);
+    if (selectedBoardData) {
+      setFormData({
+        name: selectedBoardData.name || '',
+        columns: selectedColumns
+      });
+    }
+  }, [selectedBoardData]);
 
   const handleBoardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -93,8 +85,10 @@ function EditBoard() {
     }
   };
 
+  console.log('formData:', formData);
+
   return (
-    <div className="absolute flex flex-col w-[21.438rem] bg-darkgrey rounded-md p-6 right-1/2 translate-x-1/2 top-[17.438rem]">
+    <div ref={modalRef} className="absolute flex flex-col w-[21.438rem] bg-darkgrey rounded-md p-6 right-1/2 translate-x-1/2 top-[15.563rem]">
       <h1 className="text-white hl mb-6">Edit Board</h1>
       <div className="mb-6">
         <label className="text-xs text-white font-bold mb-2">Board Name</label>
@@ -105,7 +99,7 @@ function EditBoard() {
           onChange={handleBoardNameChange}
         />
       </div>
-      <BoardRepeater value={formData.columns} onChange={handleColumnsChange} />
+      <BoardRepeater value={selectedColumns} onChange={handleColumnsChange} />
       <button
         onClick={handleSubmit}
         className="bg-mainpurple text-white py-2 rounded-[1.25rem] text-[0.813rem] font-bold leading-[1.438rem] mt-4"

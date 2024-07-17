@@ -13,6 +13,7 @@ interface ColumnRepeaterProps {
 
 const ColumnRepeater: React.FC<ColumnRepeaterProps> = ({ value, onChange }) => {
   const [repeater, setRepeater] = useState<Column[]>(value || []);
+  console.log(value);
 
   const handleRepeat = () => {
     const newColumn: Column = { name: "", boardId: "" };

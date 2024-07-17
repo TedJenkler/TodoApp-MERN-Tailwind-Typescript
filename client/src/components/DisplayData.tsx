@@ -40,6 +40,10 @@ function DisplayData() {
     dispatch(swapModal("todo" + id))
   } 
 
+  const handleColumn = () => {
+    dispatch(swapModal("editBoard"))
+  };
+
   return (
     <main className='flex bg-darkbg h-screen px-4 py-6 overflow-x-auto gap-6'>
       {filteredColumns.length > 0 && (
@@ -69,7 +73,7 @@ function DisplayData() {
           ))}
         </>
       )}
-        <button className='h-screen min-w-[17.5rem] bg-darkgrey rounded-md mt-[2.188rem] hxl text-mediumgrey'>
+        <button onClick={handleColumn} className='h-screen min-w-[17.5rem] bg-darkgrey rounded-md mt-[2.188rem] hxl text-mediumgrey'>
           + New Column
         </button>
     </main>

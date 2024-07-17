@@ -45,6 +45,12 @@ function Nav() {
 
   const EditModal = () => {
     dispatch(swapModal("editBoard"));
+    setChoiceBoardPopup(false);
+  };
+
+  const deleteModal = () => {
+    dispatch(swapModal("deleteBoard"));
+    setChoiceBoardPopup(false);
   };
 
   const handleChoice = () => {
@@ -65,7 +71,7 @@ function Nav() {
       {choiceBoardPopup ? (
         <div ref={choiceRef} className='absolute flex flex-col items-center justify-between w-[12rem] h-[5.875rem] p-4 rounded-lg top-[3.75rem] right-6 bg-darkbg'>
           <p onClick={EditModal} className='text-mediumgrey'>Edit Board</p>
-          <p className='text-red'>Delete Board</p>
+          <p onClick={deleteModal} className='text-red'>Delete Board</p>
         </div>
       ) : null}
       </div>

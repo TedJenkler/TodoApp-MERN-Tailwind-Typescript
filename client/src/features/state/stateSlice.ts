@@ -308,6 +308,45 @@ export const editColumns = createAsyncThunk(
   }
 );
 
+export const deleteBoard = createAsyncThunk(
+  'state/deleteBoard',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:2000/api/boards/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete board');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const deleteTodo = createAsyncThunk(
+  'state/deleteTodo',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:2000/api/todos/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete todo');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const stateSlice = createSlice({
   name: 'stateSlice',
   initialState,
@@ -461,6 +500,18 @@ const stateSlice = createSlice({
       state.error = null;
     });
     builder.addCase(editColumns.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.payload as string;
+    });
+    builder.addCase(deleteBoard.pending, (state) => {
+      state.loading = true;
+      state.error = null
+    });
+    builder.addCase(deleteBoard.fulfilled, (state) => {
+      state.loading = false;
+      state.error = null;
+    });
+    builder.addCase(deleteBoard.rejected, (state, action) => {
       state.loading = false
       state.error = action.payload as string;
     });

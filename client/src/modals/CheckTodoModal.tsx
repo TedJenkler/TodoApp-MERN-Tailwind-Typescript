@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import StatusSelect from '../components/StatusSelect';
 import { swapModal } from '../features/state/stateSlice';
 import settings from '../assets/settings.png';
+import { set } from 'mongoose';
 
 interface Subtodo {
   _id: string;
@@ -23,9 +24,11 @@ function CheckTodoModal() {
   const [data, setData] = useState<Todo | null>(null);
   const [children, setChildren] = useState<Subtodo[]>([]);
   const [error, setError] = useState<Error | null>(null);
+  const [toggle, setToggle] = useState<boolean>(false);
   const dispatch = useDispatch();
   let id: string = modal.slice(4);
   const modalRef = useRef<HTMLDivElement>(null); 
+  const choiceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -36,6 +39,20 @@ function CheckTodoModal() {
 
     document.addEventListener('mousedown', handleClickOutside);
 
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (choiceRef.current && !choiceRef.current.contains(event.target as Node)) {
+        setToggle(false);
+      }
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
+  
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -102,15 +119,29 @@ function CheckTodoModal() {
     }
   }, []);
 
+  const choiceTodoPopup = () => {
+    setToggle(!toggle)
+  };
+
   const editModal = () => {
     dispatch(swapModal("edit" + "todo" + id))
+  };
+
+  const deleteModal = () => {
+    dispatch(swapModal("delete" + "todo" + id))
   };
 
   return (
     <div ref={modalRef} className="w-[21.438rem] absolute bg-darkgrey top-[12.938rem] right-1/2 translate-x-1/2 p-6">
       <div className='flex justify-between items-center'>
         <h1 className="text-white mb-6 hl">{data ? data.title : null}</h1>
-        <img onClick={editModal} className='h-5 w-[0.289rem]' src={settings} alt='settings' />
+        <img onClick={choiceTodoPopup} className='h-5 w-[0.289rem]' src={settings} alt='settings' />
+        {toggle ? (
+          <div ref={choiceRef} className='absolute z-50 top-20 right-4 flex flex-col justify-between w-[12rem] h-[5.875rem] bg-darkbg rounded-lg p-4'>
+            <p className='text-mediumgrey bl' onClick={editModal}>Edit Task</p>
+            <p className='text-red bl' onClick={deleteModal}>Delete Task</p>
+          </div>
+        ) : null}
       </div>
       <p className="mb-6 text-mediumgrey bl">{data?.description ? data.description : null}</p>
       <h2 className="text-xs font-bold text-white mb-4">
