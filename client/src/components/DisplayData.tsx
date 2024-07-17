@@ -41,7 +41,7 @@ function DisplayData() {
   } 
 
   const handleColumn = () => {
-    dispatch(swapModal("editBoard"))
+    dispatch(swapModal("editBoard" + selectedBoardId))
   };
 
   return (

@@ -44,12 +44,12 @@ function Nav() {
   };
 
   const EditModal = () => {
-    dispatch(swapModal("editBoard"));
+    dispatch(swapModal("editBoard" + selectedBoard));
     setChoiceBoardPopup(false);
   };
 
   const deleteModal = () => {
-    dispatch(swapModal("deleteBoard"));
+    dispatch(swapModal("deleteBoard" + selectedBoard));
     setChoiceBoardPopup(false);
   };
 

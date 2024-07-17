@@ -20,7 +20,7 @@ function EditBoard() {
     columns: [],
   });
 
-  const selectedBoard = useSelector((state: any) => state.stateSlice.selectedBoard);
+  const selectedBoard = useSelector((state: any) => state.stateSlice.modal).slice(9)
   const columns = useSelector((state: any) => state.stateSlice.columns.columns);
   const selectedColumns = columns.filter((column: Column) => column.boardId === selectedBoard);
   const selectedBoardData = useSelector((state: any) => state.stateSlice.boards.boards.find((board: any) => board._id === selectedBoard));

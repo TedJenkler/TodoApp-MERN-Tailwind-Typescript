@@ -36,14 +36,18 @@ function App() {
   const regex2 = /^edittodo[a-zA-Z0-9_-]{5,}$/;
   const regex3 = /^deletetodo[a-zA-Z0-9_-]{5,}$/;
 
+  useEffect(() => {
+    if (boards?.length > 0) {
+      dispatch(selectedBoardState(boards[0]._id));
+    }
+  }, [boards]);
+
   if (loading || !boards || !columns || !todos || !subtodos) {
     return (
       <div className="App">
         <LoadingPage />
       </div>
     );
-  } else {
-    dispatch(selectedBoardState(boards[0]._id));
   }
 
   return (
@@ -53,8 +57,8 @@ function App() {
       {typeof modal === 'string' && regex2.test(modal) ? <EditModal /> : null }
       {typeof modal === 'string' && modal === 'add' ? <AddModal /> : null}
       {typeof modal === 'string' && modal === 'addBoard' ? <AddBoard /> : null}
-      {typeof modal === 'string' && modal === 'editBoard' ? <EditBoard /> : null}
-      {typeof modal === 'string' && modal === 'deleteBoard' ? <DeleteBoard /> : null}
+      {typeof modal === 'string' && modal.includes('editBoard') ? <EditBoard /> : null}
+      {typeof modal === 'string' && modal.includes('deleteBoard') ? <DeleteBoard /> : null}
       {typeof modal === 'string' && regex3.test(modal) ? <DeleteTodo /> : null}
       {boards.length === 0 ? <EmptyCol /> : <DisplayData />}
     </div>
