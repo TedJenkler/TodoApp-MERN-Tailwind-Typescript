@@ -23,8 +23,8 @@ function App() {
   const todos = useSelector((state: any) => state.stateSlice.todos.todos);
   const subtodos = useSelector((state: any) => state.stateSlice.subtodos.subtodos);
   const loading = useSelector((state: RootState) => state.stateSlice.loading);
-  const modal = useSelector((state: any) => state.stateSlice.modal)
-  console.log(modal)
+  const modal = useSelector((state: any) => state.stateSlice.modal);
+  console.log(modal);
 
   useEffect(() => {
     dispatch(getBoards());
@@ -52,15 +52,15 @@ function App() {
   }
 
   return (
-    <div className="App bg-darkbg">
+    <div className="App h-screen overflow-hidden bg-darkbg">
       <div className="md:hidden md:absolute">
         <Nav />
       </div>
       <div className="hidden absolute md:flex md:relative">
         <NavDesktop />
       </div>
-      {typeof modal === 'string' && regex.test(modal) ? <CheckTodoModal /> : null }
-      {typeof modal === 'string' && regex2.test(modal) ? <EditModal /> : null }
+      {typeof modal === 'string' && regex.test(modal) ? <CheckTodoModal /> : null}
+      {typeof modal === 'string' && regex2.test(modal) ? <EditModal /> : null}
       {typeof modal === 'string' && modal === 'add' ? <AddModal /> : null}
       {typeof modal === 'string' && modal === 'addBoard' ? <AddBoard /> : null}
       {typeof modal === 'string' && modal.includes('editBoard') ? <EditBoard /> : null}

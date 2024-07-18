@@ -1,8 +1,14 @@
 import blue from '../assets/blue.png';
 import purple from '../assets/purple.png';
 import green from '../assets/green.png';
+import greyboardicon from '../assets/greyboardicon.png';
+import whiteboardicon from '../assets/whiteboardicon.png';
+import purpleboardicon from '../assets/purpleboardicon.png';
 import { useDispatch, useSelector } from 'react-redux';
-import { swapModal } from '../features/state/stateSlice';
+import { selectedBoardState, swapModal, toggleMenu } from '../features/state/stateSlice';
+import ToggleTheme from './ToggleTheme';
+import slashedeye from '../assets/slashedeye.png';
+import eye from '../assets/eye.png';
 
 interface Column {
   _id: string;
@@ -37,49 +43,138 @@ function DisplayData() {
   const filteredColumns: Column[] = columns?.filter((column: Column) => column.boardId === selectedBoardId);
 
   const handleTodoModal = (id: string) => {
-    console.log(id)
-    dispatch(swapModal("todo" + id))
-  } 
+    console.log(id);
+    dispatch(swapModal("todo" + id));
+  };
 
   const handleColumn = () => {
-    dispatch(swapModal("editBoard" + selectedBoardId))
+    dispatch(swapModal("editBoard" + selectedBoardId));
+  };
+
+  const changeBoard = (id: string) => {
+    dispatch(selectedBoardState(id));
+  };
+
+  const handleModal = () => {
+    dispatch(swapModal("add"));
+    dispatch(toggleMenu(false));
+  };
+
+  const closeMenu = () => {
+    dispatch(toggleMenu(true));
   };
 
   return (
-    <main className={`flex ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} h-screen px-4 py-6 overflow-x-auto gap-6`}>
-      {filteredColumns?.length > 0 && (
-        <>
-          {filteredColumns.map((column: Column, index: number) => (
-            <section className='min-w-[17.5rem]' key={index}>
-              <div className='flex items-center gap-3'>
-                {index === 0 && <img className='h-4 w-4' src={blue} alt='dot' />}
-                {index === 1 && <img className='h-4 w-4' src={purple} alt='dot' />}
-                {index === 2 && <img className='h-4 w-4' src={green} alt='dot' />}
-                <h2 className='hs text-mediumgrey'>{column.name.toUpperCase()} ({column.todos.length})</h2>
+    <div className='flex h-screen'>
+      {menu ? (
+        <div className={`flex flex-col justify-between h-[90%] min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transform transition-all duration-700 ease-in-out`}>
+          <div>
+            <h1 className='mx-6 text-mediumgrey text-xs font-bold tracking-[2.4px] mb-5'>
+              ALL BOARDS ({boards.length})
+            </h1>
+            {boards?.map((board: any) => (
+              <div
+                key={board._id}
+                className={`flex items-center h-12 w-[15rem] px-6 gap-2 rounded-r-[6.25rem] ${
+                  board._id === selectedBoardId ? "bg-mainpurple" : ""
+                }`}
+                onClick={() => changeBoard(board._id)}
+              >
+                <img
+                  className='h-4 w-4'
+                  src={board._id === selectedBoardId ? whiteboardicon : greyboardicon}
+                  alt='board icon'
+                />
+                <p
+                  className={`hm ${
+                    board._id === selectedBoardId ? "text-white" : "text-mediumgrey"
+                  }`}
+                >
+                  {board.name}
+                </p>
               </div>
-              {todos?.filter((todo: Todo) => todo.status === column._id).map((todo: Todo) => (
-                <div key={todo._id} onClick={() => {handleTodoModal(todo._id)}} className={`flex flex-col w-full mt-5 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} rounded-lg px-4 py-6`}>
-                  <h3 className={`${isDarkMode ? 'text-white' : 'text-black'} hm w-full`}>{todo.title}</h3>
-                  <div className='flex items-center gap-2 text-mediumgrey'>
-                    {todo.subtodos.length > 0 && (
-                      <p>{subtodos?.filter((subtodo: Subtodo) => todo.subtodos.includes(subtodo._id) && subtodo.isCompleted).length} of {todo.subtodos.length} subtasks</p>
-                    )}
-                    {todo.subtodos.length === 0 && (
-                      <p>No subtasks</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </section>
-          ))}
-        </>
+            ))}
+            <div className='flex items-center h-12 w-[15rem] pl-6 gap-2'>
+              <img className='h-4 w-4' src={purpleboardicon} alt='purpleboardicon' />
+              <button onClick={handleModal} className='hm text-mainpurple'>+ Create New Board</button>
+            </div>
+          </div>
+          <div>
+            <ToggleTheme />
+            <div className='flex items-center h-12 w-[15rem] px-6 gap-[0.625rem]'>
+              <img className='h-4 w-4' src={slashedeye} alt='sidebar toggle' />
+              <button onClick={() => dispatch(toggleMenu(false))} className='hm text-mediumgrey'>Hide Sidebar</button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className='flex flex-col justify-end h-[90%] w-[3.5rem] transform transition-all duration-700 ease-in-out'>
+          <button onClick={closeMenu} className='flex bg-mainpurple mb-8 w-[3.5rem] h-12 rounded-r-[6.25rem] px-[1.125rem] items-center'>
+            <img src={eye} alt='openmenu' />
+          </button>
+        </div>
       )}
-        {columns ? 
-          <button onClick={handleColumn} className={`h-screen min-w-[17.5rem] ${isDarkMode ? 'bg-darkgrey' : 'bg-lightbg'} rounded-md mt-[2.188rem] hxl text-mediumgrey`}>
+      <main
+        className={`flex ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} h-screen px-4 py-6 overflow-x-auto gap-6`}
+      >
+        {filteredColumns.length > 0 && (
+          <>
+            {filteredColumns.map((column: Column, index: number) => (
+              <section className='min-w-[17.5rem]' key={column._id}>
+                <div className='flex items-center gap-3'>
+                  {index === 0 && <img className='h-4 w-4' src={blue} alt='dot' />}
+                  {index === 1 && <img className='h-4 w-4' src={purple} alt='dot' />}
+                  {index === 2 && <img className='h-4 w-4' src={green} alt='dot' />}
+                  <h2 className='hs text-mediumgrey'>
+                    {column.name.toUpperCase()} ({column.todos.length})
+                  </h2>
+                </div>
+                {todos
+                  ?.filter((todo: Todo) => todo.status === column._id)
+                  .map((todo: Todo) => (
+                    <div
+                      key={todo._id}
+                      onClick={() => handleTodoModal(todo._id)}
+                      className={`flex flex-col w-full mt-5 ${
+                        isDarkMode ? 'bg-darkgrey' : 'bg-white'
+                      } rounded-lg px-4 py-6`}
+                    >
+                      <h3 className={`${isDarkMode ? 'text-white' : 'text-black'} hm w-full`}>
+                        {todo.title}
+                      </h3>
+                      <div className='flex items-center gap-2 text-mediumgrey'>
+                        {todo.subtodos.length > 0 ? (
+                          <p>
+                            {
+                              subtodos?.filter(
+                                (subtodo: Subtodo) =>
+                                  todo.subtodos.includes(subtodo._id) && subtodo.isCompleted
+                              ).length
+                            }{' '}
+                            of {todo.subtodos.length} subtasks
+                          </p>
+                        ) : (
+                          <p>No subtasks</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+              </section>
+            ))}
+          </>
+        )}
+        {columns && (
+          <button
+            onClick={handleColumn}
+            className={`h-screen min-w-[17.5rem] ${
+              isDarkMode ? 'bg-darkgrey' : 'bg-lightbg'
+            } rounded-md mt-[2.188rem] hxl text-mediumgrey`}
+          >
             + New Column
           </button>
-          : null}
-    </main>
+        )}
+      </main>
+    </div>
   );
 }
 
