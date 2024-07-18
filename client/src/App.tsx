@@ -14,6 +14,7 @@ import AddBoard from "./modals/AddBoard";
 import EditBoard from "./modals/EditBoard";
 import DeleteBoard from "./modals/DeleteBoard";
 import DeleteTodo from "./modals/DeleteTodo";
+import NavDesktop from "./components/NavDesktop";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -52,7 +53,12 @@ function App() {
 
   return (
     <div className="App bg-darkbg">
-      <Nav />
+      <div className="md:hidden md:absolute">
+        <Nav />
+      </div>
+      <div className="hidden absolute md:flex md:relative">
+        <NavDesktop />
+      </div>
       {typeof modal === 'string' && regex.test(modal) ? <CheckTodoModal /> : null }
       {typeof modal === 'string' && regex2.test(modal) ? <EditModal /> : null }
       {typeof modal === 'string' && modal === 'add' ? <AddModal /> : null}

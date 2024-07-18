@@ -32,6 +32,7 @@ function DisplayData() {
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const selectedBoardId = useSelector((state: any) => state.stateSlice.selectedBoard);
+  const menu = useSelector((state: any) => state.stateSlice.menu);
 
   const filteredColumns: Column[] = columns?.filter((column: Column) => column.boardId === selectedBoardId);
 

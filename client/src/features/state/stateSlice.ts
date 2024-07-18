@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
-import { act } from 'react';
 
 interface Board {
   id: number;
@@ -34,6 +33,7 @@ interface State {
   subtodos: Subtodo[];
   modal: string;
   darkmode: boolean;
+  menu: boolean;
   loading: boolean;
   error: string | null;
 }
@@ -51,6 +51,7 @@ const initialState: State = {
   subtodos: [],
   modal: "",
   darkmode: false,
+  menu: false,
   loading: true,
   error: null,
 };
@@ -361,6 +362,9 @@ const stateSlice = createSlice({
     },
     toggleDarkmode: (state, action) => {
       state.darkmode = action.payload;
+    },
+    toggleMenu: (state, action) => {
+      state.menu = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -523,6 +527,6 @@ const stateSlice = createSlice({
   },
 });
 
-export const { selectedBoardState, swapModal, toggleDarkmode } = stateSlice.actions;
+export const { selectedBoardState, swapModal, toggleDarkmode, toggleMenu } = stateSlice.actions;
 
 export default stateSlice.reducer;
