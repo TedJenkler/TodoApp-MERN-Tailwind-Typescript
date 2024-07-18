@@ -56,7 +56,7 @@ function DisplayData() {
   };
 
   const handleModal = () => {
-    dispatch(swapModal("add"));
+    dispatch(swapModal("addBoard"));
     dispatch(toggleMenu(false));
   };
 
@@ -67,7 +67,7 @@ function DisplayData() {
   return (
     <div className='flex h-screen'>
       {menu ? (
-        <div className={`flex flex-col justify-between h-[90%] min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transform transition-all duration-700 ease-in-out`}>
+        <div className={`flex flex-col justify-between h-[90%] min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transition-all duration-300 ease-in-out`}>
           <div>
             <h1 className='mx-6 text-mediumgrey text-xs font-bold tracking-[2.4px] mb-5'>
               ALL BOARDS ({boards.length})
@@ -75,9 +75,7 @@ function DisplayData() {
             {boards?.map((board: any) => (
               <div
                 key={board._id}
-                className={`flex items-center h-12 w-[15rem] px-6 gap-2 rounded-r-[6.25rem] ${
-                  board._id === selectedBoardId ? "bg-mainpurple" : ""
-                }`}
+                className={`flex items-center h-12 w-[15rem] px-6 gap-2 rounded-r-[6.25rem] ${board._id === selectedBoardId ? "bg-mainpurple" : ""}`}
                 onClick={() => changeBoard(board._id)}
               >
                 <img
@@ -86,9 +84,7 @@ function DisplayData() {
                   alt='board icon'
                 />
                 <p
-                  className={`hm ${
-                    board._id === selectedBoardId ? "text-white" : "text-mediumgrey"
-                  }`}
+                  className={`hm ${board._id === selectedBoardId ? "text-white" : "text-mediumgrey"}`}
                 >
                   {board.name}
                 </p>
@@ -108,15 +104,13 @@ function DisplayData() {
           </div>
         </div>
       ) : (
-        <div className='flex flex-col justify-end h-[90%] w-[3.5rem] transform transition-all duration-700 ease-in-out'>
+        <div className={`flex flex-col justify-end h-[90%] w-[3.5rem] ${isDarkMode ? "bg-darkbg" : "bg-lightbg"} transition-all duration-300 ease-in-out`}>
           <button onClick={closeMenu} className='flex bg-mainpurple mb-8 w-[3.5rem] h-12 rounded-r-[6.25rem] px-[1.125rem] items-center'>
             <img src={eye} alt='openmenu' />
           </button>
         </div>
       )}
-      <main
-        className={`flex ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} h-screen px-4 py-6 overflow-x-auto gap-6`}
-      >
+      <main className={`flex ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} h-screen px-4 py-6 overflow-x-auto gap-6 transition-all duration-300 ease-in-out`}>
         {filteredColumns.length > 0 && (
           <>
             {filteredColumns.map((column: Column, index: number) => (
@@ -135,9 +129,7 @@ function DisplayData() {
                     <div
                       key={todo._id}
                       onClick={() => handleTodoModal(todo._id)}
-                      className={`flex flex-col w-full mt-5 ${
-                        isDarkMode ? 'bg-darkgrey' : 'bg-white'
-                      } rounded-lg px-4 py-6`}
+                      className={`flex flex-col w-full mt-5 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} rounded-lg px-4 py-6`}
                     >
                       <h3 className={`${isDarkMode ? 'text-white' : 'text-black'} hm w-full`}>
                         {todo.title}
@@ -145,12 +137,7 @@ function DisplayData() {
                       <div className='flex items-center gap-2 text-mediumgrey'>
                         {todo.subtodos.length > 0 ? (
                           <p>
-                            {
-                              subtodos?.filter(
-                                (subtodo: Subtodo) =>
-                                  todo.subtodos.includes(subtodo._id) && subtodo.isCompleted
-                              ).length
-                            }{' '}
+                            {subtodos?.filter((subtodo: Subtodo) => todo.subtodos.includes(subtodo._id) && subtodo.isCompleted).length}{' '}
                             of {todo.subtodos.length} subtasks
                           </p>
                         ) : (
@@ -164,12 +151,7 @@ function DisplayData() {
           </>
         )}
         {columns && (
-          <button
-            onClick={handleColumn}
-            className={`h-screen min-w-[17.5rem] ${
-              isDarkMode ? 'bg-darkgrey' : 'bg-lightbg'
-            } rounded-md mt-[2.188rem] hxl text-mediumgrey`}
-          >
+          <button onClick={handleColumn} className={`h-screen min-w-[17.5rem] ${isDarkMode ? 'bg-darkgrey' : 'bg-lightbg'} rounded-md mt-[2.188rem] hxl text-mediumgrey transition-all duration-300 ease-in-out`}>
             + New Column
           </button>
         )}
