@@ -22,6 +22,9 @@ const StatusSelectNew: React.FC<StatusSelectNewProps> = ({ handleStatus }) => {
     handleStatus(status);
   };
 
+  console.log(handleStatus)
+  console.log(selectedStatus)
+
   return (
     <>
       <div onClick={() => setOpenMenu(!openMenu)} className="flex flex-col justify-center relative">

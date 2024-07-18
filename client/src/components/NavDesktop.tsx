@@ -8,6 +8,7 @@ import { swapModal, toggleMenu } from '../features/state/stateSlice';
 function NavDesktop() {
     const dispatch = useDispatch();
     const boards = useSelector((state: any) => state.stateSlice.boards.boards);
+    const columns = useSelector((state: any) => state.stateSlice.columns.columns);
     const toggle = useSelector((state: any) => state.stateSlice.menu);
     const theme = useSelector((state: any) => state.stateSlice.darkmode);
     const selectedBoard = useSelector((state: any) => state.stateSlice.selectedBoard);
@@ -15,13 +16,16 @@ function NavDesktop() {
     const choiceRef = useRef<HTMLDivElement>(null);
 
     const boardName = boards?.find((item) => item._id === selectedBoard);
+    const hasColumns = columns?.some((column: any) => column.boardId === selectedBoard);
 
     const handleMenu = () => {
         dispatch(toggleMenu(!toggle));
     };
 
     const handleAddModal = () => {
-        dispatch(swapModal("add"));
+        if (hasColumns) {
+            dispatch(swapModal("add"));
+        }
     };
 
     const EditModal = () => {
@@ -63,7 +67,13 @@ function NavDesktop() {
                 <h1 className={`text-xl font-bold ${theme ? 'text-white' : 'text-black'}`}>{boardName?.name}</h1>
             </div>
             <div className='flex items-center gap-6'>
-                <button onClick={handleAddModal} className='bg-mainpurple h-12 w-[10.25rem] rounded-3xl text-white'>+ Add New Task</button>
+                <button
+                    onClick={handleAddModal}
+                    className={`h-12 w-[10.25rem] rounded-3xl text-white ${hasColumns ? 'bg-mainpurple' : 'bg-gray-500 cursor-not-allowed'}`}
+                    disabled={!hasColumns}
+                >
+                    + Add New Task
+                </button>
                 <div className="relative">
                     <img onClick={handleChoice} className='cursor-pointer h-5 w-[0.289rem]' src={settings} alt='settings' />
                     {choiceBoardPopup && (

@@ -104,7 +104,7 @@ function CheckTodoModal() {
   };
 
   return (
-    <div ref={modalRef} className={`w-[21.438rem] absolute ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} top-[12.938rem] right-1/2 translate-x-1/2 p-6 rounded-md`}>
+    <div ref={modalRef} className={`z-50 w-[21.438rem] absolute ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} top-[12.938rem] right-1/2 translate-x-1/2 p-6 rounded-md md:w-[30rem]`}>
       <div className='flex justify-between items-center'>
         <h1 className={`mb-6 hl ${isDarkMode ? 'text-white' : 'text-black'}`}>{data ? data.title : null}</h1>
         <img onClick={choiceTodoPopup} className='h-5 w-[0.289rem]' src={settings} alt='settings' />

@@ -9,6 +9,7 @@ import { selectedBoardState, swapModal, toggleMenu } from '../features/state/sta
 import ToggleTheme from './ToggleTheme';
 import slashedeye from '../assets/slashedeye.png';
 import eye from '../assets/eye.png';
+import EmptyCol from './EmptyCol';
 
 interface Column {
   _id: string;
@@ -67,7 +68,7 @@ function DisplayData() {
   return (
     <div className='flex h-screen'>
       {menu ? (
-        <div className={`flex flex-col justify-between h-[90%] min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transition-all duration-300 ease-in-out`}>
+        <div className={`hidden absolute md:flex md:relative flex-col justify-between h-[90%] min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transition-all duration-300 ease-in-out`}>
           <div>
             <h1 className='mx-6 text-mediumgrey text-xs font-bold tracking-[2.4px] mb-5'>
               ALL BOARDS ({boards.length})
@@ -90,10 +91,12 @@ function DisplayData() {
                 </p>
               </div>
             ))}
-            <div className='flex items-center h-12 w-[15rem] pl-6 gap-2'>
-              <img className='h-4 w-4' src={purpleboardicon} alt='purpleboardicon' />
-              <button onClick={handleModal} className='hm text-mainpurple'>+ Create New Board</button>
-            </div>
+            {filteredColumns.length === 0 && (
+              <div className='flex items-center h-12 w-[15rem] pl-6 gap-2'>
+                <img className='h-4 w-4' src={purpleboardicon} alt='purpleboardicon' />
+                <button onClick={handleModal} className='hm text-mainpurple'>+ Create New Column</button>
+              </div>
+            )}
           </div>
           <div>
             <ToggleTheme />
@@ -104,7 +107,7 @@ function DisplayData() {
           </div>
         </div>
       ) : (
-        <div className={`flex flex-col justify-end h-[90%] w-[3.5rem] ${isDarkMode ? "bg-darkbg" : "bg-lightbg"} transition-all duration-300 ease-in-out`}>
+        <div className={`hidden absolute md:flex md:relative flex-col justify-end h-[90%] w-[3.5rem] ${isDarkMode ? "bg-darkbg" : "bg-lightbg"} transition-all duration-300 ease-in-out`}>
           <button onClick={closeMenu} className='flex bg-mainpurple mb-8 w-[3.5rem] h-12 rounded-r-[6.25rem] px-[1.125rem] items-center'>
             <img src={eye} alt='openmenu' />
           </button>
@@ -150,10 +153,8 @@ function DisplayData() {
             ))}
           </>
         )}
-        {columns && (
-          <button onClick={handleColumn} className={`h-screen min-w-[17.5rem] ${isDarkMode ? 'bg-darkgrey' : 'bg-lightbg'} rounded-md mt-[2.188rem] hxl text-mediumgrey transition-all duration-300 ease-in-out`}>
-            + New Column
-          </button>
+        {filteredColumns.length === 0 && (
+          <EmptyCol />
         )}
       </main>
     </div>

@@ -13,17 +13,18 @@ interface Todo {
 
 const AddModal: React.FC = () => {
   const dispatch = useDispatch();
+  const selectedBoard = useSelector((state: any) => state.stateSlice.selectedBoard);
   const columns = useSelector((state: any) => state.stateSlice.columns.columns);
   const modalRef = useRef<HTMLDivElement>(null);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
 
-  const initialStatus = columns.length > 0 ? columns[0].name : '';
+  const initialStatus = columns.find((item) => item.boardId === selectedBoard);
 
   const [formData, setFormData] = useState<Todo>({
     title: "",
     description: "",
     subTodos: [],
-    status: initialStatus,
+    status: initialStatus._id,
   });
 
   useEffect(() => {

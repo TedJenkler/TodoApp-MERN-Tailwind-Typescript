@@ -23,6 +23,20 @@ const ColumnRepeater: React.FC<ColumnRepeaterProps> = ({ value, onChange }) => {
     onChange(newRepeater);
   };
 
+  const handleChange = (index: number, newName: string) => {
+    const newRepeater = repeater.map((column, i) => 
+      i === index ? { ...column, name: newName } : column
+    );
+    setRepeater(newRepeater);
+    onChange(newRepeater);
+  };
+
+  const handleRemove = (index: number) => {
+    const newRepeater = repeater.filter((_, i) => i !== index);
+    setRepeater(newRepeater);
+    onChange(newRepeater);
+  };
+
   return (
     <div>
       <label className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Columns</label>
@@ -31,20 +45,11 @@ const ColumnRepeater: React.FC<ColumnRepeaterProps> = ({ value, onChange }) => {
           <input
             type="text"
             value={column.name}
-            onChange={(e) => {
-              const newRepeater = [...repeater];
-              newRepeater[index].name = e.target.value;
-              setRepeater(newRepeater);
-              onChange(newRepeater);
-            }}
+            onChange={(e) => handleChange(index, e.target.value)}
             className={`rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}
           />
           <button
-            onClick={() => {
-              const newRepeater = repeater.filter((_, i) => i !== index);
-              setRepeater(newRepeater);
-              onChange(newRepeater);
-            }}
+            onClick={() => handleRemove(index)}
             className="text-red-500"
           >
             <img src={x} alt="x" />

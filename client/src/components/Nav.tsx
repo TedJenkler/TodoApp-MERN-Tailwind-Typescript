@@ -8,14 +8,15 @@ import { selectedBoardState, swapModal } from '../features/state/stateSlice';
 
 function Nav() {
   const boards = useSelector((state: any) => state.stateSlice.boards.boards);
-  const columns = useSelector((state: any) => state.stateSlice.columns)
+  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
   const theme = useSelector((state: any) => state.stateSlice.darkmode);
   const dispatch = useDispatch();
   const choiceRef = useRef<HTMLDivElement>(null);
 
-  const initialSelected = boards[0]._id
-  const [selectedBoard, setSelectedBoardLocally] = useState<number>(initialSelected);
+  const initialSelected = boards[0]?._id;
+  const [selectedBoard, setSelectedBoardLocally] = useState<number | undefined>(initialSelected);
   const [choiceBoardPopup, setChoiceBoardPopup] = useState<boolean>(false);
+  const [hasColumns, setHasColumns] = useState<boolean>(columns?.some((column: any) => column.boardId === initialSelected));
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -38,11 +39,12 @@ function Nav() {
   const onChangeBoard = (boardId: number) => {
     setSelectedBoardLocally(boardId);
     dispatch(selectedBoardState(boardId));
+    setHasColumns(columns.some((column: any) => column.boardId === boardId));
   };
 
   const addModuleBtn = () => {
-    if(columns.length === 0) return;
-    dispatch(swapModal("add"))
+    if (!hasColumns) return;
+    dispatch(swapModal("add"));
   };
 
   const EditModal = () => {
@@ -56,26 +58,30 @@ function Nav() {
   };
 
   const handleChoice = () => {
-      setChoiceBoardPopup(!choiceBoardPopup);
+    setChoiceBoardPopup(!choiceBoardPopup);
   };
 
   return (
     <nav className={`flex justify-between items-center ${theme ? "bg-darkgrey" : "bg-white"}  h-16 py-5 px-4`}>
       <div className='flex items-center gap-4'>
-        <img className='h-6 w-6' src={menu} alt='mobilemenu'/>
+        <img className='h-6 w-6' src={menu} alt='mobilemenu' />
         <CustomSelect options={boards} value={selectedBoard} onChange={onChangeBoard} />
       </div>
-      <div onClick={() => {addModuleBtn()}} className='flex items-center gap-4'>
-        <a className={`flex items-center justify-center h-8 w-12 rounded-3xl ${columns.length !== 0 ? "bg-mainpurple" : "bg-gray-500 cursor-not-allowed"}`}><img className="h-3 w-3" src={plus} alt='plus' /></a>
+      <div onClick={() => { addModuleBtn() }} className='flex items-center gap-4'>
+        <a
+          className={`flex items-center justify-center h-8 w-12 rounded-3xl ${hasColumns ? "bg-mainpurple" : "bg-gray-500 cursor-not-allowed"}`}
+        >
+          <img className="h-3 w-3" src={plus} alt='plus' />
+        </a>
       </div>
       <div>
-      <img onClick={handleChoice} className='h-4 w-1' src={settings} alt='settings'/>
-      {choiceBoardPopup ? (
-        <div ref={choiceRef} className='absolute flex flex-col items-center justify-between w-[12rem] h-[5.875rem] p-4 rounded-lg top-[3.75rem] right-6 bg-darkbg'>
-          <p onClick={EditModal} className='text-mediumgrey'>Edit Board</p>
-          <p onClick={deleteModal} className='text-red'>Delete Board</p>
-        </div>
-      ) : null}
+        <img onClick={handleChoice} className='h-4 w-1' src={settings} alt='settings' />
+        {choiceBoardPopup ? (
+          <div ref={choiceRef} className='absolute flex flex-col items-center justify-between w-[12rem] h-[5.875rem] p-4 rounded-lg top-[3.75rem] right-6 bg-darkbg'>
+            <p onClick={EditModal} className='text-mediumgrey'>Edit Board</p>
+            <p onClick={deleteModal} className='text-red'>Delete Board</p>
+          </div>
+        ) : null}
       </div>
     </nav>
   );

@@ -1,12 +1,12 @@
-import Nav from "./components/Nav";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getBoards, getColumns, getTodos, getSubtodos } from "./features/state/stateSlice";
+import { getBoards, getColumns, getTodos, getSubtodos, selectedBoardState } from "./features/state/stateSlice";
 import { AppDispatch, RootState } from "./store";
-import { useEffect } from "react";
+import Nav from "./components/Nav";
+import NavDesktop from "./components/NavDesktop";
 import LoadingPage from "./LoadingPage";
 import EmptyCol from "./components/EmptyCol";
 import DisplayData from "./components/DisplayData";
-import { selectedBoardState } from "./features/state/stateSlice";
 import CheckTodoModal from "./modals/CheckTodoModal";
 import AddModal from "./modals/AddModal";
 import EditModal from "./modals/EditModal";
@@ -14,17 +14,14 @@ import AddBoard from "./modals/AddBoard";
 import EditBoard from "./modals/EditBoard";
 import DeleteBoard from "./modals/DeleteBoard";
 import DeleteTodo from "./modals/DeleteTodo";
-import NavDesktop from "./components/NavDesktop";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const boards = useSelector((state: any) => state.stateSlice.boards.boards);
   const columns = useSelector((state: any) => state.stateSlice.columns.columns);
-  const todos = useSelector((state: any) => state.stateSlice.todos.todos);
-  const subtodos = useSelector((state: any) => state.stateSlice.subtodos.subtodos);
   const loading = useSelector((state: RootState) => state.stateSlice.loading);
   const modal = useSelector((state: any) => state.stateSlice.modal);
-  console.log(modal);
+  const theme = useSelector((state: any) => state.stateSlice.darkmode);
 
   useEffect(() => {
     dispatch(getBoards());
@@ -33,15 +30,11 @@ function App() {
     dispatch(getSubtodos());
   }, [dispatch]);
 
-  const regex = /^todo[a-zA-Z0-9_-]{5,}$/;
-  const regex2 = /^edittodo[a-zA-Z0-9_-]{5,}$/;
-  const regex3 = /^deletetodo[a-zA-Z0-9_-]{5,}$/;
-
   useEffect(() => {
     if (boards?.length > 0) {
       dispatch(selectedBoardState(boards[0]?._id));
     }
-  }, [boards]);
+  }, [boards, dispatch]);
 
   if (loading || !boards) {
     return (
@@ -51,8 +44,12 @@ function App() {
     );
   }
 
+  const regex = /^todo[a-zA-Z0-9_-]{5,}$/;
+  const regex2 = /^edittodo[a-zA-Z0-9_-]{5,}$/;
+  const regex3 = /^deletetodo[a-zA-Z0-9_-]{5,}$/;
+
   return (
-    <div className="App h-screen overflow-hidden bg-darkbg">
+    <div className={`App h-screen overflow-hidden ${theme ? 'bg-darkbg' : 'bg-lightbg'}`}>
       <div className="md:hidden md:absolute">
         <Nav />
       </div>
