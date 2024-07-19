@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    overflow: hidden
+}
+
 .hxl {
     @apply text-2xl font-bold;
     line-height: auto;

@@ -49,7 +49,7 @@ function App() {
   const regex3 = /^deletetodo[a-zA-Z0-9_-]{5,}$/;
 
   return (
-    <div className={`App h-screen overflow-hidden ${theme ? 'bg-darkbg' : 'bg-lightbg'}`}>
+    <div className={`App h-screen overflow-x-hidden ${theme ? 'bg-darkbg' : 'bg-lightbg'}`}>
       <div className="md:hidden md:absolute">
         <Nav />
       </div>
@@ -63,7 +63,7 @@ function App() {
       {typeof modal === 'string' && modal.includes('editBoard') ? <EditBoard /> : null}
       {typeof modal === 'string' && modal.includes('deleteBoard') ? <DeleteBoard /> : null}
       {typeof modal === 'string' && regex3.test(modal) ? <DeleteTodo /> : null}
-      {!columns || columns.length === 0 ? <EmptyCol /> : <DisplayData />}
+        {!columns || columns.length === 0 ? <EmptyCol /> : <DisplayData />}
     </div>
   );
 }
