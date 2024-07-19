@@ -5,6 +5,7 @@ import { swapModal } from '../features/state/stateSlice';
 import settings from '../assets/settings.png';
 import checkbox from '../assets/checkbox.png';
 import emptycheckbox from '../assets/emptycheckbox.png';
+import emptycheckboxdark from '../assets/emptycheckboxdark.png';
 
 interface Subtodo {
   _id: string;
@@ -45,6 +46,20 @@ function CheckTodoModal() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [dispatch]);
+
+  useEffect(() => {
+    const handleClickOutsideChoice = (event: MouseEvent) => {
+      if (choiceRef.current && !choiceRef.current.contains(event.target as Node)) {
+        setToggle(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideChoice);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideChoice);
+    };
+  }, [toggle]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +107,7 @@ function CheckTodoModal() {
   }, []);
 
   const choiceTodoPopup = () => {
-    setToggle(!toggle);
+    setToggle((prevToggle) => !prevToggle);
   };
 
   const editModal = () => {
@@ -104,14 +119,16 @@ function CheckTodoModal() {
   };
 
   return (
-    <div ref={modalRef} className={`z-50 w-[21.438rem] absolute ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} top-[12.938rem] right-1/2 translate-x-1/2 p-6 rounded-md md:w-[30rem]`}>
-      <div className='flex justify-between items-center'>
-        <h1 className={`mb-6 hl ${isDarkMode ? 'text-white' : 'text-black'}`}>{data ? data.title : null}</h1>
-        <img onClick={choiceTodoPopup} className='h-5 w-[0.289rem]' src={settings} alt='settings' />
+    <div ref={modalRef} className={`z-50 w-[21.438rem] absolute ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} top-[12.938rem] right-1/2 translate-x-1/2 p-6 rounded-md md:w-[30rem] md:p-8`}>
+      <div className='relative'>
+        <div className='flex justify-between items-center'>
+          <h1 className={`mb-6 hl ${isDarkMode ? 'text-white' : 'text-black'}`}>{data ? data.title : null}</h1>
+          <img onClick={choiceTodoPopup} className='h-5 w-[0.289rem] cursor-pointer' src={settings} alt='settings' />
+        </div>
         {toggle && (
-          <div ref={choiceRef} className='absolute z-50 top-20 right-4 flex flex-col w-[12rem] h-[5.875rem] bg-darkbg rounded-lg p-4'>
-            <p className={`text-mediumgrey bl ${isDarkMode ? 'text-white' : 'text-black'}`} onClick={editModal}>Edit Task</p>
-            <p className={`text-red bl ${isDarkMode ? 'text-white' : 'text-black'}`} onClick={deleteModal}>Delete Task</p>
+          <div ref={choiceRef} className='absolute justify-between z-50 top-8 right-4 flex flex-col w-[12rem] h-[5.875rem] bg-darkbg rounded-lg p-4'>
+            <p className={`text-mediumgrey bl cursor-pointer`} onClick={editModal}>Edit Task</p>
+            <p className={`text-red bl cursor-pointer`} onClick={deleteModal}>Delete Task</p>
           </div>
         )}
       </div>
@@ -121,8 +138,8 @@ function CheckTodoModal() {
       </h2>
       <div className='flex flex-col'>
         {children.map((item) => (
-          <div key={item._id} className={`w-full h-[3.688rem] mb-2 rounded flex items-center p-2 ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'}`} onClick={() => handleToggle(item._id)}>
-            <img src={item.isCompleted ? checkbox : emptycheckbox} alt='checkbox' className='w-4 h-4 mr-2' />
+          <div key={item._id} className={`w-full h-[3.688rem] mb-2 rounded flex items-center p-2 ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} md:h-full cursor-pointer`} onClick={() => handleToggle(item._id)}>
+            <img src={isDarkMode ? item.isCompleted ? checkbox : emptycheckboxdark : item.isCompleted ? checkbox : emptycheckbox} alt='checkbox' className='w-4 h-4 mr-2' />
             <span className={`text-xs font-bold ml-2 ${isDarkMode ? 'text-white' : 'text-black'} ${item.isCompleted ? 'line-through text-mediumgrey' : ''}`}>{item.title}</span>
           </div>
         ))}

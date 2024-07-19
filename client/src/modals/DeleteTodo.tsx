@@ -31,39 +31,36 @@ function DeleteTodo() {
   return (
     <div
       ref={modalRef}
-      className={`absolute w-[21.438rem] p-6 right-1/2 translate-x-1/2 top-[21.438rem] rounded-md ${
+      className={`absolute w-[21.438rem] z-50 p-6 rounded-md right-1/2 translate-x-1/2 top-[21.438rem] ${
         isDarkMode ? "bg-darkgrey" : "bg-white"
-      }`}
+      } md:w-[30rem] md:p-8`}
     >
-      <h1 className={`${isDarkMode ? "text-red" : "text-black"} hl mb-6`}>
-        Delete this task?
-      </h1>
-      <p className="text-mediumgrey bl mb-6">
-        Are you sure you want to delete the ‘Build settings UI’ task and its
-        subtasks? This action cannot be reversed.
-      </p>
-      <button
-        onClick={handleDelete}
-        className={`rounded-[1.25rem] h-10 w-full font-bold ${
-          isDarkMode
-            ? "bg-red text-white"
-            : "bg-red text-white"
-        } mb-4`}
-      >
-        Delete
-      </button>
-      <button
-        onClick={() => {
-          dispatch(swapModal(""));
-        }}
-        className={`rounded-[1.25rem] h-10 w-full font-bold ${
-          isDarkMode
-            ? "bg-white text-mainpurple"
-            : "bg-lightbg text-mainpurple"
-        }`}
-      >
-        Cancel
-      </button>
+      <div>
+        <h1 className={`${isDarkMode ? "text-red" : "text-black"} hl mb-6`}>
+          Delete this task?
+        </h1>
+        <p className="text-mediumgrey bl mb-6">
+          Are you sure you want to delete the ‘Build settings UI’ task and its subtasks? This action cannot be reversed.
+        </p>
+      </div>
+      <div className="md:flex md:gap-4">
+        <button
+          onClick={handleDelete}
+          className={`bg-red h-10 w-full rounded-[1.25rem] text-white font-bold mb-4`}
+        >
+          Delete
+        </button>
+        <button
+          onClick={() => {
+            dispatch(swapModal(""));
+          }}
+          className={`${
+            isDarkMode ? "bg-white text-mainpurple" : "bg-lightbg text-mainpurple"
+          } h-10 w-full rounded-[1.25rem] font-bold`}
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }

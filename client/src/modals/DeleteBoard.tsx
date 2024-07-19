@@ -29,31 +29,35 @@ function DeleteBoard() {
   return (
     <div
       ref={modalRef}
-      className={`absolute w-[21.438rem] p-6 rounded-md right-1/2 translate-x-1/2 top-[21.438rem] ${
+      className={`absolute w-[21.438rem] z-50 p-6 rounded-md right-1/2 translate-x-1/2 top-[21.438rem] ${
         isDarkMode ? 'bg-darkgrey' : 'bg-white'
-      }`}
+      } md:w-[30rem] md:p-8`}
     >
-      <h1 className={`${isDarkMode ? 'text-red' : 'text-black'} hl mb-6`}>
-        Delete this board?
-      </h1>
-      <p className="text-mediumgrey bl mb-6">
-        Are you sure you want to delete this board? This action will remove all
-        columns and tasks and cannot be reversed.
-      </p>
-      <button
-        onClick={handleDelete}
-        className={`bg-red h-10 w-full rounded-[1.25rem] text-white font-bold mb-4`}
-      >
-        Delete
-      </button>
-      <button
-        onClick={() => {
-          dispatch(swapModal(''));
-        }}
-        className={`bg-${isDarkMode ? 'white' : 'lightbg'} h-10 w-full rounded-[1.25rem] text-mainpurple font-bold`}
-      >
-        Cancel
-      </button>
+      <div>
+        <h1 className={`${isDarkMode ? 'text-red' : 'text-black'} hl mb-6`}>
+          Delete this board?
+        </h1>
+        <p className="text-mediumgrey bl mb-6">
+          Are you sure you want to delete this board? This action will remove all
+          columns and tasks and cannot be reversed.
+        </p>
+      </div>
+      <div className="md:flex md:gap-4">
+        <button
+          onClick={handleDelete}
+          className={`bg-red h-10 w-full rounded-[1.25rem] text-white font-bold mb-4`}
+        >
+          Delete
+        </button>
+        <button
+          onClick={() => {
+            dispatch(swapModal(''));
+          }}
+          className={`bg-${isDarkMode ? 'white' : 'lightbg'} h-10 w-full rounded-[1.25rem] text-mainpurple font-bold`}
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }

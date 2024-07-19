@@ -44,14 +44,14 @@ const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange })
 
   return (
     <div>
-      <label className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Subtasks</label>
+      <label className={`text-xs font-bold mb-2 overflow-auto ${isDarkMode ? 'text-white' : 'text-black'}`}>Subtasks</label>
       {repeater.map((subTodo, index) => (
         <div key={index} className="flex items-center justify-between mb-2 w-full">
           <input
             type="text"
             value={subTodo.title}
             onChange={(e) => handleSubtodoChange(index, e.target.value)}
-            className={`rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}
+            className={`rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} md:w-[24rem]`}
           />
           <img
             src={x}

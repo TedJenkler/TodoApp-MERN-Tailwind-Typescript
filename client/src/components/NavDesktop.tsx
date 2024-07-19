@@ -57,7 +57,7 @@ function NavDesktop() {
     }, []);
 
     return (
-        <div className={`fixed flex justify-between items-center h-[5.063rem] w-full pr-6 py-7 ${theme ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}>
+        <div className={`fixed flex justify-between z-50 items-center h-[5.063rem] w-full pr-6 py-7 ${theme ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}>
             <div className='flex items-center gap-6'>
                 <div onClick={handleMenu} className={`flex items-center border-r transition-transform ${toggle ? 'w-[16.313rem] h-[5.063rem]' : 'w-[12.563rem] h-[5.063rem]'} ${theme ? 'bg-darkgrey text-white border-mediumgrey/25' : 'bg-white text-black border-mediumgrey/25'} pl-6`}>
                     <div className='flex items-center h-[5.063rem] w-[16.313rem]'>

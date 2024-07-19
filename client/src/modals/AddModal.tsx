@@ -94,35 +94,37 @@ const AddModal: React.FC = () => {
   };
 
   return (
-    <div ref={modalRef} className={`absolute top-[9.75rem] w-[21.438rem] p-6 translate-x-1/2 right-1/2 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} rounded-md`}>
-      <h1 className={`hl mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>Add New Task</h1>
-      <div className="flex flex-col mb-6">
-        <label htmlFor="title" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Title</label>
-        <input
-          id="title"
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
-          className={`rounded-[0.25rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'}`}
-        />
+    <div ref={modalRef} className={`absolute top-[9.75rem] w-[21.438rem] z-50 p-6 translate-x-1/2 right-1/2 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} rounded-md md:w-[30rem] md:p-8 md:max-h-[80rem]`}>
+      <div className="overflow-y-auto" style={{ maxHeight: 'calc(80vh - 6rem)' }}>
+        <h1 className={`hl mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>Add New Task</h1>
+        <div className="flex flex-col mb-6">
+          <label htmlFor="title" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Title</label>
+          <input
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleInputChange}
+            className={`rounded-[0.25rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'}`}
+          />
+        </div>
+        <div className="flex flex-col mb-6">
+          <label htmlFor="description" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Description</label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            className={`rounded-[0.25rem] h-[7rem] px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'}`}
+          />
+        </div>
+        <div className="mb-6">
+          <SubtodoRepeater subTodos={formData.subTodos} onChange={handleSubtodosChange} />
+        </div>
+        <div className="mb-6">
+          <StatusSelectNew handleStatus={handleStatus} />
+        </div>
+        <button onClick={handleSubmit} className={`bg-mainpurple text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}>Create Task</button>
       </div>
-      <div className="flex flex-col mb-6">
-        <label htmlFor="description" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Description</label>
-        <textarea
-          id="description"
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-          className={`rounded-[0.25rem] h-[7rem] px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'}`}
-        />
-      </div>
-      <div className="mb-6">
-        <SubtodoRepeater subTodos={formData.subTodos} onChange={handleSubtodosChange} />
-      </div>
-      <div className="mb-6">
-        <StatusSelectNew handleStatus={handleStatus} />
-      </div>
-      <button onClick={handleSubmit} className={`bg-mainpurple text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}>Create Task</button>
     </div>
   );
 }
