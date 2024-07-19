@@ -126,7 +126,7 @@ function CheckTodoModal() {
           <img onClick={choiceTodoPopup} className='h-5 w-[0.289rem] cursor-pointer' src={settings} alt='settings' />
         </div>
         {toggle && (
-          <div ref={choiceRef} className='absolute justify-between z-50 top-8 right-4 flex flex-col w-[12rem] h-[5.875rem] bg-darkbg rounded-lg p-4'>
+          <div ref={choiceRef} className={`absolute justify-between z-50 top-8 right-4 flex flex-col w-[12rem] h-[5.875rem] ${isDarkMode ? "bg-darkbg" : "bg-white"} rounded-lg p-4`}>
             <p className={`text-mediumgrey bl cursor-pointer`} onClick={editModal}>Edit Task</p>
             <p className={`text-red bl cursor-pointer`} onClick={deleteModal}>Delete Task</p>
           </div>
@@ -136,9 +136,9 @@ function CheckTodoModal() {
       <h2 className={`text-xs font-bold ${isDarkMode ? 'text-white' : 'text-black'} mb-4`}>
         Subtasks ({children.filter((item) => item.isCompleted).length} of {children.length})
       </h2>
-      <div className='flex flex-col'>
+      <div className='custom-scrollbar flex flex-col'>
         {children.map((item) => (
-          <div key={item._id} className={`w-full h-[3.688rem] mb-2 rounded flex items-center p-2 ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} md:h-full cursor-pointer`} onClick={() => handleToggle(item._id)}>
+          <div key={item._id} className={`w-full h-[3.688rem] mb-2 rounded flex items-center p-2 ${isDarkMode ? 'bg-darkbg hover:bg-mainpurple/25' : 'bg-lightbg hover:bg-mainpurple/25'} md:h-full cursor-pointer`} onClick={() => handleToggle(item._id)}>
             <img src={isDarkMode ? item.isCompleted ? checkbox : emptycheckboxdark : item.isCompleted ? checkbox : emptycheckbox} alt='checkbox' className='w-4 h-4 mr-2' />
             <span className={`text-xs font-bold ml-2 ${isDarkMode ? 'text-white' : 'text-black'} ${item.isCompleted ? 'line-through text-mediumgrey' : ''}`}>{item.title}</span>
           </div>

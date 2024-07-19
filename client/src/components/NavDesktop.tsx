@@ -69,7 +69,7 @@ function NavDesktop() {
             <div className='flex items-center gap-6'>
                 <button
                     onClick={handleAddModal}
-                    className={`h-12 w-[10.25rem] rounded-3xl text-white ${hasColumns ? 'bg-mainpurple' : 'bg-gray-500 cursor-not-allowed'}`}
+                    className={`h-12 w-[10.25rem] rounded-3xl text-white ${hasColumns ? 'bg-mainpurple cursor-pointer hover:bg-mainpurplehover' : 'bg-mainpurple/25 cursor-not-allowed'}`}
                     disabled={!hasColumns}
                 >
                     + Add New Task

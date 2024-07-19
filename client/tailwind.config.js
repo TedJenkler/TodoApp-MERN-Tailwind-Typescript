@@ -15,6 +15,9 @@ export default {
         'red': '#EA5555',
         'black': '#000112',
         'lightbg': '#F4F7FD',
+        'mainpurplehover': '#A8A4FF',
+        'redhover': '#FF9898',
+        
       }
     },
   },

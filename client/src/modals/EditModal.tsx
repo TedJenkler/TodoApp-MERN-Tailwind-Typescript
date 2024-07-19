@@ -136,7 +136,7 @@ const EditModal: React.FC = () => {
 
   return (
     <div ref={modalRef} className={`absolute bottom-1/2 translate-y-1/2 w-[21.438rem] z-50 p-6 translate-x-1/2 right-1/2 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} rounded-md md:w-[30rem] md:p-8 md:max-h-[80vh]`}>
-      <div className="overflow-y-auto" style={{ maxHeight: 'calc(80vh - 6rem)' }}>
+      <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(80vh - 6rem)' }}>
         <h1 className={`hl mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>Edit Task</h1>
         <div className="flex flex-col mb-6">
           <label htmlFor="title" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Title</label>
@@ -145,7 +145,7 @@ const EditModal: React.FC = () => {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className={`rounded-[0.25rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'}`}
+            className={`rounded-[0.25rem] h-10 px-4 py-2 border border-mediumgrey/25 focus:border-mainpurple ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'} outline-none`}
           />
         </div>
         <div className="flex flex-col mb-6">
@@ -155,7 +155,7 @@ const EditModal: React.FC = () => {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            className={`rounded-[0.25rem] h-[7rem] px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'}`}
+            className={`rounded-[0.25rem] h-[7rem] px-4 py-2 border border-mediumgrey/25 focus:border-mainpurple ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'} outline-none`}
           />
         </div>
         <div className="mb-6">

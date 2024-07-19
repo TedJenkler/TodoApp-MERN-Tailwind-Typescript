@@ -69,7 +69,7 @@ function Nav() {
       </div>
       <div onClick={() => { addModuleBtn() }} className='flex items-center gap-4'>
         <a
-          className={`flex items-center justify-center h-8 w-12 rounded-3xl ${hasColumns ? "bg-mainpurple" : "bg-gray-500 cursor-not-allowed"}`}
+          className={`flex items-center justify-center h-8 w-12 rounded-3xl ${hasColumns ? "bg-mainpurple cursor-pointer hover:bg-mainpurplehover" : "bg-mainpurple/25 cursor-not-allowed"}`}
         >
           <img className="h-3 w-3" src={plus} alt='plus' />
         </a>

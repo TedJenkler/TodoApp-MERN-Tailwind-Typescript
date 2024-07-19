@@ -76,14 +76,14 @@ const AddModal: React.FC = () => {
 
     dispatch(addTodo({ title, description, status: nameToId }))
       .then((resultAction) => {
-        const todoId = resultAction.payload.todo._id
+        const todoId = resultAction.payload.todo._id;
         console.log('Todo created with ID:', todoId);
         dispatch(addSubtodos({ subTodos, todoId }));
         setFormData({
           title: "",
           description: "",
           subTodos: [],
-          status: initialStatus,
+          status: initialStatus._id,
         });
       })
       .catch((error: any) => {
@@ -95,7 +95,7 @@ const AddModal: React.FC = () => {
 
   return (
     <div ref={modalRef} className={`absolute bottom-1/2 translate-y-1/2 w-[21.438rem] z-50 p-6 translate-x-1/2 right-1/2 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} rounded-md md:w-[30rem] md:p-8 md:max-h-[80rem]`}>
-      <div className="overflow-y-auto" style={{ maxHeight: 'calc(80vh - 6rem)' }}>
+      <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(80vh - 6rem)' }}>
         <h1 className={`hl mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>Add New Task</h1>
         <div className="flex flex-col mb-6">
           <label htmlFor="title" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Title</label>
@@ -104,7 +104,7 @@ const AddModal: React.FC = () => {
             name="title"
             value={formData.title}
             onChange={handleInputChange}
-            className={`rounded-[0.25rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'}`}
+            className={`rounded-[0.25rem] h-10 px-4 py-2 border border-mediumgrey/25 focus:border-mainpurple ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'} outline-none`}
           />
         </div>
         <div className="flex flex-col mb-6">
@@ -114,7 +114,7 @@ const AddModal: React.FC = () => {
             name="description"
             value={formData.description}
             onChange={handleInputChange}
-            className={`rounded-[0.25rem] h-[7rem] px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'}`}
+            className={`rounded-[0.25rem] h-[7rem] px-4 py-2 border border-mediumgrey/25 focus:border-mainpurple ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'} outline-none`}
           />
         </div>
         <div className="mb-6">
@@ -123,10 +123,10 @@ const AddModal: React.FC = () => {
         <div className="mb-6">
           <StatusSelectNew handleStatus={handleStatus} />
         </div>
-        <button onClick={handleSubmit} className={`bg-mainpurple text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}>Create Task</button>
+        <button onClick={handleSubmit} className={`bg-mainpurple hover:bg-mainpurplehover text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}>Create Task</button>
       </div>
     </div>
   );
-}
+};
 
 export default AddModal;

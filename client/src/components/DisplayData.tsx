@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import blue from '../assets/blue.png';
 import purple from '../assets/purple.png';
 import green from '../assets/green.png';
@@ -32,6 +33,8 @@ interface Subtodo {
 }
 
 function DisplayData() {
+  const [hoveredBoardId, setHoveredBoardId] = useState<string | null>(null);
+  
   const boards = useSelector((state: any) => state.stateSlice.boards.boards);
   const columns = useSelector((state: any) => state.stateSlice.columns.columns);
   const todos = useSelector((state: any) => state.stateSlice.todos.todos);
@@ -68,7 +71,7 @@ function DisplayData() {
   return (
     <div className='flex h-screen overflow-hidden md:mt-[5rem]'>
       {menu ? (
-        <div className={`hidden absolute md:flex md:fixed flex-col justify-between h-[90%] min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transition-all duration-300 ease-in-out`}>
+        <div className={`hidden absolute md:flex md:fixed flex-col justify-between h-[92%] min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transition-all duration-300 ease-in-out`}>
           <div>
             <h1 className='mx-6 text-mediumgrey text-xs font-bold tracking-[2.4px] mb-5'>
               ALL BOARDS ({boards.length})
@@ -76,17 +79,17 @@ function DisplayData() {
             {boards?.map((board: any) => (
               <div
                 key={board._id}
-                className={`flex items-center h-12 w-[15rem] px-6 gap-2 rounded-r-[6.25rem] ${board._id === selectedBoardId ? "bg-mainpurple" : ""}`}
+                className={`flex items-center h-12 w-[15rem] px-6 gap-2 rounded-r-[6.25rem] ${board._id === selectedBoardId ? "bg-mainpurple text-white" : `text-mediumgrey hover:text-mainpurple ${isDarkMode ? "hover:bg-white" : "hover:bg-mainpurple/25" }`} cursor-pointer`}
                 onClick={() => changeBoard(board._id)}
+                onMouseEnter={() => setHoveredBoardId(board._id)}
+                onMouseLeave={() => setHoveredBoardId(null)}
               >
                 <img
                   className='h-4 w-4'
-                  src={board._id === selectedBoardId ? whiteboardicon : greyboardicon}
+                  src={board._id === selectedBoardId ? whiteboardicon : hoveredBoardId === board._id ? purpleboardicon : greyboardicon}
                   alt='board icon'
                 />
-                <p
-                  className={`hm ${board._id === selectedBoardId ? "text-white" : "text-mediumgrey"}`}
-                >
+                <p className='hm'>
                   {board.name}
                 </p>
               </div>
@@ -98,15 +101,15 @@ function DisplayData() {
           </div>
           <div>
             <ToggleTheme />
-            <div className='flex items-center h-12 w-[15rem] px-6 gap-[0.625rem]'>
+            <div onClick={() => dispatch(toggleMenu(false))} className={`flex items-center h-12 w-[15rem] px-6 gap-[0.625rem] ${isDarkMode ? "hover:bg-white" : "hover:bg-mainpurple/25"} rounded-r-[6.25rem]`}>
               <img className='h-4 w-4' src={slashedeye} alt='sidebar toggle' />
-              <button onClick={() => dispatch(toggleMenu(false))} className='hm text-mediumgrey'>Hide Sidebar</button>
+              <button className='hm text-mainpurple'>Hide Sidebar</button>
             </div>
           </div>
         </div>
       ) : (
-        <div className={`hidden absolute md:flex md:fixed flex-col justify-end h-[90%] w-[3.5rem] ${isDarkMode ? "bg-darkbg" : "bg-lightbg"} transition-all duration-300 ease-in-out`}>
-          <button onClick={closeMenu} className='flex bg-mainpurple mb-8 w-[3.5rem] h-12 rounded-r-[6.25rem] px-[1.125rem] items-center'>
+        <div className={`hidden absolute md:flex md:fixed flex-col justify-end h-[92%] w-[3.5rem] ${isDarkMode ? "bg-darkbg" : "bg-lightbg"} transition-all duration-300 ease-in-out`}>
+          <button onClick={closeMenu} className='flex bg-mainpurple mb-8 w-[3.5rem] h-12 rounded-r-[6.25rem] px-[1.125rem] items-center hover:bg-mainpurplehover'>
             <img src={eye} alt='openmenu' />
           </button>
         </div>
@@ -129,9 +132,9 @@ function DisplayData() {
                   <div
                     key={todo._id}
                     onClick={() => handleTodoModal(todo._id)}
-                    className={`flex flex-col w-full mt-5 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} rounded-lg px-4 w-[17.5rem] py-6`}
+                    className={`flex flex-col mt-5 ${isDarkMode ? 'bg-darkgrey text-white ' : 'bg-white text-black'} rounded-lg px-4 w-[17.5rem] py-6 cursor-pointer hover:text-mainpurple`}
                   >
-                    <h3 className={`${isDarkMode ? 'text-white' : 'text-black'} hm w-full`}>
+                    <h3 className='hm w-full'>
                       {todo.title}
                     </h3>
                     <div className='flex items-center gap-2 text-mediumgrey'>

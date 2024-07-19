@@ -61,7 +61,7 @@ const AddBoard: React.FC = () => {
       ref={modalRef}
       className={`absolute bottom-1/2 translate-y-1/2 w-[21.438rem] z-50 p-6 translate-x-1/2 right-1/2 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} rounded-md md:w-[30rem] md:p-8 md:max-h-[80vh]`}
     >
-      <div className="overflow-y-auto" style={{ maxHeight: 'calc(80vh - 6rem)' }}>
+      <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(80vh - 6rem)' }}>
         <h1 className={`hl mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>Add New Board</h1>
         <div className="mb-6">
           <label className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Board Name</label>
@@ -82,6 +82,6 @@ const AddBoard: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default AddBoard;

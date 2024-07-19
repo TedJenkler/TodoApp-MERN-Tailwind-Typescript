@@ -51,7 +51,7 @@ const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange })
             type="text"
             value={subTodo.title}
             onChange={(e) => handleSubtodoChange(index, e.target.value)}
-            className={`rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} md:w-[24rem]`}
+            className={`rounded-[0.25rem] w-[16.5rem] h-10 px-4 py-2 border border-mediumgrey/25 focus:border-mainpurple ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} md:w-[24rem] outline-none`}
           />
           <img
             src={x}

@@ -34,7 +34,7 @@ function DeleteBoard() {
       } md:w-[30rem] md:p-8`}
     >
       <div>
-        <h1 className={`${isDarkMode ? 'text-red' : 'text-black'} hl mb-6`}>
+        <h1 className='text-red hl mb-6'>
           Delete this board?
         </h1>
         <p className="text-mediumgrey bl mb-6">
@@ -45,7 +45,7 @@ function DeleteBoard() {
       <div className="md:flex md:gap-4">
         <button
           onClick={handleDelete}
-          className={`bg-red h-10 w-full rounded-[1.25rem] text-white font-bold mb-4`}
+          className={`bg-red hover:bg-redhover h-10 w-full rounded-[1.25rem] text-white font-bold mb-4`}
         >
           Delete
         </button>
@@ -53,7 +53,7 @@ function DeleteBoard() {
           onClick={() => {
             dispatch(swapModal(''));
           }}
-          className={`bg-${isDarkMode ? 'white' : 'lightbg'} h-10 w-full rounded-[1.25rem] text-mainpurple font-bold`}
+          className={`${isDarkMode ? 'bg-white hover:bg-mainpurple/25' : 'bg-lightbg hover:bg-mainpurple/25'} h-10 w-full rounded-[1.25rem] text-mainpurple font-bold`}
         >
           Cancel
         </button>

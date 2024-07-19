@@ -48,12 +48,13 @@ function ToggleTheme() {
             className="flex items-center cursor-pointer"
           >
             <div className="relative">
-              <div className="w-10 h-5 bg-mainpurple rounded-full shadow-inner"></div>
-              <div
+              <div className="w-10 h-5 bg-mainpurple rounded-full shadow-inner hover:bg-mainpurplehover"></div>
+              <label
+                htmlFor="toggle"
                 className={`toggle-dot absolute bottom-1/2 translate-y-1/2 w-4 h-4 bg-white rounded-full shadow ${
-                  isChecked ? "right-1 bg-white" : "left-1 bg-white"
+                  isChecked ? "right-[3px] bg-white" : "left-[3px] bg-white"
                 } transition`}
-              ></div>
+              ></label>
             </div>
           </label>
         </div>

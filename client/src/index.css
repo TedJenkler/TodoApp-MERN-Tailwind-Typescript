@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+.custom-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 0px; /* Safari and Chrome */
+    background: transparent; /* Optional: just to ensure the track is transparent */
+  }
+
 body {
     overflow: hidden
 }
