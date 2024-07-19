@@ -129,7 +129,7 @@ function DisplayData() {
                   <div
                     key={todo._id}
                     onClick={() => handleTodoModal(todo._id)}
-                    className={`flex flex-col w-full mt-5 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} rounded-lg px-4 py-6`}
+                    className={`flex flex-col w-full mt-5 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} rounded-lg px-4 w-[17.5rem] py-6`}
                   >
                     <h3 className={`${isDarkMode ? 'text-white' : 'text-black'} hm w-full`}>
                       {todo.title}

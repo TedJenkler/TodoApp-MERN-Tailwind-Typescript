@@ -31,7 +31,7 @@ function DeleteTodo() {
   return (
     <div
       ref={modalRef}
-      className={`absolute w-[21.438rem] z-50 p-6 rounded-md right-1/2 translate-x-1/2 top-[21.438rem] ${
+      className={`absolute w-[21.438rem] z-50 p-6 rounded-md right-1/2 translate-x-1/2 bottom-1/2 translate-y-1/2 ${
         isDarkMode ? "bg-darkgrey" : "bg-white"
       } md:w-[30rem] md:p-8`}
     >

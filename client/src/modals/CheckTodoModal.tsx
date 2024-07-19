@@ -119,7 +119,7 @@ function CheckTodoModal() {
   };
 
   return (
-    <div ref={modalRef} className={`z-50 w-[21.438rem] absolute ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} top-[12.938rem] right-1/2 translate-x-1/2 p-6 rounded-md md:w-[30rem] md:p-8`}>
+    <div ref={modalRef} className={`z-50 w-[21.438rem] absolute ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} bottom-1/2 translate-y-1/2 right-1/2 translate-x-1/2 p-6 rounded-md md:w-[30rem] md:p-8`}>
       <div className='relative'>
         <div className='flex justify-between items-center'>
           <h1 className={`mb-6 hl ${isDarkMode ? 'text-white' : 'text-black'}`}>{data ? data.title : null}</h1>
