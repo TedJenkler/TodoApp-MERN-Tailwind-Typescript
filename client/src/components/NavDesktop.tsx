@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import settings from '../assets/settings.png';
 import logo from '../assets/logodesktop.png';
 import lightlogo from "../assets/logodesktoplight.png";
 import { useDispatch, useSelector } from 'react-redux';
 import { swapModal, toggleMenu } from '../features/state/stateSlice';
+import useClickOutside from '../hooks/useClickOutside';
 
 function NavDesktop() {
     const dispatch = useDispatch();
@@ -17,6 +18,8 @@ function NavDesktop() {
 
     const boardName = boards?.find((item) => item._id === selectedBoard);
     const hasColumns = columns?.some((column: any) => column.boardId === selectedBoard);
+
+    useClickOutside(choiceRef, "toggle", setChoiceBoardPopup)
 
     const handleMenu = () => {
         dispatch(toggleMenu(!toggle));
@@ -41,20 +44,6 @@ function NavDesktop() {
     const handleChoice = () => {
         setChoiceBoardPopup(!choiceBoardPopup);
     };
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (choiceRef.current && !choiceRef.current.contains(event.target as Node)) {
-                setChoiceBoardPopup(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
 
     return (
         <div className={`fixed flex justify-between z-50 items-center h-[5.063rem] w-full pr-6 py-7 ${theme ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}>

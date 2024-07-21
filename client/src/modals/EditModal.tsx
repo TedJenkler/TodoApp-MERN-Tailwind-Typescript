@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SubtodoRepeater from "../components/SubtodoRepeater";
 import StatusSelectNew from "../components/StatusSelectNew";
 import { swapModal, updateTodo, updateSubtodos } from "../features/state/stateSlice";
+import useClickOutside from "../hooks/useClickOutside";
 
 interface Todo {
   title: string;
@@ -26,19 +27,7 @@ const EditModal: React.FC = () => {
   });
   const [formError, setFormError] = useState({ title: false, subtasks: false });
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        dispatch(swapModal(""));
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dispatch]);
+  useClickOutside(modalRef, "modal");
 
   useEffect(() => {
     const fetchTodo = async () => {
@@ -185,7 +174,7 @@ const EditModal: React.FC = () => {
         </div>
         <button
           onClick={handleSubmit}
-          className={`bg-mainpurple text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}
+          className={`bg-mainpurple hover:bg-mainpurplehover text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem]`}
           disabled={formError.subtasks}
         >
           Save Changes

@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { deleteTodo, swapModal } from "../features/state/stateSlice";
 import { useDispatch, useSelector } from "react-redux";
+import useClickOutside from "../hooks/useClickOutside";
 
 function DeleteTodo() {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -9,19 +10,7 @@ function DeleteTodo() {
   const id = todoid.slice(10);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        dispatch(swapModal(""));
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [dispatch]);
+  useClickOutside(modalRef, "modal");
 
   const handleDelete = () => {
     dispatch(deleteTodo(id));

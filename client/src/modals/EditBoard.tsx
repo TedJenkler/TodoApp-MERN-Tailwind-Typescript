@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ColumnRepeater from '../components/ColumnRepeater';
 import { editBoard, editColumns, swapModal } from '../features/state/stateSlice';
+import useClickOutside from '../hooks/useClickOutside';
 
 interface Column {
   name: string;
@@ -25,19 +26,7 @@ const EditBoard: React.FC = () => {
   );
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        dispatch(swapModal(''));
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dispatch]);
+  useClickOutside(modalRef, "modal");
 
   useEffect(() => {
     if (selectedBoardData) {
@@ -111,7 +100,7 @@ const EditBoard: React.FC = () => {
         <ColumnRepeater value={formData.columns} onChange={handleColumnsChange} />
         <button
           onClick={handleSubmit}
-          className={`bg-mainpurple text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] mt-4 ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}
+          className={`bg-mainpurple hover:bg-mainpurplehover text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] mt-4`}
           disabled={formError.columns}
         >
           Save Changes

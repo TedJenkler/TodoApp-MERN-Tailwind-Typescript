@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ColumnRepeater from '../components/ColumnRepeater';
 import { addBoard, addColumns, swapModal } from '../features/state/stateSlice';
-
+import useClickOutside from '../hooks/useClickOutside';
 interface Column {
   name: string;
   boardId: string;
@@ -20,19 +20,7 @@ const AddBoard: React.FC = () => {
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        dispatch(swapModal(''));
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dispatch]);
+  useClickOutside(modalRef, "modal");
 
   const handleBoardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, name: e.target.value });
@@ -94,7 +82,7 @@ const AddBoard: React.FC = () => {
         <ColumnRepeater value={formData.columns} onChange={handleColumnsChange} />
         <button
           onClick={handleSubmit}
-          className={`bg-mainpurple text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] mt-4 ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}
+          className={`bg-mainpurple hover:bg-mainpurplehover text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] mt-4`}
           disabled={formError.columns}
         >
           Create New Board

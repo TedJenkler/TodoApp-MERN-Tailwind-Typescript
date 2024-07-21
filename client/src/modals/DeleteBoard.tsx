@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { swapModal, deleteBoard } from "../features/state/stateSlice";
+import useClickOutside from "../hooks/useClickOutside";
 
 function DeleteBoard() {
   const modalRef = useRef<HTMLDivElement>(null);
@@ -8,19 +9,7 @@ function DeleteBoard() {
   const id = useSelector((state: any) => state.stateSlice.selectedBoard);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        dispatch(swapModal(''));
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dispatch]);
+  useClickOutside(modalRef, "modal");
 
   const handleDelete = () => {
     dispatch(deleteBoard(id));

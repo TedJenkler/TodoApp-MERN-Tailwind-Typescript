@@ -1,8 +1,9 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SubtodoRepeater from "../components/SubtodoRepeater";
 import StatusSelectNew from "../components/StatusSelectNew";
 import { addTodo, addSubtodos, swapModal } from "../features/state/stateSlice";
+import useClickOutside from "../hooks/useClickOutside";
 
 interface Todo {
   title: string;
@@ -28,19 +29,7 @@ const AddModal: React.FC = () => {
   });
   const [formError, setFormError] = useState({ title: false, subtasks: false });
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        dispatch(swapModal(""));
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dispatch]);
+  useClickOutside(modalRef, "modal");
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -144,7 +133,7 @@ const AddModal: React.FC = () => {
         </div>
         <button
           onClick={handleSubmit}
-          className={`bg-mainpurple hover:bg-mainpurplehover text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}
+          className={`bg-mainpurple hover:bg-mainpurplehover text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem]`}
           disabled={formError.subtasks}
         >
           Create Task

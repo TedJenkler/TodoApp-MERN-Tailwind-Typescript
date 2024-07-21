@@ -6,6 +6,7 @@ import settings from '../assets/settings.png';
 import checkbox from '../assets/checkbox.png';
 import emptycheckbox from '../assets/emptycheckbox.png';
 import emptycheckboxdark from '../assets/emptycheckboxdark.png';
+import useClickOutside from '../hooks/useClickOutside';
 
 interface Subtodo {
   _id: string;
@@ -33,33 +34,9 @@ function CheckTodoModal() {
   const choiceRef = useRef<HTMLDivElement>(null);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        dispatch(swapModal(''));
-      }
-    };
+  useClickOutside(modalRef, "modal");
 
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
-    const handleClickOutsideChoice = (event: MouseEvent) => {
-      if (choiceRef.current && !choiceRef.current.contains(event.target as Node)) {
-        setToggle(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutsideChoice);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutsideChoice);
-    };
-  }, [toggle]);
+  useClickOutside(choiceRef, "toggle", setToggle);
 
   useEffect(() => {
     const fetchData = async () => {
