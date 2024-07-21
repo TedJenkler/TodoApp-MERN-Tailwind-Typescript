@@ -49,7 +49,12 @@ exports.addTodo = async (req, res) => {
             return res.status(404).json({ message: 'Could not update Column' });
         }
 
-        res.status(201).json({ message: 'Successfully created todo', todo });
+        const todos = await Todo.find();
+        if(!todos) {
+            return res.status(404).json({ message: 'Cant find todos'})
+        }
+
+        res.status(201).json({ message: 'Successfully created todo', todo, todos });
     } catch (error) {
         console.error('Error adding todo', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -84,7 +89,12 @@ exports.updateById = async (req, res) => {
             return res.status(500).json({ message: 'Error updating new column' });
         }
 
-        res.status(200).json({ message: 'Successfully updated todo', todo: updatedTodo });
+        const todos = await Todo.find();
+        if(!todos) {
+            return res.status(404).json({ message: 'Cant find todos'})
+        }
+
+        res.status(200).json({ message: 'Successfully updated todo', todo: updatedTodo, todos: todos });
     } catch (error) {
         console.error('Error updating todo', error);
         res.status(500).json({ message: 'Internal Server Error' });

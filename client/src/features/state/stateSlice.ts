@@ -85,7 +85,9 @@ interface GetTodosPayload {
 }
 
 interface GetSubtodosPayload {
+  todos: TodoResponse[];
   subtodos: SubtodoResponse[];
+  allSubtodos: SubtodoResponse[];
 }
 
 interface ErrorPayload {
@@ -386,6 +388,24 @@ export const deleteTodo = createAsyncThunk(
   }
 );
 
+export const toggleSubtodo = createAsyncThunk(
+  'state/toggleSubtodo',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:2000/api/subtodos/toggle/${id}`, {
+        method: 'PATCH',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to toggle subtodo');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const stateSlice = createSlice({
   name: 'stateSlice',
   initialState,
@@ -408,18 +428,52 @@ const stateSlice = createSlice({
       .addCase(getBoards.fulfilled, (state, action: { payload: GetBoardsPayload }) => {
         state.loading = false;
         state.boards = action.payload.boards;
+        state.error = null;
       })
       .addCase(getColumns.fulfilled, (state, action: { payload: GetColumnsPayload }) => {
         state.loading = false;
         state.columns = action.payload.columns;
+        state.error = null;
       })
       .addCase(getTodos.fulfilled, (state, action: { payload: GetTodosPayload }) => {
         state.loading = false;
         state.todos = action.payload.todos;
+        state.error = null;
       })
       .addCase(getSubtodos.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
         state.loading = false;
         state.subtodos = action.payload.subtodos;
+        state.error = null;
+      })
+      .addCase(addTodo.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+        state.loading = false;
+        state.todos = action.payload.todos
+        state.error = null;
+      })
+      .addCase(updateTodo.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+        state.loading = false;
+        state.todos = action.payload.todos
+        state.error = null;
+      })
+      .addCase(addSubtodos.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
+        state.loading = false
+        state.todos = action.payload.todos
+        state.subtodos = action.payload.allSubtodos;
+        state.error = null
+      })
+      .addCase(updateSubtodos.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
+        state.loading = false
+        state.todos = action.payload.todos
+        state.subtodos = action.payload.allSubtodos;
+        state.error = null
+      })
+      .addCase(toggleSubtodo.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
+        state.loading = false
+        state.subtodos = action.payload.allSubtodos
+        state.error = null
+      })
+      .addCase(toggleSubtodo.pending, (state) => {
+        // Nothing
       })
       .addMatcher(
         (action) => action.type.endsWith('/fulfilled'),
@@ -429,7 +483,7 @@ const stateSlice = createSlice({
         }
       )
       .addMatcher(
-        (action) => action.type.endsWith('/pending'),
+        (action) => action.type.endsWith('/pending' && action.type !== 'state/toggleSubtodo/pending'),
         (state) => {
           state.loading = true;
           state.error = null;

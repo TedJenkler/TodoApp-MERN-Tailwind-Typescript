@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusSelect from '../components/StatusSelect';
-import { swapModal } from '../features/state/stateSlice';
+import { swapModal, toggleSubtodo } from '../features/state/stateSlice';
 import settings from '../assets/settings.png';
 import checkbox from '../assets/checkbox.png';
 import emptycheckbox from '../assets/emptycheckbox.png';
@@ -11,6 +11,7 @@ import useClickOutside from '../hooks/useClickOutside';
 interface Subtodo {
   _id: string;
   title: string;
+  todoId: string;
   isCompleted: boolean;
 }
 
@@ -24,64 +25,26 @@ interface Todo {
 
 function CheckTodoModal() {
   const modal = useSelector((state: any) => state.stateSlice.modal);
-  const [data, setData] = useState<Todo | null>(null);
-  const [children, setChildren] = useState<Subtodo[]>([]);
-  const [error, setError] = useState<Error | null>(null);
-  const [toggle, setToggle] = useState<boolean>(false);
-  const dispatch = useDispatch();
-  const id: string = modal.slice(4);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const choiceRef = useRef<HTMLDivElement>(null);
+  const todos = useSelector((state: any) => state.stateSlice.todos);
+  const subtodos = useSelector((state: any) => state.stateSlice.subtodos);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
 
-  useClickOutside(modalRef, "modal");
+  const id: string = modal.slice(4);
 
+  const selectedTodo = todos.find((todo: Todo) => todo._id === id);
+  const subtodoList = subtodos.filter((subtodo: Subtodo) => subtodo.todoId === id);
+
+  const [toggle, setToggle] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const modalRef = useRef<HTMLDivElement>(null);
+  const choiceRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(modalRef, "modal");
   useClickOutside(choiceRef, "toggle", setToggle);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const todoResponse = await fetch(`http://localhost:2000/api/todos/${id}`);
-        if (!todoResponse.ok) {
-          throw new Error('Failed to fetch todo data');
-        }
-        const todoData = await todoResponse.json();
-        setData(todoData.todo);
-
-        const subtodosResponse = await fetch(`http://localhost:2000/api/subtodos/${id}`);
-        if (!subtodosResponse.ok) {
-          throw new Error('Failed to fetch subtodos data');
-        }
-        const subtodosData = await subtodosResponse.json();
-        setChildren(subtodosData.subtodos);
-      } catch (error: any) {
-        setError(error);
-      }
-    };
-
-    fetchData();
-  }, [id]);
-
-  const handleToggle = useCallback(async (subtodoId: string) => {
-    try {
-      const response = await fetch(`http://localhost:2000/api/subtodos/toggle/${subtodoId}`, {
-        method: 'PATCH',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to toggle subtodo');
-      }
-
-      const updatedSubtodo = await response.json();
-      setChildren((prevChildren) =>
-        prevChildren.map((item) =>
-          item._id === subtodoId ? { ...item, isCompleted: !item.isCompleted } : item
-        )
-      );
-    } catch (error) {
-      console.error('Error toggling subtodo:', error);
-    }
-  }, []);
+  const handleToggle = useCallback((subtodoId: string) => {
+    dispatch(toggleSubtodo(subtodoId));
+  }, [dispatch]);
 
   const choiceTodoPopup = () => {
     setToggle((prevToggle) => !prevToggle);
@@ -99,7 +62,7 @@ function CheckTodoModal() {
     <div ref={modalRef} className={`z-50 w-[21.438rem] absolute ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} bottom-1/2 translate-y-1/2 right-1/2 translate-x-1/2 p-6 rounded-md md:w-[30rem] md:p-8`}>
       <div className='relative'>
         <div className='flex justify-between items-center'>
-          <h1 className={`mb-6 hl ${isDarkMode ? 'text-white' : 'text-black'}`}>{data ? data.title : null}</h1>
+          <h1 className={`mb-6 hl ${isDarkMode ? 'text-white' : 'text-black'}`}>{selectedTodo ? selectedTodo.title : null}</h1>
           <img onClick={choiceTodoPopup} className='h-5 w-[0.289rem] cursor-pointer' src={settings} alt='settings' />
         </div>
         {toggle && (
@@ -109,19 +72,19 @@ function CheckTodoModal() {
           </div>
         )}
       </div>
-      <p className={`mb-6 text-mediumgrey bl ${isDarkMode ? 'text-white' : 'text-black'}`}>{data?.description ? data.description : null}</p>
+      <p className={`mb-6 text-mediumgrey bl ${isDarkMode ? 'text-white' : 'text-black'}`}>{selectedTodo?.description ? selectedTodo.description : null}</p>
       <h2 className={`text-xs font-bold ${isDarkMode ? 'text-white' : 'text-black'} mb-4`}>
-        Subtasks ({children.filter((item) => item.isCompleted).length} of {children.length})
+        Subtasks ({subtodoList.filter((item) => item.isCompleted).length} of {subtodoList.length})
       </h2>
       <div className='custom-scrollbar flex flex-col'>
-        {children.map((item) => (
+        {subtodoList.map((item) => (
           <div key={item._id} className={`w-full h-[3.688rem] mb-2 rounded flex items-center p-2 ${isDarkMode ? 'bg-darkbg hover:bg-mainpurple/25' : 'bg-lightbg hover:bg-mainpurple/25'} md:h-full cursor-pointer`} onClick={() => handleToggle(item._id)}>
             <img src={isDarkMode ? item.isCompleted ? checkbox : emptycheckboxdark : item.isCompleted ? checkbox : emptycheckbox} alt='checkbox' className='w-4 h-4 mr-2' />
             <span className={`text-xs font-bold ml-2 ${isDarkMode ? 'text-white' : 'text-black'} ${item.isCompleted ? 'line-through text-mediumgrey' : ''}`}>{item.title}</span>
           </div>
         ))}
       </div>
-      <StatusSelect todo={data} />
+      <StatusSelect todo={selectedTodo} />
     </div>
   );
 }

@@ -36,8 +36,6 @@ function App() {
     }
   }, [boards, dispatch]);
 
-  console.log(boards)
-  console.log(columns)
   if (loading || !boards) {
     return (
       <div className="App">

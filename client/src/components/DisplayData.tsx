@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import blue from '../assets/blue.png';
 import purple from '../assets/purple.png';
 import green from '../assets/green.png';
 import greyboardicon from '../assets/greyboardicon.png';
 import whiteboardicon from '../assets/whiteboardicon.png';
 import purpleboardicon from '../assets/purpleboardicon.png';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectedBoardState, swapModal, toggleMenu } from '../features/state/stateSlice';
-import ToggleTheme from './ToggleTheme';
 import slashedeye from '../assets/slashedeye.png';
 import eye from '../assets/eye.png';
 import EmptyCol from './EmptyCol';
+import ToggleTheme from './ToggleTheme';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectedBoardState, swapModal, toggleMenu } from '../features/state/stateSlice';
 
 interface Column {
   _id: string;
@@ -34,7 +34,7 @@ interface Subtodo {
 
 function DisplayData() {
   const [hoveredBoardId, setHoveredBoardId] = useState<string | null>(null);
-  
+
   const boards = useSelector((state: any) => state.stateSlice.boards);
   const columns = useSelector((state: any) => state.stateSlice.columns);
   const todos = useSelector((state: any) => state.stateSlice.todos);
@@ -44,10 +44,12 @@ function DisplayData() {
   const selectedBoardId = useSelector((state: any) => state.stateSlice.selectedBoard);
   const menu = useSelector((state: any) => state.stateSlice.menu);
 
-  const filteredColumns: Column[] = columns?.filter((column: Column) => column.boardId === selectedBoardId);
+  const filteredColumns: Column[] = useMemo(() => 
+    columns?.filter((column: Column) => column.boardId === selectedBoardId),
+    [columns, selectedBoardId]
+  );
 
   const handleTodoModal = (id: string) => {
-    console.log(id);
     dispatch(swapModal("todo" + id));
   };
 

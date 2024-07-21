@@ -52,7 +52,17 @@ exports.addSubtodos = async (req, res) => {
             return res.status(404).json({ message: 'Cannot update Todo' });
         }
 
-        res.status(201).json({ message: 'Successfully added subtodos', subtodos: insertedSubtodos });
+        const todos = await Todo.find();
+        if(!todos) {
+            return res.status(404).json({ message: 'Cant find todos'})
+        }
+
+        const subtodos = await Subtodo.find();
+        if(!subtodos) {
+            return res.status(404).json({ message: 'Cant find Subtodos'})
+        }
+
+        res.status(201).json({ message: 'Successfully added subtodos', subtodos: insertedSubtodos, todos: todos, allSubtodos: subtodos });
     } catch (error) {
         console.error('Error adding subtodos', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -88,7 +98,17 @@ exports.updateByTodoId = async (req, res) => {
             updatedTodo.subtodos = insertedSubtodos.map(sub => sub._id);
             await updatedTodo.save();
 
-            res.status(200).json({ message: 'Successfully updated todo and subtodos', updatedTodo, subtodos: insertedSubtodos });
+            const todos = await Todo.find();
+            if(!todos) {
+                return res.status(404).json({ message: 'Cant find todos'})
+            }
+
+            const subtodos = await Subtodo.find();
+            if(!subtodos) {
+                return res.status(404).json({ message: 'Cant find Subtodos'})
+            }
+
+            res.status(200).json({ message: 'Successfully updated todo and subtodos', updatedTodo, subtodos: insertedSubtodos, todos: todos, allSubtodos: subtodos });
         } else {
             res.status(200).json({ message: 'Successfully updated todo (no subtodos provided)', updatedTodo });
         }
@@ -109,7 +129,12 @@ exports.toggleSubtodo = async (req, res) => {
 
         const updatedSubtodo = await Subtodo.findByIdAndUpdate(id, { isCompleted: !subtodo.isCompleted }, { new: true });
 
-        res.status(200).json({ message: 'Successfully toggled subtodo', subtodo: updatedSubtodo });
+        const subtodos = await Subtodo.find();
+        if(!subtodos) {
+            return res.status(404).json({ message: 'Cant find Subtodos'})
+        }
+
+        res.status(200).json({ message: 'Successfully toggled subtodo', subtodo: updatedSubtodo, allSubtodos: subtodos });
     } catch (error) {
         console.error('Error toggling subtodo', error);
         res.status(500).json({ message: 'Internal Server Error' });
