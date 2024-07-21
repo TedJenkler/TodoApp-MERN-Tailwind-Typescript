@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import StatusSelectNew from "../components/StatusSelectNew";
 import SubtodoRepeater from "../components/SubtodoRepeater";
+import StatusSelectNew from "../components/StatusSelectNew";
 import { swapModal, updateTodo, updateSubtodos } from "../features/state/stateSlice";
 
 interface Todo {
@@ -12,18 +12,19 @@ interface Todo {
 }
 
 const EditModal: React.FC = () => {
+  const dispatch = useDispatch();
   const todoId = useSelector((state: any) => state.stateSlice.modal).slice(8);
+  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
+  const modalRef = useRef<HTMLDivElement>(null);
+
   const [formData, setFormData] = useState<Todo>({
     title: "",
     description: "",
     subTodos: [],
     status: ""
   });
-
-  const dispatch = useDispatch();
-  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
-  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const [formError, setFormError] = useState({ title: false, subtasks: false });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -92,10 +93,14 @@ const EditModal: React.FC = () => {
     }));
   };
 
-  const handleSubtodosChange = (subTodos: string[]) => {
+  const handleSubtodosChange = (subTodos: string[], hasErrors: boolean) => {
     setFormData(prevData => ({
       ...prevData,
-      subTodos: subTodos,
+      subTodos,
+    }));
+    setFormError(prevError => ({
+      ...prevError,
+      subtasks: hasErrors,
     }));
   };
 
@@ -107,6 +112,15 @@ const EditModal: React.FC = () => {
   };
 
   const handleSubmit = () => {
+    if (!formData.title || formData.title.trim() === '') {
+      setFormError(prevError => ({ ...prevError, title: true }));
+      return;
+    }
+
+    if (formError.subtasks) {
+      return;
+    }
+
     const { title, description, status, subTodos } = formData;
 
     const selectedColumn = columns.find((column: any) => column.name === status || column._id === status);
@@ -139,14 +153,19 @@ const EditModal: React.FC = () => {
       <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(80vh - 6rem)' }}>
         <h1 className={`hl mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>Edit Task</h1>
         <div className="flex flex-col mb-6">
-          <label htmlFor="title" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Title</label>
-          <input
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            className={`rounded-[0.25rem] h-10 px-4 py-2 border border-mediumgrey/25 focus:border-mainpurple ${isDarkMode ? 'bg-darkgrey text-mediumgrey' : 'bg-white text-black'} outline-none`}
-          />
+          <div className="relative">
+            <label htmlFor="title" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Title</label>
+            <input
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className={`w-full h-10 px-4 py-2 border focus:border-mainpurple rounded-[0.25rem] ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} ${formError.title ? "border-red" : "border-mediumgrey/25"} outline-none`}
+            />
+            {formError.title && (
+              <span className='absolute whitespace-nowrap right-4 top-[1.938rem] text-red bl'>Can’t be empty</span>
+            )}
+          </div>
         </div>
         <div className="flex flex-col mb-6">
           <label htmlFor="description" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Description</label>
@@ -167,6 +186,7 @@ const EditModal: React.FC = () => {
         <button
           onClick={handleSubmit}
           className={`bg-mainpurple text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}
+          disabled={formError.subtasks}
         >
           Save Changes
         </button>

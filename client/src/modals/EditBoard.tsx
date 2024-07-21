@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import BoardRepeater from '../components/ColumnRepeater';
+import ColumnRepeater from '../components/ColumnRepeater';
 import { editBoard, editColumns, swapModal } from '../features/state/stateSlice';
 
 interface Column {
@@ -14,18 +14,15 @@ interface Board {
 }
 
 const EditBoard: React.FC = () => {
-  const [formData, setFormData] = useState<Board>({
-    name: '',
-    columns: [],
-  });
-
+  const [formData, setFormData] = useState<Board>({ name: '', columns: [] });
+  const [formError, setFormError] = useState({ name: false, columns: false });
+  const dispatch = useDispatch();
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const selectedBoardId = useSelector((state: any) => state.stateSlice.modal.slice(9));
   const columns = useSelector((state: any) => state.stateSlice.columns.columns);
   const selectedBoardData = useSelector((state: any) => 
     state.stateSlice.boards.boards.find((board: any) => board._id === selectedBoardId)
   );
-  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
-  const dispatch = useDispatch();
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,6 +33,7 @@ const EditBoard: React.FC = () => {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -52,32 +50,35 @@ const EditBoard: React.FC = () => {
   }, [selectedBoardData, selectedBoardId, columns]);
 
   const handleBoardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prevData => ({
-      ...prevData,
-      name: e.target.value,
-    }));
+    setFormData({ ...formData, name: e.target.value });
   };
 
-  const handleColumnsChange = (columns: Column[]) => {
-    setFormData(prevData => ({
-      ...prevData,
-      columns: columns,
-    }));
+  const handleColumnsChange = (columns: Column[], hasErrors: boolean) => {
+    setFormData({ ...formData, columns });
+    setFormError(prevError => ({ ...prevError, columns: hasErrors }));
   };
 
   const handleSubmit = async () => {
+    if (!formData.name || formData.name.trim() === '') {
+      setFormError({ ...formError, name: true });
+      return;
+    }
+
+    if (formError.columns) {
+      return;
+    }
+
+    setFormError({ name: false, columns: false });
+
     try {
       const action = await dispatch(editBoard({ id: selectedBoardId, name: formData.name }));
 
       if (editBoard.fulfilled.match(action)) {
-        console.log('Board edited successfully');
+        const updatedBoardId = selectedBoardId;
+        const columnsWithBoardId = formData.columns.map(column => ({ ...column, boardId: updatedBoardId }));
 
-        const columnsWithBoardId = formData.columns.map(column => ({
-          ...column,
-          boardId: selectedBoardId,
-        }));
-
-        await dispatch(editColumns({ columns: columnsWithBoardId, boardId: selectedBoardId }));
+        await dispatch(editColumns({ columns: columnsWithBoardId, boardId: updatedBoardId }));
+        dispatch(swapModal(''));
       } else {
         console.error('Failed to edit board', action.payload);
       }
@@ -94,24 +95,30 @@ const EditBoard: React.FC = () => {
       <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(80vh - 6rem)' }}>
         <h1 className={`text-xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>Edit Board</h1>
         <div className="mb-6">
-          <label className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Board Name</label>
-          <input
-            className={`w-full h-10 px-4 py-2 border border-mediumgrey/25 rounded ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}
-            type="text"
-            value={formData.name}
-            onChange={handleBoardNameChange}
-          />
+          <div className='relative'>
+            <label className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Board Name</label>
+            <input
+              className={`w-full h-10 px-4 py-2 border focus:border-mainpurple rounded-[0.25rem] ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} ${formError.name ? "border-red" : "border-mediumgrey/25"} outline-none`}
+              type="text"
+              value={formData.name}
+              onChange={handleBoardNameChange}
+            />
+            {formError.name && (
+              <span className='absolute whitespace-nowrap right-4 top-[1.938rem] text-red bl'>Can’t be empty</span>
+            )}
+          </div>
         </div>
-        <BoardRepeater value={formData.columns} onChange={handleColumnsChange} />
+        <ColumnRepeater value={formData.columns} onChange={handleColumnsChange} />
         <button
           onClick={handleSubmit}
           className={`bg-mainpurple text-white text-[0.813rem] w-full h-10 font-bold leading-[1.438rem] rounded-[1.25rem] mt-4 ${isDarkMode ? 'hover:bg-mainpurple-dark' : 'hover:bg-mainpurple-light'}`}
+          disabled={formError.columns}
         >
           Save Changes
         </button>
       </div>
     </div>
   );
-}
+};
 
 export default EditBoard;
