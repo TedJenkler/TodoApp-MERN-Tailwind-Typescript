@@ -77,6 +77,7 @@ interface GetBoardsPayload {
 }
 
 interface GetColumnsPayload {
+  boards: BoardResponse[];
   columns: ColumnResponse[];
 }
 
@@ -474,6 +475,28 @@ const stateSlice = createSlice({
       })
       .addCase(toggleSubtodo.pending, (state) => {
         // Nothing
+      })
+      .addCase(editBoard.fulfilled, (state, action: { payload: GetBoardsPayload }) => {
+        state.loading = false
+        state.boards = action.payload.boards
+        state.error = null
+      })
+      .addCase(addBoard.fulfilled, (state, action: { payload: GetBoardsPayload }) => {
+        state.loading = false
+        state.boards = action.payload.boards
+        state.error = null
+      })
+      .addCase(addColumns.fulfilled, (state, action: { payload: GetColumnsPayload }) => {
+        state.loading = false;
+        state.boards = action.payload.boards
+        state.columns = action.payload.columns;
+        state.error = null;
+      })
+      .addCase(editColumns.fulfilled, (state, action: { payload: GetColumnsPayload }) => {
+        state.loading = false;
+        state.boards = action.payload.boards
+        state.columns = action.payload.columns;
+        state.error = null;
       })
       .addMatcher(
         (action) => action.type.endsWith('/fulfilled'),

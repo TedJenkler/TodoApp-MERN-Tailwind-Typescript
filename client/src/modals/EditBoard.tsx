@@ -30,7 +30,7 @@ const EditBoard: React.FC = () => {
 
   useEffect(() => {
     if (selectedBoardData) {
-      const selectedColumns = columns.filter((column: Column) => column.boardId === selectedBoardId);
+      const selectedColumns = columns?.filter((column: Column) => column.boardId === selectedBoardId);
       setFormData({
         name: selectedBoardData.name || '',
         columns: selectedColumns || [],

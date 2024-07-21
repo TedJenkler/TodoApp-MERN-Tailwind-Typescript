@@ -179,7 +179,15 @@ exports.addMany = async (req, res) => {
             return res.status(404).json({ message: `Error saving to board with ID ${boardId}` })
         };
 
-        res.status(200).json({ message: 'Successfully added many columns', columns: addedColumns });
+        const boards = await Board.find();
+        const newColumns = await Columns.find();
+
+        res.status(200).json({
+            message: 'Successfully updated columns for the board',
+            board: updateBoard,
+            boards: boards,
+            columns: newColumns
+        });
     } catch (error) {
         console.error('Error adding many columns', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -209,7 +217,15 @@ exports.updateAll = async (req, res) => {
             { new: true }
         );
 
-        res.status(200).json({ message: 'Successfully updated columns for the board', board: updatedBoard });
+        const boards = await Board.find();
+        const newColumns = await Columns.find();
+
+        res.status(200).json({
+            message: 'Successfully updated columns for the board',
+            board: updatedBoard,
+            boards: boards,
+            columns: newColumns
+        });
     } catch (error) {
         console.error('Error updating columns for the board', error);
         res.status(500).json({ message: 'Internal Server Error' });

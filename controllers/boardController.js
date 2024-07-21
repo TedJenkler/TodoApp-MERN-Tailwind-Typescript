@@ -35,21 +35,19 @@ exports.addBoard = async (req, res) => {
     try {
         const { name } = req.body;
 
-        const existingBoard = await Board.findOne({ name: name });
+        const existingBoard = await Board.findOne({ name });
         if (existingBoard) {
             return res.status(400).json({ message: 'Board already exists' });
         }
 
-        const board = new Board({
-            name,
-        });
-
+        const board = new Board({ name });
         const savedBoard = await board.save();
         if (!savedBoard) {
             return res.status(400).json({ message: 'Error saving board' });
         }
-        
-        res.status(201).json({ message: 'Successfully added board', board: savedBoard, id: savedBoard._id });
+
+        const boards = await Board.find();
+        res.status(201).json({ message: 'Successfully added board', board: savedBoard, id: savedBoard._id, boards });
     } catch (error) {
         console.error('Error adding board', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -69,7 +67,8 @@ exports.updateById = async (req, res) => {
             return res.status(404).json({ message: 'No board found' });
         }
 
-        res.status(200).json({ message: 'Successfully updated board', board: updatedBoard });
+        const boards = await Board.find();
+        res.status(200).json({ message: 'Successfully updated board', board: updatedBoard, boards });
     } catch (error) {
         console.error('Error updating board', error);
         res.status(500).json({ message: 'Internal Server Error' });
