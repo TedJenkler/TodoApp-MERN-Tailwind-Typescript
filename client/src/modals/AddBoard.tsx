@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ColumnRepeater from '../components/ColumnRepeater';
 import { addBoard, addColumns, swapModal } from '../features/state/stateSlice';

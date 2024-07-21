@@ -35,10 +35,10 @@ interface Subtodo {
 function DisplayData() {
   const [hoveredBoardId, setHoveredBoardId] = useState<string | null>(null);
   
-  const boards = useSelector((state: any) => state.stateSlice.boards.boards);
-  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
-  const todos = useSelector((state: any) => state.stateSlice.todos.todos);
-  const subtodos = useSelector((state: any) => state.stateSlice.subtodos.subtodos);
+  const boards = useSelector((state: any) => state.stateSlice.boards);
+  const columns = useSelector((state: any) => state.stateSlice.columns);
+  const todos = useSelector((state: any) => state.stateSlice.todos);
+  const subtodos = useSelector((state: any) => state.stateSlice.subtodos);
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const selectedBoardId = useSelector((state: any) => state.stateSlice.selectedBoard);

@@ -17,8 +17,8 @@ import DeleteTodo from "./modals/DeleteTodo";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  const boards = useSelector((state: any) => state.stateSlice.boards.boards);
-  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+  const boards = useSelector((state: any) => state.stateSlice.boards);
+  const columns = useSelector((state: any) => state.stateSlice.columns);
   const loading = useSelector((state: RootState) => state.stateSlice.loading);
   const modal = useSelector((state: any) => state.stateSlice.modal);
   const theme = useSelector((state: any) => state.stateSlice.darkmode);
@@ -36,6 +36,8 @@ function App() {
     }
   }, [boards, dispatch]);
 
+  console.log(boards)
+  console.log(columns)
   if (loading || !boards) {
     return (
       <div className="App">

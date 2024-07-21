@@ -8,7 +8,7 @@ interface StatusSelectNewProps {
 
 const StatusSelectNew: React.FC<StatusSelectNewProps> = ({ handleStatus }) => {
   const selectedBoard = useSelector((state: any) => state.stateSlice.selectedBoard);
-  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+  const columns = useSelector((state: any) => state.stateSlice.columns);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   
   const selectedColumns = columns.filter((item) => item.boardId === selectedBoard);

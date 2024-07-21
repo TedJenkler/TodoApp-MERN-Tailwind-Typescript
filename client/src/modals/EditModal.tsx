@@ -15,7 +15,7 @@ interface Todo {
 const EditModal: React.FC = () => {
   const dispatch = useDispatch();
   const todoId = useSelector((state: any) => state.stateSlice.modal).slice(8);
-  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+  const columns = useSelector((state: any) => state.stateSlice.columns);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const modalRef = useRef<HTMLDivElement>(null);
 

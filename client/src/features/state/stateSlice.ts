@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, isRejectedWithValue } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface Board {
   id: number;
@@ -38,11 +38,6 @@ interface State {
   error: string | null;
 }
 
-interface AddColumnsPayload {
-  columns: [];
-  boardId: string;
-}
-
 const initialState: State = {
   selectedBoard: { id: null },
   boards: [],
@@ -55,6 +50,47 @@ const initialState: State = {
   loading: true,
   error: null,
 };
+interface BoardResponse {
+  id: number;
+  title: string;
+}
+
+interface ColumnResponse {
+  id: number;
+  title: string;
+}
+
+interface TodoResponse {
+  id: number;
+  title: string;
+  columnId: number;
+}
+
+interface SubtodoResponse {
+  title: string;
+  isCompleted: boolean;
+  todoId: number;
+}
+
+interface GetBoardsPayload {
+  boards: BoardResponse[];
+}
+
+interface GetColumnsPayload {
+  columns: ColumnResponse[];
+}
+
+interface GetTodosPayload {
+  todos: TodoResponse[];
+}
+
+interface GetSubtodosPayload {
+  subtodos: SubtodoResponse[];
+}
+
+interface ErrorPayload {
+  message: string;
+}
 
 export const getBoards = createAsyncThunk(
   'state/getBoards',
@@ -368,163 +404,45 @@ const stateSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(getBoards.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(getBoards.fulfilled, (state, action) => {
-      state.loading = false;
-      state.boards = action.payload;
-    });
-    builder.addCase(getBoards.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-    builder.addCase(getColumns.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(getColumns.fulfilled, (state, action) => {
-      state.loading = false;
-      state.columns = action.payload;
-    });
-    builder.addCase(getColumns.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-    builder.addCase(getTodos.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(getTodos.fulfilled, (state, action) => {
-      state.loading = false;
-      state.todos = action.payload;
-    });
-    builder.addCase(getTodos.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-    builder.addCase(getSubtodos.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(getSubtodos.fulfilled, (state, action) => {
-      state.loading = false;
-      state.subtodos = action.payload;
-    });
-    builder.addCase(getSubtodos.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
-    builder.addCase(addTodo.pending, (state) => {
-      state.loading = true;
-      state.error = null
-    });
-    builder.addCase(addTodo.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(addTodo.rejected, (state, action) => {
-      state.loading = false
-      state.error = action.payload as string;
-    });
-    builder.addCase(updateTodo.pending, (state) => {
-      state.loading = true;
-      state.error = null
-    });
-    builder.addCase(updateTodo.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(updateTodo.rejected, (state, action) => {
-      state.loading = false
-      state.error = action.payload as string;
-    });
-    builder.addCase(updateSubtodos.pending, (state) => {
-      state.loading = true;
-      state.error = null
-    });
-    builder.addCase(updateSubtodos.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(updateSubtodos.rejected, (state, action) => {
-      state.loading = false
-      state.error = action.payload as string;
-    });
-    builder.addCase(addSubtodos.pending, (state) => {
-      state.loading = true;
-      state.error = null
-    });
-    builder.addCase(addSubtodos.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(addSubtodos.rejected, (state, action) => {
-      state.loading = false
-      state.error = action.payload as string;
-    });
-    builder.addCase(addBoard.pending, (state) => {
-      state.loading = true;
-      state.error = null
-    });
-    builder.addCase(addBoard.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(addBoard.rejected, (state, action) => {
-      state.loading = false
-      state.error = action.payload as string;
-    });
-    builder.addCase(addColumns.pending, (state) => {
-      state.loading = true;
-      state.error = null
-    });
-    builder.addCase(addColumns.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(addColumns.rejected, (state, action) => {
-      state.loading = false
-      state.error = action.payload as string;
-    });
-    builder.addCase(editBoard.pending, (state) => {
-      state.loading = true;
-      state.error = null
-    });
-    builder.addCase(editBoard.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(editBoard.rejected, (state, action) => {
-      state.loading = false
-      state.error = action.payload as string;
-    });
-    builder.addCase(editColumns.pending, (state) => {
-      state.loading = true;
-      state.error = null
-    });
-    builder.addCase(editColumns.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(editColumns.rejected, (state, action) => {
-      state.loading = false
-      state.error = action.payload as string;
-    });
-    builder.addCase(deleteBoard.pending, (state) => {
-      state.loading = true;
-      state.error = null
-    });
-    builder.addCase(deleteBoard.fulfilled, (state) => {
-      state.loading = false;
-      state.error = null;
-    });
-    builder.addCase(deleteBoard.rejected, (state, action) => {
-      state.loading = false
-      state.error = action.payload as string;
-    });
-  },
+    builder
+      .addCase(getBoards.fulfilled, (state, action: { payload: GetBoardsPayload }) => {
+        state.loading = false;
+        state.boards = action.payload.boards;
+      })
+      .addCase(getColumns.fulfilled, (state, action: { payload: GetColumnsPayload }) => {
+        state.loading = false;
+        state.columns = action.payload.columns;
+      })
+      .addCase(getTodos.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+        state.loading = false;
+        state.todos = action.payload.todos;
+      })
+      .addCase(getSubtodos.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
+        state.loading = false;
+        state.subtodos = action.payload.subtodos;
+      })
+      .addMatcher(
+        (action) => action.type.endsWith('/fulfilled'),
+        (state) => {
+          state.loading = false;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith('/pending'),
+        (state) => {
+          state.loading = true;
+          state.error = null;
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith('/rejected'),
+        (state, action: { payload: ErrorPayload }) => {
+          state.loading = false;
+          state.error = action.payload.message;
+        }
+      );
+  }
 });
 
 export const { selectedBoardState, swapModal, toggleDarkmode, toggleMenu } = stateSlice.actions;

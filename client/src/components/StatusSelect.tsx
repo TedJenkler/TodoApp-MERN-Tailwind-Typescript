@@ -4,7 +4,7 @@ import arrowdown from "../assets/arrowdown.png";
 
 function StatusSelect({ todo }) {
   const board = useSelector((state: any) => state.stateSlice.selectedBoard);
-  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+  const columns = useSelector((state: any) => state.stateSlice.columns);
   const selectedColumns = columns.filter((column: any) => column.boardId === board);
   const modal = useSelector((state: any) => state.stateSlice.modal);
   const id = modal.slice(4);

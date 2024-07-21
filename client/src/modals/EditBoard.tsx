@@ -20,9 +20,9 @@ const EditBoard: React.FC = () => {
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const selectedBoardId = useSelector((state: any) => state.stateSlice.modal.slice(9));
-  const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+  const columns = useSelector((state: any) => state.stateSlice.columns);
   const selectedBoardData = useSelector((state: any) => 
-    state.stateSlice.boards.boards.find((board: any) => board._id === selectedBoardId)
+    state.stateSlice.boards.find((board: any) => board._id === selectedBoardId)
   );
   const modalRef = useRef<HTMLDivElement>(null);
 

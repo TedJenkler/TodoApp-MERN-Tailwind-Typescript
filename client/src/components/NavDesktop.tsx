@@ -8,8 +8,8 @@ import useClickOutside from '../hooks/useClickOutside';
 
 function NavDesktop() {
     const dispatch = useDispatch();
-    const boards = useSelector((state: any) => state.stateSlice.boards.boards);
-    const columns = useSelector((state: any) => state.stateSlice.columns.columns);
+    const boards = useSelector((state: any) => state.stateSlice.boards);
+    const columns = useSelector((state: any) => state.stateSlice.columns);
     const toggle = useSelector((state: any) => state.stateSlice.menu);
     const theme = useSelector((state: any) => state.stateSlice.darkmode);
     const selectedBoard = useSelector((state: any) => state.stateSlice.selectedBoard);
