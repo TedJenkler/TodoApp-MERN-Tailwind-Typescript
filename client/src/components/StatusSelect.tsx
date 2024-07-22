@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import arrowdown from "../assets/arrowdown.png";
+import { updateTodoById } from "../features/state/stateSlice";
 
 function StatusSelect({ todo }) {
   const board = useSelector((state: any) => state.stateSlice.selectedBoard);
@@ -9,6 +10,7 @@ function StatusSelect({ todo }) {
   const modal = useSelector((state: any) => state.stateSlice.modal);
   const id = modal.slice(4);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
+  const dispatch = useDispatch();
 
   const [status, setStatus] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
@@ -43,24 +45,7 @@ function StatusSelect({ todo }) {
   const handleStatusChange = async (newStatus: string) => {
     setStatus(newStatus);
     setOpenMenu(false);
-
-    try {
-      const response = await fetch(`http://localhost:2000/api/todos/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ...todo, status: newStatus })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update status');
-      }
-
-      console.log('Status updated successfully');
-    } catch (error: any) {
-      console.error('Error updating status:', error.message);
-    }
+    dispatch(updateTodoById({todo: todo, status: newStatus, id: id}))
   };
 
   return (

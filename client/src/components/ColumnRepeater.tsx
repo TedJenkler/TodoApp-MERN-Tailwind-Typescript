@@ -33,12 +33,13 @@ const ColumnRepeater: React.FC<ColumnRepeaterProps> = ({ value, onChange }) => {
   };
 
   const handleChange = (index: number, newName: string) => {
-    const newRepeater = [...repeater];
-    newRepeater[index].name = newName;
+    const newRepeater = repeater.map((column, i) =>
+      i === index ? { ...column, name: newName } : column
+    );
+    const newErrorRepeater = errorRepeater.map((error, i) =>
+      i === index ? !newName.trim() : error
+    );
     setRepeater(newRepeater);
-    
-    const newErrorRepeater = [...errorRepeater];
-    newErrorRepeater[index] = !newName.trim();
     setErrorRepeater(newErrorRepeater);
     onChange(newRepeater, newErrorRepeater.some(error => error));
   };

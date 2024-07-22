@@ -95,6 +95,12 @@ interface ErrorPayload {
   message: string;
 }
 
+interface UpdateTodoPayload {
+  todo: any;
+  status: string;
+  id: string;
+}
+
 export const getBoards = createAsyncThunk(
   'state/getBoards',
   async (_, { rejectWithValue }) => {
@@ -407,6 +413,30 @@ export const toggleSubtodo = createAsyncThunk(
   }
 );
 
+export const updateTodoById = createAsyncThunk(
+  'state/updateTodoById',
+  async ({ todo, status, id }: UpdateTodoPayload, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:2000/api/todos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...todo, status }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update status');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const stateSlice = createSlice({
   name: 'stateSlice',
   initialState,
@@ -496,6 +526,11 @@ const stateSlice = createSlice({
         state.loading = false;
         state.boards = action.payload.boards
         state.columns = action.payload.columns;
+        state.error = null;
+      })
+      .addCase(updateTodoById.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+        state.loading = false;
+        state.todos = action.payload.todos
         state.error = null;
       })
       .addMatcher(
