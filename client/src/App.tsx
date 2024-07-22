@@ -50,12 +50,24 @@ function App() {
 
   return (
     <div className={`App h-screen overflow-x-hidden ${theme ? 'bg-darkbg' : 'bg-lightbg'}`}>
+      {modal === "" ? 
       <div className="md:hidden md:absolute">
         <Nav />
       </div>
+      :
+      <div className="md:hidden md:absolute brightness-50">
+        <Nav />
+      </div>
+      }
+      {modal === "" ? 
       <div className="hidden absolute md:flex md:relative">
         <NavDesktop />
       </div>
+      :
+      <div className="hidden absolute md:flex md:relative brightness-50">
+        <NavDesktop />
+      </div>
+      }
       {typeof modal === 'string' && regex.test(modal) ? <CheckTodoModal /> : null}
       {typeof modal === 'string' && regex2.test(modal) ? <EditModal /> : null}
       {typeof modal === 'string' && modal === 'add' ? <AddModal /> : null}
@@ -63,7 +75,12 @@ function App() {
       {typeof modal === 'string' && modal.includes('editBoard') ? <EditBoard /> : null}
       {typeof modal === 'string' && modal.includes('deleteBoard') ? <DeleteBoard /> : null}
       {typeof modal === 'string' && regex3.test(modal) ? <DeleteTodo /> : null}
+      {modal === "" ? !columns || columns.length === 0 ? <EmptyCol /> : <DisplayData /> :
+      <div className="brightness-50">
         {!columns || columns.length === 0 ? <EmptyCol /> : <DisplayData />}
+      </div>
+      }
+        
     </div>
   );
 }

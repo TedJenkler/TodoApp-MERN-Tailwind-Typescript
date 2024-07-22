@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, MouseEvent } from 'react';
 import menu from '../assets/menu.png';
 import settings from '../assets/settings.png';
 import plus from '../assets/plus.png';
@@ -62,26 +62,28 @@ function Nav() {
   };
 
   return (
-    <nav className={`flex justify-between items-center ${theme ? "bg-darkgrey" : "bg-white"}  h-16 py-5 px-4`}>
+    <nav className={`flex justify-between items-center ${theme ? "bg-darkgrey" : "bg-white"} h-16 py-5 px-4`}>
       <div className='flex items-center gap-4'>
-        <img className='h-6 w-6' src={menu} alt='mobilemenu' />
+        <img className='h-[1.563rem] w-6' src={menu} alt='mobile menu' />
         <CustomSelect options={boards} value={selectedBoard} onChange={onChangeBoard} />
       </div>
-      <div onClick={() => { addModuleBtn() }} className='flex items-center gap-4'>
-        <a
-          className={`flex items-center justify-center h-8 w-12 rounded-3xl ${hasColumns ? "bg-mainpurple cursor-pointer hover:bg-mainpurplehover" : "bg-mainpurple/25 cursor-not-allowed"}`}
-        >
-          <img className="h-3 w-3" src={plus} alt='plus' />
-        </a>
-      </div>
-      <div>
-        <img onClick={handleChoice} className='h-4 w-1' src={settings} alt='settings' />
-        {choiceBoardPopup ? (
-          <div ref={choiceRef} className='absolute flex flex-col items-center justify-between w-[12rem] h-[5.875rem] p-4 rounded-lg top-[3.75rem] right-6 bg-darkbg'>
-            <p onClick={EditModal} className='text-mediumgrey'>Edit Board</p>
-            <p onClick={deleteModal} className='text-red'>Delete Board</p>
-          </div>
-        ) : null}
+      <div className='flex gap-4 items-center'>
+        <div onClick={addModuleBtn} className='flex items-center gap-4'>
+          <a
+            className={`flex items-center justify-center h-8 w-12 rounded-3xl ${hasColumns ? "bg-mainpurple cursor-pointer hover:bg-mainpurplehover" : "bg-mainpurple/25 cursor-not-allowed"}`}
+          >
+            <img className="h-3 w-3" src={plus} alt='plus' />
+          </a>
+        </div>
+        <div>
+          <img onClick={handleChoice} className='h-4 w-1' src={settings} alt='settings' />
+          {choiceBoardPopup && (
+            <div ref={choiceRef} className='absolute flex flex-col items-center justify-between w-[12rem] h-[5.875rem] p-4 rounded-lg top-[3.75rem] right-6 bg-darkbg'>
+              <p onClick={EditModal} className='text-mediumgrey'>Edit Board</p>
+              <p onClick={deleteModal} className='text-red'>Delete Board</p>
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );

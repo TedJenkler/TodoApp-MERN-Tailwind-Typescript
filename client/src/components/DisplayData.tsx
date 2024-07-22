@@ -34,7 +34,7 @@ const DraggableTodo = ({ todo, onClick }) => {
       <h3 className='hm w-full'>{todo.title}</h3>
       <div className='flex items-center gap-2 text-mediumgrey'>
         {todo.subtodos.length > 0 ? (
-          <p>
+          <p className='bm'>
             {todo.subtodos.filter(subtodo => subtodo.isCompleted).length} of {todo.subtodos.length} subtasks
           </p>
         ) : (
@@ -156,7 +156,7 @@ const DisplayData = () => {
             </button>
           </div>
         )}
-        <main className={`flex flex-1 ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} ${menu ? "md:ml-[16.313rem]" : "md:ml-[3.5rem]"} h-full px-4 py-6 overflow-auto gap-6 transition-all duration-300 ease-in-out`}>
+        <main className={`flex flex-1 ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} ${menu ? "md:ml-[16.2rem]" : "md:ml-[3.5rem]"} h-full px-4 py-6 overflow-auto gap-6 transition-all duration-300 ease-in-out`}>
           {filteredColumns.length > 0 ? (
             filteredColumns.map((column: Column, index: number) => (
               <DroppableColumn
