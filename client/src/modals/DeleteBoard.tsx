@@ -13,6 +13,7 @@ function DeleteBoard() {
 
   const handleDelete = () => {
     dispatch(deleteBoard(id));
+    dispatch(swapModal(""));
   };
 
   return (

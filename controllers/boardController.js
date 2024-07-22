@@ -91,7 +91,12 @@ exports.deleteById = async (req, res) => {
             await Columns.deleteMany({ boardId: id });
         }
 
-        res.status(200).json({ message: 'Successfully deleted board and associated columns', board: deletedBoard });
+        const boards = await Board.find();
+        if(!boards) {
+            return res.status(404).json({ message: 'No boards found' })
+        }
+
+        res.status(200).json({ message: 'Successfully deleted board and associated columns', board: deletedBoard, boards: boards });
     } catch (error) {
         console.error('Error deleting board', error);
         res.status(500).json({ message: 'Internal Server Error' });

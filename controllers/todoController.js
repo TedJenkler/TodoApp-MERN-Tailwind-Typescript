@@ -121,7 +121,12 @@ exports.deleteById = async (req, res) => {
             return res.status(500).json({ message: "Error updating column" });
         }
 
-        res.status(200).json({ message: "Successfully deleted todo", todo });
+        const todos = await Todo.find();
+        if(!todos) {
+            return res.status(404).json({ message: 'Error updating todos' });
+        }
+
+        res.status(200).json({ message: "Successfully deleted todo", todo: todo, todos: todos });
     } catch (error) {
         console.error("Error deleting todo", error);
         res.status(500).json({ message: "Internal Server Error" });

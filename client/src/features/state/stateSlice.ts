@@ -533,6 +533,16 @@ const stateSlice = createSlice({
         state.todos = action.payload.todos
         state.error = null;
       })
+      .addCase(deleteBoard.fulfilled, (state, action: { payload: GetBoardsPayload }) => {
+        state.loading = false;
+        state.boards = action.payload.boards
+        state.error = null;
+      })
+      .addCase(deleteTodo.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+        state.loading = false;
+        state.todos = action.payload.todos
+        state.error = null;
+      })
       .addMatcher(
         (action) => action.type.endsWith('/fulfilled'),
         (state) => {
