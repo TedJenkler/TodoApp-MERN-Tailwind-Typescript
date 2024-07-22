@@ -75,8 +75,8 @@ const DisplayData = () => {
   const selectedBoardId = useSelector((state: any) => state.stateSlice.selectedBoard);
   const menu = useSelector((state: any) => state.stateSlice.menu);
 
-  const filteredColumns: Column[] = useMemo(() =>
-    columns?.filter((column: Column) => column.boardId === selectedBoardId),
+  const filteredColumns: Column[] = useMemo(
+    () => columns?.filter((column: Column) => column.boardId === selectedBoardId),
     [columns, selectedBoardId]
   );
 
@@ -113,7 +113,9 @@ const DisplayData = () => {
     <DndProvider backend={HTML5Backend}>
       <div className='flex h-screen overflow-hidden md:mt-[5rem]'>
         {menu ? (
-          <div className={`hidden absolute md:flex md:fixed flex-col justify-between h-[92%] min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transition-all duration-300 ease-in-out`}>
+          <div
+            className={`hidden absolute md:flex md:fixed flex-col justify-between h-[92%] min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transition-all duration-300 ease-in-out`}
+          >
             <div>
               <h1 className='mx-6 text-mediumgrey text-xs font-bold tracking-[2.4px] mb-5'>
                 ALL BOARDS ({boards.length})
@@ -143,20 +145,30 @@ const DisplayData = () => {
             </div>
             <div>
               <ToggleTheme />
-              <div onClick={() => dispatch(toggleMenu(false))} className={`flex items-center h-12 w-[15rem] px-6 gap-[0.625rem] ${isDarkMode ? "hover:bg-white" : "hover:bg-mainpurple/25"} rounded-r-[6.25rem]`}>
+              <div
+                onClick={() => dispatch(toggleMenu(false))}
+                className={`flex items-center h-12 w-[15rem] px-6 gap-[0.625rem] ${isDarkMode ? "hover:bg-white" : "hover:bg-mainpurple/25"} rounded-r-[6.25rem]`}
+              >
                 <img className='h-4 w-4' src={slashedeye} alt='sidebar toggle' />
                 <button className='hm text-mainpurple'>Hide Sidebar</button>
               </div>
             </div>
           </div>
         ) : (
-          <div className={`hidden absolute md:flex md:fixed flex-col justify-end h-[92%] w-[3.5rem] ${isDarkMode ? "bg-darkbg" : "bg-lightbg"} transition-all duration-300 ease-in-out`}>
-            <button onClick={closeMenu} className='flex bg-mainpurple mb-8 w-[3.5rem] h-12 rounded-r-[6.25rem] px-[1.125rem] items-center hover:bg-mainpurplehover'>
+          <div
+            className={`hidden absolute md:flex md:fixed flex-col justify-end h-[92%] w-[3.5rem] ${isDarkMode ? "bg-darkbg" : "bg-lightbg"} transition-all duration-300 ease-in-out`}
+          >
+            <button
+              onClick={closeMenu}
+              className='flex bg-mainpurple mb-8 w-[3.5rem] h-12 rounded-r-[6.25rem] px-[1.125rem] items-center hover:bg-mainpurplehover'
+            >
               <img src={eye} alt='openmenu' />
             </button>
           </div>
         )}
-        <main className={`flex flex-1 ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} ${menu ? "md:ml-[16.2rem]" : "md:ml-[3.5rem]"} h-full px-4 py-6 overflow-auto gap-6 transition-all duration-300 ease-in-out`}>
+        <main
+          className={`flex flex-1 ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} ${menu ? "md:ml-[16.2rem]" : "md:ml-[3.5rem]"} h-full px-4 py-6 overflow-auto gap-6 transition-all duration-300 ease-in-out`}
+        >
           {filteredColumns.length > 0 ? (
             filteredColumns.map((column: Column, index: number) => (
               <DroppableColumn
@@ -164,7 +176,7 @@ const DisplayData = () => {
                 column={{
                   ...column,
                   dotIcon: index === 0 ? blue : index === 1 ? purple : green,
-                  todos: todos.filter((todo: Todo) => todo.status === column._id)
+                  todos: todos.filter((todo: Todo) => todo.status === column._id),
                 }}
                 onDrop={handleDrop}
               >
@@ -182,6 +194,9 @@ const DisplayData = () => {
           ) : (
             <EmptyCol />
           )}
+          {filteredColumns.length > 0 ? <div onClick={handleColumn} className={`flex mt-[2.188rem] items-center justify-center min-w-[17.5rem] ${isDarkMode ? "bg-darkgrey" : "bg-speciallight" } rounded-md`}>
+            <p className='hxl text-mediumgrey'>+ New Column</p>
+          </div> : null}
         </main>
       </div>
     </DndProvider>

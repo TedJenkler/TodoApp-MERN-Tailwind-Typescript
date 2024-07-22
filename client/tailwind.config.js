@@ -17,7 +17,7 @@ export default {
         'lightbg': '#F4F7FD',
         'mainpurplehover': '#A8A4FF',
         'redhover': '#FF9898',
-        
+        'speciallight': '#E9EFFA'
       }
     },
   },
