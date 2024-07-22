@@ -34,6 +34,7 @@ interface State {
   modal: string;
   darkmode: boolean;
   menu: boolean;
+  menuMobile: boolean;
   loading: boolean;
   error: string | null;
 }
@@ -47,6 +48,7 @@ const initialState: State = {
   modal: "",
   darkmode: false,
   menu: false,
+  menuMobile: false,
   loading: true,
   error: null,
 };
@@ -452,6 +454,9 @@ const stateSlice = createSlice({
     },
     toggleMenu: (state, action) => {
       state.menu = action.payload;
+    },
+    toggleMobileMenu: (state, action) => {
+      state.menuMobile = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -567,6 +572,6 @@ const stateSlice = createSlice({
   }
 });
 
-export const { selectedBoardState, swapModal, toggleDarkmode, toggleMenu } = stateSlice.actions;
+export const { selectedBoardState, swapModal, toggleDarkmode, toggleMenu, toggleMobileMenu } = stateSlice.actions;
 
 export default stateSlice.reducer;

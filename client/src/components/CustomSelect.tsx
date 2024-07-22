@@ -5,7 +5,8 @@ import greyboardicon from '../assets/greyboardicon.png';
 import purpleboardicon from '../assets/purpleboardicon.png';
 import ToggleTheme from './ToggleTheme';
 import { useDispatch, useSelector } from 'react-redux';
-import { swapModal } from '../features/state/stateSlice';
+import { swapModal, toggleMobileMenu } from '../features/state/stateSlice';
+import useClickOutside from '../hooks/useClickOutside';
 
 interface Option {
   _id: number;
@@ -22,20 +23,17 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ options, value, onChange })
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
-  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode); // Assuming darkmode state is correctly managed
+  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
+
+  useClickOutside(selectRef, "toggle", setIsOpen);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+    if(isOpen) {
+      dispatch(toggleMobileMenu(true))
+    }else {
+      dispatch(toggleMobileMenu(false))
+    }
+  }, [isOpen])
 
   const handleOptionClick = (option: Option) => {
     onChange(option._id);
@@ -53,7 +51,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ options, value, onChange })
   }
 
   return (
-    <div ref={selectRef} className="relative">
+    <div ref={selectRef} className="relative z-50">
       <div onClick={() => setIsOpen(!isOpen)} className="flex items-center w-[9.938rem] h-[1.438rem] cursor-pointer">
         <p className={`${isDarkMode ? "text-white" : "text-black"} hl whitespace-nowrap`}>{getNameById(value)}</p>
         <img className={`h-2 w-2 ml-2 transform ${isOpen ? 'rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`} src={arrowdown} alt="arrowdown" />

@@ -105,6 +105,7 @@ const AddModal: React.FC = () => {
             <label htmlFor="title" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Title</label>
             <input
               id="title"
+              placeholder="e.g. Take coffee break"
               name="title"
               value={formData.title}
               onChange={handleInputChange}
@@ -119,6 +120,7 @@ const AddModal: React.FC = () => {
           <label htmlFor="description" className={`text-xs font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-black'}`}>Description</label>
           <textarea
             id="description"
+            placeholder="e.g. It’s always good to take a break. This 15 minute break will  recharge the batteries a little."
             name="description"
             value={formData.description}
             onChange={handleInputChange}

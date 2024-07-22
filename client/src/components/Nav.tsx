@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, MouseEvent } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import menu from '../assets/menu.png';
 import settings from '../assets/settings.png';
 import plus from '../assets/plus.png';
 import CustomSelect from './CustomSelect';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectedBoardState, swapModal } from '../features/state/stateSlice';
+import useClickOutside from '../hooks/useClickOutside';
 
 function Nav() {
   const boards = useSelector((state: any) => state.stateSlice.boards);
@@ -18,19 +19,7 @@ function Nav() {
   const [choiceBoardPopup, setChoiceBoardPopup] = useState<boolean>(false);
   const [hasColumns, setHasColumns] = useState<boolean>(columns?.some((column: any) => column.boardId === initialSelected));
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (choiceRef.current && !choiceRef.current.contains(event.target as Node)) {
-        setChoiceBoardPopup(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  useClickOutside(choiceRef, "toggle", setChoiceBoardPopup)
 
   useEffect(() => {
     setSelectedBoardLocally(initialSelected);
@@ -63,7 +52,7 @@ function Nav() {
   };
 
   return (
-    <nav className={`flex justify-between items-center ${theme ? "bg-darkgrey" : "bg-white"} h-16 py-5 px-4`}>
+    <nav className={`flex justify-between items-center ${theme ? "bg-darkgrey" : "bg-white"} h-16 py-5 px-4 z-50`}>
       <div className='flex items-center gap-4'>
         <img className='h-[1.563rem] w-6' src={menu} alt='mobile menu' />
         <CustomSelect options={boards} value={selectedBoard} onChange={onChangeBoard} />

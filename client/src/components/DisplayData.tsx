@@ -167,7 +167,7 @@ const DisplayData = () => {
           </div>
         )}
         <main
-          className={`flex flex-1 ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} ${menu ? "md:ml-[16.2rem]" : "md:ml-[3.5rem]"} h-full px-4 py-6 overflow-auto gap-6 transition-all duration-300 ease-in-out`}
+          className={`flex flex-1 ${isDarkMode ? 'bg-darkbg' : 'bg-lightbg'} ${menu ? "md:ml-[16.2rem]" : "md:ml-[3.3rem]"} h-full px-4 py-6 overflow-auto gap-6 transition-all duration-300 ease-in-out`}
         >
           {filteredColumns.length > 0 ? (
             filteredColumns.map((column: Column, index: number) => (

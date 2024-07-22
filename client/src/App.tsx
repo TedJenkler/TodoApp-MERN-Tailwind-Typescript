@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getBoards, getColumns, getTodos, getSubtodos, selectedBoardState } from "./features/state/stateSlice";
 import { AppDispatch, RootState } from "./store";
@@ -22,6 +22,7 @@ function App() {
   const loading = useSelector((state: RootState) => state.stateSlice.loading);
   const modal = useSelector((state: any) => state.stateSlice.modal);
   const theme = useSelector((state: any) => state.stateSlice.darkmode);
+  const menu = useSelector((state: any) => state.stateSlice.menuMobile);
 
   useEffect(() => {
     dispatch(getBoards());
@@ -43,7 +44,7 @@ function App() {
       </div>
     );
   }
-
+  console.log(menu)
   const regex = /^todo[a-zA-Z0-9_-]{5,}$/;
   const regex2 = /^edittodo[a-zA-Z0-9_-]{5,}$/;
   const regex3 = /^deletetodo[a-zA-Z0-9_-]{5,}$/;
@@ -75,12 +76,11 @@ function App() {
       {typeof modal === 'string' && modal.includes('editBoard') ? <EditBoard /> : null}
       {typeof modal === 'string' && modal.includes('deleteBoard') ? <DeleteBoard /> : null}
       {typeof modal === 'string' && regex3.test(modal) ? <DeleteTodo /> : null}
-      {modal === "" ? !columns || columns.length === 0 ? <EmptyCol /> : <DisplayData /> :
+      {modal === "" ? !columns || columns.length === 0 ? <EmptyCol /> : <div className={menu ? "brightness-50 md:brightness-100" : ""}><DisplayData /></div> :
       <div className="brightness-50">
         {!columns || columns.length === 0 ? <EmptyCol /> : <DisplayData />}
       </div>
       }
-        
     </div>
   );
 }

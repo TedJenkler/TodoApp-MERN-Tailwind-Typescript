@@ -71,6 +71,7 @@ const AddBoard: React.FC = () => {
             <input
               className={`w-full h-10 px-4 py-2 border focus:border-mainpurple rounded-[0.25rem] ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'} ${formError.name ? "border-red" : "border-mediumgrey/25"} outline-none`}
               type="text"
+              placeholder='e.g. Web Design'
               value={formData.name}
               onChange={handleBoardNameChange}
             />
