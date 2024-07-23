@@ -17,6 +17,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 const ItemType = 'TODO_ITEM';
 
 const DraggableTodo = ({ todo, onClick }) => {
+  const subtodos = useSelector((state: any) => state.stateSlice.subtodos);
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemType,
     item: { id: todo._id, status: todo.status },
@@ -35,7 +36,8 @@ const DraggableTodo = ({ todo, onClick }) => {
       <div className='flex items-center gap-2 text-mediumgrey'>
         {todo.subtodos.length > 0 ? (
           <p className='bm'>
-            {todo.subtodos.filter(subtodo => subtodo.isCompleted).length} of {todo.subtodos.length} subtasks
+            {subtodos?.filter((subtodo: Subtodo) => todo.subtodos.includes(subtodo._id) && subtodo.isCompleted).length}{' '}
+            of {todo.subtodos.length} subtasks
           </p>
         ) : (
           <p>No subtasks</p>
@@ -69,7 +71,6 @@ const DisplayData = () => {
   const boards = useSelector((state: any) => state.stateSlice.boards);
   const columns = useSelector((state: any) => state.stateSlice.columns);
   const todos = useSelector((state: any) => state.stateSlice.todos);
-  const subtodos = useSelector((state: any) => state.stateSlice.subtodos);
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const selectedBoardId = useSelector((state: any) => state.stateSlice.selectedBoard);

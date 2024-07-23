@@ -505,6 +505,7 @@ const stateSlice = createSlice({
       })
       .addCase(toggleSubtodo.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
         state.loading = false
+        state.todos = action.payload.todos
         state.subtodos = action.payload.allSubtodos
         state.error = null
       })

@@ -129,12 +129,17 @@ exports.toggleSubtodo = async (req, res) => {
 
         const updatedSubtodo = await Subtodo.findByIdAndUpdate(id, { isCompleted: !subtodo.isCompleted }, { new: true });
 
+        const todos = await Todo.find();
+        if(!todos) {
+            return res.status(404).json({ message: 'Cant find Todos'})
+        }
+
         const subtodos = await Subtodo.find();
         if(!subtodos) {
             return res.status(404).json({ message: 'Cant find Subtodos'})
         }
 
-        res.status(200).json({ message: 'Successfully toggled subtodo', subtodo: updatedSubtodo, allSubtodos: subtodos });
+        res.status(200).json({ message: 'Successfully toggled subtodo', subtodo: updatedSubtodo, todos: todos, allSubtodos: subtodos });
     } catch (error) {
         console.error('Error toggling subtodo', error);
         res.status(500).json({ message: 'Internal Server Error' });
