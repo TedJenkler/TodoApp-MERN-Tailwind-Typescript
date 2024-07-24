@@ -11,7 +11,7 @@ const StatusSelectNew: React.FC<StatusSelectNewProps> = ({ handleStatus }) => {
   const columns = useSelector((state: any) => state.stateSlice.columns);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   
-  const selectedColumns = columns.filter((item) => item.boardId === selectedBoard);
+  const selectedColumns = columns.filter((item: any) => item.boardId === selectedBoard);
   
   const [openMenu, setOpenMenu] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState(selectedColumns[0]?.name || '');
@@ -35,7 +35,7 @@ const StatusSelectNew: React.FC<StatusSelectNewProps> = ({ handleStatus }) => {
         </div>
         {openMenu && (
           <div className={`absolute top-full mt-2 w-full border border-mediumgrey/25 rounded-[0.25rem] z-10 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'}`}>
-            {selectedColumns.map((item) => (
+            {selectedColumns.map((item: any) => (
               <div key={item.id} className={`px-4 py-2 cursor-pointer ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}`} onClick={() => handleStatusSelect(item.name)}>
                 <p className={`${isDarkMode ? 'text-white' : 'text-black'}`}>{item.name}</p>
               </div>

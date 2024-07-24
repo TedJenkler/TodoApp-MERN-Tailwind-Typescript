@@ -4,6 +4,7 @@ import SubtodoRepeater from "../components/SubtodoRepeater";
 import StatusSelectNew from "../components/StatusSelectNew";
 import { swapModal, updateTodo, updateSubtodos } from "../features/state/stateSlice";
 import useClickOutside from "../hooks/useClickOutside";
+import { AppDispatch } from "../store";
 
 interface Todo {
   title: string;
@@ -13,7 +14,7 @@ interface Todo {
 }
 
 const EditModal: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const todoId = useSelector((state: any) => state.stateSlice.modal).slice(8);
   const columns = useSelector((state: any) => state.stateSlice.columns);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);

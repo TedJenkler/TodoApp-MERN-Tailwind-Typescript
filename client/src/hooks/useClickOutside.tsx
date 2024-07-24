@@ -11,7 +11,9 @@ function useClickOutside(ref: React.RefObject<HTMLElement>, mode: String, onChan
                     dispatch(swapModal(""));
                 }
                 if(mode === "toggle") {
-                    onChange(false)
+                    if(onChange) {
+                        onChange(false)
+                    }
                 }
             }
         }

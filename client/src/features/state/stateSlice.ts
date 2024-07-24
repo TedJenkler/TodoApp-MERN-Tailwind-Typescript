@@ -1,19 +1,13 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Column } from '../../types';
 
 interface Board {
   id: number;
   title: string;
 }
-
-interface Column {
-  id: number;
-  title: string;
-}
-
 interface Todo {
-  id: number;
+  id: number | string;
   title: string;
-  columnId: number;
 }
 
 interface Subtodo {
@@ -25,6 +19,88 @@ interface Subtodo {
 interface SelectedBoardState {
   id: number | null;
 }
+
+interface State {
+  selectedBoard: SelectedBoardState;
+  boards: Board[];
+  columns: Column[];
+  todos: Todo[];
+  subtodos: Subtodo[];
+  modal: string;
+  darkmode: boolean;
+  menu: boolean;
+  menuMobile: boolean;
+  loading: boolean;
+  error: string | null;
+}
+
+interface BoardResponse {
+  id: number;
+  title: string;
+}
+
+interface TodoResponse {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+}
+
+interface SubtodoResponse {
+  title: string;
+  isCompleted: boolean;
+  todoId: number;
+}
+
+interface GetBoardsPayload {
+  boards: BoardResponse[];
+}
+
+interface GetColumnsPayload {
+  columns: Column[];
+  boards: Board[];
+}
+
+interface ColumnsResponse {
+  columns: Column[];
+  boards: Board[];
+}
+
+interface GetTodosPayload {
+  todos: TodoResponse[];
+}
+
+interface GetSubtodosPayload {
+  subtodos: SubtodoResponse[];
+  todos: TodoResponse[];
+  allSubtodos: SubtodoResponse[];
+}
+
+interface ErrorPayload {
+  message: string;
+}
+
+interface UpdateTodoPayload {
+  todo: Todo;
+  status: string;
+  id: string;
+}
+
+interface AddTodoParams {
+  title: string;
+  description: string;
+  status: string;
+}
+
+interface AddColumnsParams {
+  columns: Column[];
+  boardId: string;
+}
+
+export interface DeleteBoardParams {
+  id: string;
+}
+
 interface State {
   selectedBoard: SelectedBoardState;
   boards: Board[];
@@ -52,56 +128,6 @@ const initialState: State = {
   loading: true,
   error: null,
 };
-interface BoardResponse {
-  id: number;
-  title: string;
-}
-
-interface ColumnResponse {
-  id: number;
-  title: string;
-}
-
-interface TodoResponse {
-  id: number;
-  title: string;
-  columnId: number;
-}
-
-interface SubtodoResponse {
-  title: string;
-  isCompleted: boolean;
-  todoId: number;
-}
-
-interface GetBoardsPayload {
-  boards: BoardResponse[];
-}
-
-interface GetColumnsPayload {
-  boards: BoardResponse[];
-  columns: ColumnResponse[];
-}
-
-interface GetTodosPayload {
-  todos: TodoResponse[];
-}
-
-interface GetSubtodosPayload {
-  todos: TodoResponse[];
-  subtodos: SubtodoResponse[];
-  allSubtodos: SubtodoResponse[];
-}
-
-interface ErrorPayload {
-  message: string;
-}
-
-interface UpdateTodoPayload {
-  todo: any;
-  status: string;
-  id: string;
-}
 
 export const getBoards = createAsyncThunk(
   'state/getBoards',
@@ -167,8 +193,8 @@ export const getColumns = createAsyncThunk(
     }
   );
 
-  export const addTodo = createAsyncThunk(
-    'state/addtodo',
+  export const addTodo = createAsyncThunk<GetTodosPayload, AddTodoParams, { rejectValue: ErrorPayload }>(
+    'state/addTodo',
     async ({ title, description, status }, { rejectWithValue }) => {
       try {
         const response = await fetch('http://localhost:2000/api/todos/', {
@@ -184,9 +210,9 @@ export const getColumns = createAsyncThunk(
         }
   
         const data = await response.json();
-        return data;
+        return data as GetTodosPayload;
       } catch (error: any) {
-        return rejectWithValue(error.message);
+        return rejectWithValue({ message: error.message });
       }
     }
   );
@@ -286,29 +312,29 @@ export const getColumns = createAsyncThunk(
     }
   );
 
-  export const addColumns = createAsyncThunk(
+  export const addColumns = createAsyncThunk<ColumnsResponse, AddColumnsParams, { rejectValue: ErrorPayload }>(
     'state/addColumns',
     async ({ columns, boardId }, { rejectWithValue }) => {
-        try {
-            const response = await fetch('http://localhost:2000/api/columns/many', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ columns, boardId }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to add columns');
-            }
-
-            const data = await response.json();
-            return data;
-        } catch (error: any) {
-            return rejectWithValue(error.message);
+      try {
+        const response = await fetch('http://localhost:2000/api/columns/many', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ columns, boardId }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to add columns');
         }
+  
+        const data = await response.json();
+        return data as ColumnsResponse;
+      } catch (error: any) {
+        return rejectWithValue({ message: error.message });
+      }
     }
-);
+  );
 
 export const editBoard = createAsyncThunk(
   'state/editBoard',
@@ -360,7 +386,7 @@ export const editColumns = createAsyncThunk(
 
 export const deleteBoard = createAsyncThunk(
   'state/deleteBoard',
-  async (id, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
       const response = await fetch(`http://localhost:2000/api/boards/${id}`, {
         method: 'DELETE',
@@ -380,7 +406,7 @@ export const deleteBoard = createAsyncThunk(
 
 export const deleteTodo = createAsyncThunk(
   'state/deleteTodo',
-  async (id, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
       const response = await fetch(`http://localhost:2000/api/todos/${id}`, {
         method: 'DELETE',
@@ -443,110 +469,110 @@ const stateSlice = createSlice({
   name: 'stateSlice',
   initialState,
   reducers: {
-    selectedBoardState: (state, action) => {
+    selectedBoardState: (state, action: PayloadAction<SelectedBoardState>) => {
       state.selectedBoard = action.payload;
     },
-    swapModal: (state, action) => {
+    swapModal: (state, action: PayloadAction<string>) => {
       state.modal = action.payload;
     },
-    toggleDarkmode: (state, action) => {
+    toggleDarkmode: (state, action: PayloadAction<boolean>) => {
       state.darkmode = action.payload;
     },
-    toggleMenu: (state, action) => {
+    toggleMenu: (state, action: PayloadAction<boolean>) => {
       state.menu = action.payload;
     },
-    toggleMobileMenu: (state, action) => {
+    toggleMobileMenu: (state, action: PayloadAction<boolean>) => {
       state.menuMobile = action.payload;
     }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getBoards.fulfilled, (state, action: { payload: GetBoardsPayload }) => {
+      .addCase(getBoards.fulfilled, (state, action: PayloadAction<GetBoardsPayload>) => {
         state.loading = false;
         state.boards = action.payload.boards;
         state.error = null;
       })
-      .addCase(getColumns.fulfilled, (state, action: { payload: GetColumnsPayload }) => {
+      .addCase(getColumns.fulfilled, (state, action: PayloadAction<GetColumnsPayload>) => {
         state.loading = false;
         state.columns = action.payload.columns;
         state.error = null;
       })
-      .addCase(getTodos.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+      .addCase(getTodos.fulfilled, (state, action: PayloadAction<GetTodosPayload>) => {
         state.loading = false;
         state.todos = action.payload.todos;
         state.error = null;
       })
-      .addCase(getSubtodos.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
+      .addCase(getSubtodos.fulfilled, (state, action: PayloadAction<GetSubtodosPayload>) => {
         state.loading = false;
         state.subtodos = action.payload.subtodos;
         state.error = null;
       })
-      .addCase(addTodo.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+      .addCase(addTodo.fulfilled, (state, action: PayloadAction<GetTodosPayload>) => {
         state.loading = false;
-        state.todos = action.payload.todos
+        state.todos = action.payload.todos;
         state.error = null;
       })
-      .addCase(updateTodo.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+      .addCase(updateTodo.fulfilled, (state, action: PayloadAction<GetTodosPayload>) => {
         state.loading = false;
-        state.todos = action.payload.todos
+        state.todos = action.payload.todos;
         state.error = null;
       })
-      .addCase(addSubtodos.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
-        state.loading = false
-        state.todos = action.payload.todos
+      .addCase(addSubtodos.fulfilled, (state, action: PayloadAction<GetSubtodosPayload>) => {
+        state.loading = false;
+        state.todos = action.payload.todos;
         state.subtodos = action.payload.allSubtodos;
-        state.error = null
+        state.error = null;
       })
-      .addCase(updateSubtodos.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
-        state.loading = false
-        state.todos = action.payload.todos
+      .addCase(updateSubtodos.fulfilled, (state, action: PayloadAction<GetSubtodosPayload>) => {
+        state.loading = false;
+        state.todos = action.payload.todos;
         state.subtodos = action.payload.allSubtodos;
-        state.error = null
+        state.error = null;
       })
-      .addCase(toggleSubtodo.fulfilled, (state, action: { payload: GetSubtodosPayload }) => {
-        state.loading = false
-        state.todos = action.payload.todos
-        state.subtodos = action.payload.allSubtodos
-        state.error = null
+      .addCase(toggleSubtodo.fulfilled, (state, action: PayloadAction<GetSubtodosPayload>) => {
+        state.loading = false;
+        state.todos = action.payload.todos;
+        state.subtodos = action.payload.allSubtodos;
+        state.error = null;
       })
-      .addCase(toggleSubtodo.pending, (state) => {
+      .addCase(toggleSubtodo.pending, () => {
         // Nothing
       })
-      .addCase(editBoard.fulfilled, (state, action: { payload: GetBoardsPayload }) => {
-        state.loading = false
-        state.boards = action.payload.boards
-        state.error = null
-      })
-      .addCase(addBoard.fulfilled, (state, action: { payload: GetBoardsPayload }) => {
-        state.loading = false
-        state.boards = action.payload.boards
-        state.error = null
-      })
-      .addCase(addColumns.fulfilled, (state, action: { payload: GetColumnsPayload }) => {
+      .addCase(editBoard.fulfilled, (state, action: PayloadAction<GetBoardsPayload>) => {
         state.loading = false;
-        state.boards = action.payload.boards
+        state.boards = action.payload.boards;
+        state.error = null;
+      })
+      .addCase(addBoard.fulfilled, (state, action: PayloadAction<GetBoardsPayload>) => {
+        state.loading = false;
+        state.boards = action.payload.boards;
+        state.error = null;
+      })
+      .addCase(addColumns.fulfilled, (state, action: PayloadAction<GetColumnsPayload>) => {
+        state.loading = false;
+        state.boards = action.payload.boards;
         state.columns = action.payload.columns;
         state.error = null;
       })
-      .addCase(editColumns.fulfilled, (state, action: { payload: GetColumnsPayload }) => {
+      .addCase(editColumns.fulfilled, (state, action: PayloadAction<GetColumnsPayload>) => {
         state.loading = false;
-        state.boards = action.payload.boards
+        state.boards = action.payload.boards;
         state.columns = action.payload.columns;
         state.error = null;
       })
-      .addCase(updateTodoById.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+      .addCase(updateTodoById.fulfilled, (state, action: PayloadAction<GetTodosPayload>) => {
         state.loading = false;
-        state.todos = action.payload.todos
+        state.todos = action.payload.todos;
         state.error = null;
       })
-      .addCase(deleteBoard.fulfilled, (state, action: { payload: GetBoardsPayload }) => {
+      .addCase(deleteBoard.fulfilled, (state, action: PayloadAction<GetBoardsPayload>) => {
         state.loading = false;
-        state.boards = action.payload.boards
+        state.boards = action.payload.boards;
         state.error = null;
       })
-      .addCase(deleteTodo.fulfilled, (state, action: { payload: GetTodosPayload }) => {
+      .addCase(deleteTodo.fulfilled, (state, action: PayloadAction<GetTodosPayload>) => {
         state.loading = false;
-        state.todos = action.payload.todos
+        state.todos = action.payload.todos;
         state.error = null;
       })
       .addMatcher(
@@ -565,7 +591,7 @@ const stateSlice = createSlice({
       )
       .addMatcher(
         (action) => action.type.endsWith('/rejected'),
-        (state, action: { payload: ErrorPayload }) => {
+        (state, action: PayloadAction<ErrorPayload>) => {
           state.loading = false;
           state.error = action.payload.message;
         }

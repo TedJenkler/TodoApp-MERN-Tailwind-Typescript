@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import blue from '../assets/blue.png';
 import purple from '../assets/purple.png';
 import green from '../assets/green.png';
@@ -13,10 +13,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectedBoardState, swapModal, toggleMenu, updateTodoById } from '../features/state/stateSlice';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Todo, Subtodo, Column } from '../types';
+import { AppDispatch } from '../store';
 
 const ItemType = 'TODO_ITEM';
 
-const DraggableTodo = ({ todo, onClick }) => {
+interface DraggableTodoProps {
+  todo: Todo & { isDarkMode: boolean };
+  onClick: () => void;
+}
+
+interface DroppableColumnProps {
+  column: Column & { dotIcon: any; todos: Todo[] };
+  children: React.ReactNode;
+  onDrop: (todoId: string, newColumnId: any) => any;
+}
+
+const DraggableTodo: React.FC<DraggableTodoProps> = ({ todo, onClick }) => {
   const subtodos = useSelector((state: any) => state.stateSlice.subtodos);
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemType,
@@ -47,10 +60,10 @@ const DraggableTodo = ({ todo, onClick }) => {
   );
 };
 
-const DroppableColumn = ({ column, children, onDrop }) => {
+const DroppableColumn: React.FC<DroppableColumnProps> = ({ column, children, onDrop }) => {
   const [, drop] = useDrop(() => ({
     accept: ItemType,
-    drop: (item) => onDrop(item.id, column._id),
+    drop: (item: any) => onDrop(item.id, column._id),
   }));
 
   return (
@@ -71,7 +84,7 @@ const DisplayData = () => {
   const boards = useSelector((state: any) => state.stateSlice.boards);
   const columns = useSelector((state: any) => state.stateSlice.columns);
   const todos = useSelector((state: any) => state.stateSlice.todos);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const selectedBoardId = useSelector((state: any) => state.stateSlice.selectedBoard);
   const menu = useSelector((state: any) => state.stateSlice.menu);
@@ -89,7 +102,7 @@ const DisplayData = () => {
     dispatch(swapModal("editBoard" + selectedBoardId));
   };
 
-  const changeBoard = (id: string) => {
+  const changeBoard = (id: any) => {
     dispatch(selectedBoardState(id));
   };
 
@@ -103,7 +116,7 @@ const DisplayData = () => {
   };
 
   const handleDrop = (todoId: string, newColumnId: string) => {
-    const selectedTodo = todos.find(item => item._id === todoId);
+    const selectedTodo = todos.find((item: any) => item._id === todoId);
     if (selectedTodo) {
       dispatch(updateTodoById({ todo: selectedTodo, status: newColumnId, id: todoId }));
     }

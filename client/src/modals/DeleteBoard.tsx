@@ -2,17 +2,20 @@ import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { swapModal, deleteBoard } from "../features/state/stateSlice";
 import useClickOutside from "../hooks/useClickOutside";
+import { AppDispatch } from "../store";
 
 function DeleteBoard() {
   const modalRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const id = useSelector((state: any) => state.stateSlice.selectedBoard);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
 
   useClickOutside(modalRef, "modal");
 
   const handleDelete = () => {
-    dispatch(deleteBoard(id));
+    if (id) {
+      dispatch(deleteBoard(id));
+    }
     dispatch(swapModal(""));
   };
 

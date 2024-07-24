@@ -3,21 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import ColumnRepeater from '../components/ColumnRepeater';
 import { addBoard, addColumns, swapModal } from '../features/state/stateSlice';
 import useClickOutside from '../hooks/useClickOutside';
-interface Column {
-  name: string;
-  boardId: string;
-}
-
-interface Board {
-  name: string;
-  columns: Column[];
-}
+import { RootState, AppDispatch } from '../store';
+import { Column, Board } from '../types';
 
 const AddBoard: React.FC = () => {
   const [formData, setFormData] = useState<Board>({ name: '', columns: [] });
-  const [formError, setFormError] = useState({ name: false, columns: false });
-  const dispatch = useDispatch();
-  const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
+  const [formError, setFormError] = useState<{ name: boolean; columns: boolean }>({ name: false, columns: false });
+  const dispatch = useDispatch<AppDispatch>();
+  const isDarkMode = useSelector((state: RootState) => state.stateSlice.darkmode);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(modalRef, "modal");
@@ -47,7 +40,11 @@ const AddBoard: React.FC = () => {
       const action = await dispatch(addBoard({ name: formData.name }));
       if (addBoard.fulfilled.match(action)) {
         const boardId = action.payload.board._id;
-        const columnsWithBoardId = formData.columns.map(column => ({ ...column, boardId: boardId }));
+        const columnsWithBoardId: Column[] = formData.columns.map(column => ({
+          ...column,
+          boardId,
+          title: column.name
+        }));
         await dispatch(addColumns({ columns: columnsWithBoardId, boardId }));
         dispatch(swapModal(''));
       } else {

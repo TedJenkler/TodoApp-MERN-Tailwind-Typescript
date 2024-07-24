@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import settings from '../assets/settings.png';
 import logo from '../assets/logodesktop.png';
 import lightlogo from "../assets/logodesktoplight.png";
@@ -16,7 +16,7 @@ function NavDesktop() {
     const [choiceBoardPopup, setChoiceBoardPopup] = useState<boolean>(false);
     const choiceRef = useRef<HTMLDivElement>(null);
 
-    const boardName = boards?.find((item) => item._id === selectedBoard);
+    const boardName = boards?.find((item: any) => item._id === selectedBoard);
     const hasColumns = columns?.some((column: any) => column.boardId === selectedBoard);
 
     useClickOutside(choiceRef, "toggle", setChoiceBoardPopup)

@@ -2,15 +2,21 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import arrowdown from "../assets/arrowdown.png";
 import { updateTodoById } from "../features/state/stateSlice";
+import { AppDispatch } from "../store";
+import { Todo } from '../types'
 
-function StatusSelect({ todo }) {
+interface StatusSelectProps {
+  todo: Todo;
+}
+
+const StatusSelect: React.FC<StatusSelectProps> = ({ todo }) => {
   const board = useSelector((state: any) => state.stateSlice.selectedBoard);
   const columns = useSelector((state: any) => state.stateSlice.columns);
   const selectedColumns = columns.filter((column: any) => column.boardId === board);
   const modal = useSelector((state: any) => state.stateSlice.modal);
   const id = modal.slice(4);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
   const [status, setStatus] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
@@ -55,7 +61,7 @@ function StatusSelect({ todo }) {
         onClick={handleSelect}
         className={`flex justify-between items-center w-full h-10 border border-mediumgrey/25 py-2 px-4 cursor-pointer ${isDarkMode ? 'bg-darkgrey text-white' : 'bg-white text-black'}`}
       >
-        <p className="bl">{status ? selectedColumns.find(column => column._id === status)?.name : null}</p>
+        <p className="bl">{status ? selectedColumns.find((column: any) => column._id === status)?.name : null}</p>
         <img className={`h-2 w-2 transform transition-transform duration-300 ease-in-out ${openMenu ? "rotate-180" : "rotate-0"}`} src={arrowdown} alt="arrowdown" />
       </div>
       {openMenu &&

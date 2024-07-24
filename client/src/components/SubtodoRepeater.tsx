@@ -2,15 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import x from '../assets/x.png';
 import redx from '../assets/redx.png';
-
-interface Subtodo {
-  title: string;
-  isCompleted: boolean;
-}
-
+import { Subtodo } from "../types";
 interface SubtodoRepeaterProps {
-  subTodos: Subtodo[];
-  onChange: (subTodos: Subtodo[], hasErrors: boolean) => void;
+  subTodos: any[];
+  onChange: any
 }
 
 const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange }) => {

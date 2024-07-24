@@ -2,10 +2,11 @@ import { useRef } from "react";
 import { deleteTodo, swapModal } from "../features/state/stateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import useClickOutside from "../hooks/useClickOutside";
+import { AppDispatch } from "../store";
 
 function DeleteTodo() {
   const modalRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const todoid = useSelector((state: any) => state.stateSlice.modal);
   const id = todoid.slice(10);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);

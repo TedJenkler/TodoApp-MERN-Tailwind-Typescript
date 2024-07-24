@@ -26,7 +26,7 @@ function Nav() {
     setHasColumns(columns?.some((column: any) => column.boardId === initialSelected));
   }, [initialSelected, columns]);
 
-  const onChangeBoard = (boardId: number) => {
+  const onChangeBoard = (boardId: any) => {
     setSelectedBoardLocally(boardId);
     dispatch(selectedBoardState(boardId));
     setHasColumns(columns.some((column: any) => column.boardId === boardId));

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ColumnRepeater from '../components/ColumnRepeater';
 import { editBoard, editColumns, swapModal } from '../features/state/stateSlice';
 import useClickOutside from '../hooks/useClickOutside';
+import { AppDispatch } from '../store';
 
 interface Column {
   name: string;
@@ -17,7 +18,7 @@ interface Board {
 const EditBoard: React.FC = () => {
   const [formData, setFormData] = useState<Board>({ name: '', columns: [] });
   const [formError, setFormError] = useState({ name: false, columns: false });
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const selectedBoardId = useSelector((state: any) => state.stateSlice.modal.slice(9));
   const columns = useSelector((state: any) => state.stateSlice.columns);

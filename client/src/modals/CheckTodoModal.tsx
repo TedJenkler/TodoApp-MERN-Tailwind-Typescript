@@ -7,6 +7,7 @@ import checkbox from '../assets/checkbox.png';
 import emptycheckbox from '../assets/emptycheckbox.png';
 import emptycheckboxdark from '../assets/emptycheckboxdark.png';
 import useClickOutside from '../hooks/useClickOutside';
+import { AppDispatch } from '../store';
 
 interface Subtodo {
   _id: string;
@@ -35,7 +36,7 @@ function CheckTodoModal() {
   const subtodoList = subtodos.filter((subtodo: Subtodo) => subtodo.todoId === id);
 
   const [toggle, setToggle] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const modalRef = useRef<HTMLDivElement>(null);
   const choiceRef = useRef<HTMLDivElement>(null);
 
@@ -74,10 +75,10 @@ function CheckTodoModal() {
       </div>
       <p className={`mb-6 text-mediumgrey bl ${isDarkMode ? 'text-white' : 'text-black'}`}>{selectedTodo?.description ? selectedTodo.description : null}</p>
       <h2 className={`text-xs font-bold ${isDarkMode ? 'text-white' : 'text-black'} mb-4`}>
-        Subtasks ({subtodoList.filter((item) => item.isCompleted).length} of {subtodoList.length})
+        Subtasks ({subtodoList.filter((item: any) => item.isCompleted).length} of {subtodoList.length})
       </h2>
       <div className='custom-scrollbar flex flex-col'>
-        {subtodoList.map((item) => (
+        {subtodoList.map((item: any) => (
           <div key={item._id} className={`w-full h-[3.688rem] mb-2 rounded flex items-center p-2 ${isDarkMode ? 'bg-darkbg hover:bg-mainpurple/25' : 'bg-lightbg hover:bg-mainpurple/25'} md:h-full cursor-pointer`} onClick={() => handleToggle(item._id)}>
             <img src={isDarkMode ? item.isCompleted ? checkbox : emptycheckboxdark : item.isCompleted ? checkbox : emptycheckbox} alt='checkbox' className='w-4 h-4 mr-2' />
             <span className={`text-xs font-bold ml-2 ${isDarkMode ? 'text-white' : 'text-black'} ${item.isCompleted ? 'line-through text-mediumgrey' : ''}`}>{item.title}</span>
