@@ -9,6 +9,7 @@ const columnsRoutes = require('./routes/columnsroutes');
 const todoRoutes = require('./routes/todoroutes');
 const subtodoRoutes = require('./routes/subtodoroutes');
 const morgan = require('morgan');
+const path = require('path');
 
 dotenv.config();
 
@@ -25,17 +26,21 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
 app.use('/api/boards', boardRoutes);
 app.use('/api/columns', columnsRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/subtodos', subtodoRoutes);
 
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
 })
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('Could not connect to MongoDB...', err));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/dist/index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
