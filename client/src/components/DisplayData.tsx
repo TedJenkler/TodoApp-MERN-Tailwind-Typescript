@@ -34,7 +34,7 @@ const DraggableTodo: React.FC<DraggableTodoProps> = ({ todo, onClick }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemType,
     item: { id: todo._id, status: todo.status },
-    collect: (monitor) => ({
+    collect: (monitor: any) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));

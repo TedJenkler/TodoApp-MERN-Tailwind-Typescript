@@ -129,11 +129,15 @@ const initialState: State = {
   error: null,
 };
 
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://todoapp-mern-tailwind-typescript.onrender.com/api'
+  : 'http://localhost:2000/api';
+
 export const getBoards = createAsyncThunk(
   'state/getBoards',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:2000/api/boards');
+      const response = await fetch(`${API_URL}/boards`);
       if (!response.ok) {
         throw new Error('Failed to fetch boards');
       }
@@ -149,7 +153,7 @@ export const getColumns = createAsyncThunk(
   'state/getColumns',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:2000/api/columns');
+      const response = await fetch(`${API_URL}/columns`);
       if (!response.ok) {
         throw new Error('Failed to fetch columns');
       }
@@ -158,189 +162,189 @@ export const getColumns = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
-    }
-  );
+  }
+);
 
-  export const getTodos = createAsyncThunk(
-    'state/getTodos',
-    async (_, { rejectWithValue }) => {
-      try {
-        const response = await fetch('http://localhost:2000/api/todos');
-        if (!response.ok) {
-          throw new Error('Failed to fetch todos');
-        }
-        const data = await response.json();
-        return data;
-      } catch (error: any) {
-        return rejectWithValue(error.message);
+export const getTodos = createAsyncThunk(
+  'state/getTodos',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/todos`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch todos');
       }
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
-  );
+  }
+);
 
-  export const getSubtodos = createAsyncThunk(
-    'state/subtodos',
-    async (_, { rejectWithValue }) => {
-      try {
-        const response = await fetch('http://localhost:2000/api/subtodos');
-        if (!response.ok) {
-          throw new Error('Failed to fetch subtodos');
-        }
-        const data = await response.json();
-        return data;
-      } catch (error: any) {
-        return rejectWithValue(error.message);
+export const getSubtodos = createAsyncThunk(
+  'state/subtodos',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/subtodos`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch subtodos');
       }
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
-  );
+  }
+);
 
-  export const addTodo = createAsyncThunk<GetTodosPayload, AddTodoParams, { rejectValue: ErrorPayload }>(
-    'state/addTodo',
-    async ({ title, description, status }, { rejectWithValue }) => {
-      try {
-        const response = await fetch('http://localhost:2000/api/todos/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ title, description, status }),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to add todo');
-        }
-  
-        const data = await response.json();
-        return data as GetTodosPayload;
-      } catch (error: any) {
-        return rejectWithValue({ message: error.message });
+export const addTodo = createAsyncThunk<GetTodosPayload, AddTodoParams, { rejectValue: ErrorPayload }>(
+  'state/addTodo',
+  async ({ title, description, status }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/todos/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, description, status }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add todo');
       }
-    }
-  );
 
-  export const addSubtodos = createAsyncThunk(
-    'state/addsubtodos',
-    async ({ subTodos, todoId }: { subTodos: any[], todoId: string }, { rejectWithValue }) => {
-      try {
-        const response = await fetch('http://localhost:2000/api/subtodos/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ subTodos, todoId }),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to add subtodos');
-        }
-  
-        const data = await response.json();
-        return data;
-      } catch (error: any) {
-        return rejectWithValue(error.message);
+      const data = await response.json();
+      return data as GetTodosPayload;
+    } catch (error: any) {
+      return rejectWithValue({ message: error.message });
+    }
+  }
+);
+
+export const addSubtodos = createAsyncThunk(
+  'state/addsubtodos',
+  async ({ subTodos, todoId }: { subTodos: any[], todoId: string }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/subtodos/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ subTodos, todoId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add subtodos');
       }
-    }
-  );
 
-  export const updateTodo = createAsyncThunk(
-    'state/updateTodo',
-    async ({ title, description, status, id }: { title: string, description: string, status: string, id: string }, { rejectWithValue }) => {
-      try {
-        const response = await fetch(`http://localhost:2000/api/todos/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ title, description, status })
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to update todo');
-        }
-  
-        const data = await response.json();
-        return data;
-      } catch (error: any) {
-        return rejectWithValue(error.message);
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateTodo = createAsyncThunk(
+  'state/updateTodo',
+  async ({ title, description, status, id }: { title: string, description: string, status: string, id: string }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/todos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, description, status })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update todo');
       }
-    }
-  );
 
-  export const updateSubtodos = createAsyncThunk(
-    'state/updateSubtodos',
-    async ({ subTodos, todoId }: { subTodos: string[], todoId: string }, { rejectWithValue }) => {
-      try {
-        const response = await fetch(`http://localhost:2000/api/subtodos/${todoId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ subTodos }),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to update subtodos');
-        }
-  
-        const data = await response.json();
-        return data;
-      } catch (error: any) {
-        return rejectWithValue(error.message);
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateSubtodos = createAsyncThunk(
+  'state/updateSubtodos',
+  async ({ subTodos, todoId }: { subTodos: string[], todoId: string }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/subtodos/${todoId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ subTodos }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update subtodos');
       }
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
-  );
+  }
+);
 
-  export const addBoard = createAsyncThunk(
-    'state/addBoard',
-    async ({ name }: { name: string }, { rejectWithValue }) => {
-      try {
-        const response = await fetch('http://localhost:2000/api/boards/add', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name }),
-        }); 
-        if(!response.ok) {
-          throw new Error('Failed to add board');
-        }
-
-        const data = await response.json();
-        return data;
-      }catch (error: any) {
-        return rejectWithValue(error.message);
+export const addBoard = createAsyncThunk(
+  'state/addBoard',
+  async ({ name }: { name: string }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/boards/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name }),
+      }); 
+      if(!response.ok) {
+        throw new Error('Failed to add board');
       }
-    }
-  );
 
-  export const addColumns = createAsyncThunk<ColumnsResponse, AddColumnsParams, { rejectValue: ErrorPayload }>(
-    'state/addColumns',
-    async ({ columns, boardId }, { rejectWithValue }) => {
-      try {
-        const response = await fetch('http://localhost:2000/api/columns/many', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ columns, boardId }),
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to add columns');
-        }
-  
-        const data = await response.json();
-        return data as ColumnsResponse;
-      } catch (error: any) {
-        return rejectWithValue({ message: error.message });
-      }
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
-  );
+  }
+);
+
+export const addColumns = createAsyncThunk<ColumnsResponse, AddColumnsParams, { rejectValue: ErrorPayload }>(
+  'state/addColumns',
+  async ({ columns, boardId }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/columns/many`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ columns, boardId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add columns');
+      }
+
+      const data = await response.json();
+      return data as ColumnsResponse;
+    } catch (error: any) {
+      return rejectWithValue({ message: error.message });
+    }
+  }
+);
 
 export const editBoard = createAsyncThunk(
   'state/editBoard',
   async ({ id, name }: { id: string, name: string }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:2000/api/boards/${id}`, {
+      const response = await fetch(`${API_URL}/boards/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -364,7 +368,7 @@ export const editColumns = createAsyncThunk(
   'state/editColumns',
   async ({ columns, boardId }: { columns: Column[], boardId: String }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:2000/api/columns`, {
+      const response = await fetch(`${API_URL}/columns`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -388,7 +392,7 @@ export const deleteBoard = createAsyncThunk(
   'state/deleteBoard',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:2000/api/boards/${id}`, {
+      const response = await fetch(`${API_URL}/boards/${id}`, {
         method: 'DELETE',
       });
 
@@ -408,7 +412,7 @@ export const deleteTodo = createAsyncThunk(
   'state/deleteTodo',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:2000/api/todos/${id}`, {
+      const response = await fetch(`${API_URL}/todos/${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
@@ -427,7 +431,7 @@ export const toggleSubtodo = createAsyncThunk(
   'state/toggleSubtodo',
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:2000/api/subtodos/toggle/${id}`, {
+      const response = await fetch(`${API_URL}/subtodos/toggle/${id}`, {
         method: 'PATCH',
       });
       if (!response.ok) {
@@ -445,7 +449,7 @@ export const updateTodoById = createAsyncThunk(
   'state/updateTodoById',
   async ({ todo, status, id }: UpdateTodoPayload, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:2000/api/todos/${id}`, {
+      const response = await fetch(`${API_URL}/todos/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
