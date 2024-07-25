@@ -53,7 +53,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ options, value, onChange })
   return (
     <div ref={selectRef} className="relative z-50">
       <div onClick={() => setIsOpen(!isOpen)} className="flex items-center w-[9.938rem] h-[1.438rem] cursor-pointer">
-        <p className={`${isDarkMode ? "text-white" : "text-black"} hl whitespace-nowrap`}>{getNameById(value)}</p>
+        <p className={`${isDarkMode ? "text-white" : "text-black"} hl whitespace-nowrap`}>{getNameById(value) || "No Boards Created"}</p>
         <img className={`h-2 w-2 ml-2 transform ${isOpen ? 'rotate-180' : 'rotate-0'} transition-transform duration-300 ease-in-out`} src={arrowdown} alt="arrowdown" />
       </div>
       {isOpen && (
