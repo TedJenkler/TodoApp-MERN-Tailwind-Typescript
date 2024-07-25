@@ -181,6 +181,22 @@ export const getTodos = createAsyncThunk(
   }
 );
 
+export const getTodoById = createAsyncThunk<Todo, number, { rejectValue: string }>(
+  'state/getTodoById',
+  async (id: number, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_URL}/todos/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch todo');
+      }
+      const data = await response.json();
+      return data as Todo;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const getSubtodos = createAsyncThunk(
   'state/subtodos',
   async (_, { rejectWithValue }) => {

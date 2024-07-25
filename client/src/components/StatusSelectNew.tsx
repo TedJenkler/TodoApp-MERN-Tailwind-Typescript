@@ -14,16 +14,13 @@ const StatusSelectNew: React.FC<StatusSelectNewProps> = ({ handleStatus }) => {
   const selectedColumns = columns.filter((item: any) => item.boardId === selectedBoard);
   
   const [openMenu, setOpenMenu] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(selectedColumns[0]?.name || '');
+  const [selectedStatus, setSelectedStatus] = useState(selectedColumns[0]?.name);
 
   const handleStatusSelect = (status: string) => {
     setSelectedStatus(status);
     setOpenMenu(false);
     handleStatus(status);
   };
-
-  console.log(handleStatus)
-  console.log(selectedStatus)
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import arrowdown from "../assets/arrowdown.png";
-import { updateTodoById } from "../features/state/stateSlice";
+import { updateTodoById, getTodoById } from "../features/state/stateSlice";
 import { AppDispatch } from "../store";
 import { Todo } from '../types'
 
@@ -18,21 +18,11 @@ const StatusSelect: React.FC<StatusSelectProps> = ({ todo }) => {
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const dispatch: AppDispatch = useDispatch();
 
-  const [status, setStatus] = useState<string | null>(null);
+  const [status, setStatus] = useState<any>(null);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
 
-  const getTodoStatusById = async (id: string) => {
-    try {
-      const response = await fetch(`http://localhost:2000/api/todos/${id}`);
-      if (!response.ok) {
-        throw new Error(`Error fetching status: ${response.statusText}`);
-      }
-      const result = await response.json();
-      return result.todo.status;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
+  const getTodoStatusById = async (id: any) => {
+    dispatch(getTodoById(id))
   };
 
   useEffect(() => {

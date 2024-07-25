@@ -16,7 +16,7 @@ const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange })
   useEffect(() => {
     if (subTodos) {
       setRepeater(subTodos);
-      setErrorRepeater(subTodos.map(subTodo => !subTodo.title.trim()));
+      setErrorRepeater(subTodos.map(subTodo => !subTodo.title?.trim()));
     }
   }, [subTodos]);
 

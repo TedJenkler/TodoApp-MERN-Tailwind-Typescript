@@ -79,7 +79,7 @@ const AddModal: React.FC = () => {
 
     const { title, description, status, subTodos } = formData;
 
-    const selectedColumn = columns.find((column: Column) => column.name === status);
+    const selectedColumn = columns.find((column: Column) => column.name === status || column._id === status);
     if (!selectedColumn) {
       console.error(`Column with ID '${status}' not found in columns.`);
       return;

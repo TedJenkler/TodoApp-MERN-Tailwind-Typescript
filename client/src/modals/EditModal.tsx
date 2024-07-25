@@ -2,9 +2,9 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SubtodoRepeater from "../components/SubtodoRepeater";
 import StatusSelectNew from "../components/StatusSelectNew";
-import { swapModal, updateTodo, updateSubtodos } from "../features/state/stateSlice";
+import { swapModal, updateTodo, updateSubtodos, getTodoById } from "../features/state/stateSlice";
 import useClickOutside from "../hooks/useClickOutside";
-import { AppDispatch } from "../store";
+import { AppDispatch, RootState } from "../store";
 
 interface Todo {
   title: string;
@@ -13,10 +13,23 @@ interface Todo {
   status: string;
 }
 
+interface Subtodo {
+  id: string;
+  todoId: string;
+  title: string;
+  completed: boolean;
+}
+
+interface Column {
+  _id: string;
+  name: string;
+}
+
 const EditModal: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const todoId = useSelector((state: any) => state.stateSlice.modal).slice(8);
+  const todoId = useSelector((state: any) => state.stateSlice.modal?.slice(8));
   const columns = useSelector((state: any) => state.stateSlice.columns);
+  const subtodos = useSelector((state: any) => state.stateSlice.subtodos);
   const isDarkMode = useSelector((state: any) => state.stateSlice.darkmode);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -31,49 +44,23 @@ const EditModal: React.FC = () => {
   useClickOutside(modalRef, "modal");
 
   useEffect(() => {
-    const fetchTodo = async () => {
-      try {
-        const response = await fetch(`http://localhost:2000/api/todos/${todoId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch todo');
-        }
-        const data = await response.json();
-        setFormData(data.todo);
-      } catch (error: any) {
-        console.log('Cannot fetch todo', error);
-      }
-    };
-
     if (todoId) {
-      fetchTodo();
+      dispatch(getTodoById(todoId))
+        .then((response) => {
+          if (response.meta.requestStatus === 'fulfilled') {
+            const todoData: any = response.payload;
+            const selectedSubtodos = subtodos.filter((item: Subtodo) => item.todoId === todoId);
+            setFormData({
+              ...todoData.todo,
+              subTodos: selectedSubtodos.map((subtodo: any) => subtodo),
+            });
+          } else {
+            console.error("Failed to fetch todo");
+          }
+        })
+        .catch((error) => console.error("Error fetching todo:", error));
     }
-  }, [todoId]);
-
-  useEffect(() => {
-    const fetchSubtodos = async () => {
-      try {
-        const response = await fetch(`http://localhost:2000/api/subtodos/${todoId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch subtodos');
-        }
-        const data = await response.json();
-        setFormData(prevData => ({
-          ...prevData,
-          subTodos: data.subtodos
-        }));
-      } catch (error: any) {
-        console.log('Failed to fetch subtodos', error);
-        setFormData(prevData => ({
-          ...prevData,
-          subTodos: []
-        }));
-      }
-    };
-
-    if (todoId) {
-      fetchSubtodos();
-    }
-  }, [todoId]);
+  }, [todoId, subtodos, dispatch]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -102,7 +89,7 @@ const EditModal: React.FC = () => {
   };
 
   const handleSubmit = () => {
-    if (!formData.title || formData.title.trim() === '') {
+    if (!formData.title.trim()) {
       setFormError(prevError => ({ ...prevError, title: true }));
       return;
     }
@@ -113,7 +100,7 @@ const EditModal: React.FC = () => {
 
     const { title, description, status, subTodos } = formData;
 
-    const selectedColumn = columns.find((column: any) => column.name === status || column._id === status);
+    const selectedColumn = columns.find((column: Column) => column.name === status || column._id === status);
     if (!selectedColumn) {
       console.error(`Column with name or _id '${status}' not found in columns.`);
       return;
