@@ -75,7 +75,7 @@ const Sidebar: React.FC = () => {
         </div>
       ) : (
         <div
-          className={`hidden absolute md:flex md:fixed flex-col justify-end h-[92%] w-[3.5rem] ${isDarkMode ? "bg-darkbg" : "bg-lightbg"} transition-all duration-300 ease-in-out`}
+          className={`hidden absolute md:flex md:fixed flex-col justify-end md:mt-[5rem] h-[92%] w-[3.5rem] ${isDarkMode ? "bg-darkbg" : "bg-lightbg"} transition-all duration-300 ease-in-out`}
         >
           <button
             onClick={closeMenu}

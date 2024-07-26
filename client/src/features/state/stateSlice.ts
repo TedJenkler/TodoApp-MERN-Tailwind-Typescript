@@ -413,12 +413,14 @@ export const deleteBoard = createAsyncThunk(
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete board');
+        console.error('Delete request failed with status:', response.status);
+        return rejectWithValue(`Failed to delete board. Status: ${response.status}`);
       }
 
       const data = await response.json();
       return data;
     } catch (error: any) {
+      console.error('Error occurred during delete operation:', error.message);
       return rejectWithValue(error.message);
     }
   }
