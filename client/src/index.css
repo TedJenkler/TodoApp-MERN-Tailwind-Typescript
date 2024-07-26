@@ -12,9 +12,9 @@
     background: transparent; /* Optional: just to ensure the track is transparent */
   }
 
-body {
-    overflow: hidden
-}
+  .sidebar {
+    height: calc(100vh - 80px);
+  }
 
 .hxl {
     @apply text-2xl font-bold;

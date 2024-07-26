@@ -50,7 +50,7 @@ function App() {
   const regex3 = /^deletetodo[a-zA-Z0-9_-]{5,}$/;
 
   return (
-    <div className={`App h-screen overflow-x-hidden ${theme ? 'bg-darkbg' : 'bg-lightbg'}`}>
+    <div className={`App h-screen ${theme ? 'bg-darkbg' : 'bg-lightbg'}`}>
       {modal === "" ? 
       <div className="md:hidden md:absolute">
         <Nav />

@@ -33,7 +33,7 @@ const Sidebar: React.FC = () => {
     <>
       {menu ? (
         <div
-          className={`hidden absolute md:flex md:fixed flex-col justify-between h-[92%] top-20 min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transition-all duration-300 ease-in-out`}
+          className={`hidden absolute md:flex md:fixed flex-col justify-between sidebar top-20 min-w-[16.313rem] pt-8 ${isDarkMode ? 'bg-darkgrey' : 'bg-white'} transition-all duration-300 ease-in-out`}
         >
           <div>
             <h1 className='mx-6 text-mediumgrey text-xs font-bold tracking-[2.4px] mb-5'>
