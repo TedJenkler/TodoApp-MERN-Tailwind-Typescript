@@ -114,8 +114,11 @@ exports.deleteById = async (req, res) => {
         }
 
         const boards = await Board.find();
+        const columns = await Columns.find();
+        const todos = await Todo.find();
+        const subtods = await Subtodo.find();
 
-        res.status(200).json({ message: 'Successfully deleted board and associated columns', board: deletedBoard, boards: boards });
+        res.status(200).json({ message: 'Successfully deleted board and associated columns', board: deletedBoard, boards: boards, columns: columns, todos: todos, subtodos: subtods });
     } catch (error) {
         console.error('Error deleting board', error);
         res.status(500).json({ message: 'Internal Server Error' });
