@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 import x from '../assets/x.png';
 import redx from '../assets/redx.png';
 import { Subtodo } from "../types";
+
 interface SubtodoRepeaterProps {
-  subTodos: any[];
-  onChange: any
+  subTodos: Subtodo[];
+  onChange: (newSubTodos: Subtodo[], hasError: boolean) => void;
 }
 
 const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange }) => {
@@ -30,22 +31,30 @@ const SubtodoRepeater: React.FC<SubtodoRepeaterProps> = ({ subTodos, onChange })
   };
 
   const handleSubtodoChange = (index: number, value: string) => {
-    const newRepeater = [...repeater];
-    newRepeater[index].title = value;
-    setRepeater(newRepeater);
-    
-    const newErrorRepeater = [...errorRepeater];
-    newErrorRepeater[index] = !value.trim();
-    setErrorRepeater(newErrorRepeater);
-    onChange(newRepeater, newErrorRepeater.some(error => error));
+    setRepeater(prevRepeater => {
+      const newRepeater = prevRepeater.map((subTodo, i) =>
+        i === index ? { ...subTodo, title: value } : subTodo
+      );
+      setErrorRepeater(prevErrors => {
+        const newErrorRepeater = [...prevErrors];
+        newErrorRepeater[index] = !value.trim();
+        onChange(newRepeater, newErrorRepeater.some(error => error));
+        return newErrorRepeater;
+      });
+      return newRepeater;
+    });
   };
 
   const handleRemoveSubtodo = (index: number) => {
-    const newRepeater = repeater.filter((_, i) => i !== index);
-    const newErrorRepeater = errorRepeater.filter((_, i) => i !== index);
-    setRepeater(newRepeater);
-    setErrorRepeater(newErrorRepeater);
-    onChange(newRepeater, newErrorRepeater.some(error => error));
+    setRepeater(prevRepeater => {
+      const newRepeater = prevRepeater.filter((_, i) => i !== index);
+      setErrorRepeater(prevErrors => {
+        const newErrorRepeater = prevErrors.filter((_, i) => i !== index);
+        onChange(newRepeater, newErrorRepeater.some(error => error));
+        return newErrorRepeater;
+      });
+      return newRepeater;
+    });
   };
 
   return (

@@ -102,7 +102,6 @@ const AddModal: React.FC = () => {
       }
 
       const todoId = payload.todo._id;
-      console.log('Todo created with ID:', todoId);
 
       await dispatch(addSubtodos({ subTodos, todoId }));
 

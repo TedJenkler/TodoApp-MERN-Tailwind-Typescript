@@ -93,25 +93,13 @@ exports.deleteById = async (req, res) => {
         }
 
         const filteredColumnIds = filteredColumns.map((item) => item._id);
-        if (filteredColumnIds.length === 0) {
-            return res.status(404).json({ message: 'Cannot find column ids' });
-        }
 
         const todosToDelete = await Todo.find({ status: { $in: filteredColumnIds } });
-        if (todosToDelete.length === 0) {
-            return res.status(404).json({ message: 'Cannot find todos' });
-        }
 
         const todoIds = todosToDelete.map(todo => todo._id);
         const deleteTodosResult = await Todo.deleteMany({ _id: { $in: todoIds } });
-        if (deleteTodosResult.deletedCount === 0) {
-            return res.status(402).json({ message: 'Cannot delete todos' });
-        }
 
         const deleteSubtodosResult = await Subtodo.deleteMany({ todoId: { $in: todoIds } });
-        if (deleteSubtodosResult.deletedCount === 0) {
-            return res.status(401).json({ message: 'Cannot delete subtodos' });
-        }
 
         const boards = await Board.find();
         const columns = await Columns.find();

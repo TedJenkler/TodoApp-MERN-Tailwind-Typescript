@@ -1,12 +1,14 @@
 import moon from "../assets/moon.png";
 import sun from "../assets/sun.png";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleDarkmode } from "../features/state/stateSlice";
 
 function ToggleTheme() {
   const [isChecked, setIsChecked] = useState(false);
   const dispatch = useDispatch();
+  const menu = useSelector((state: any) => state.stateSlice.menu);
+  const mobilemenu = useSelector((state: any) => state.stateSlice.menuMobile);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -41,7 +43,7 @@ function ToggleTheme() {
             id="toggle"
             className="hidden"
             checked={isChecked}
-            onChange={toggleTheme}
+            onChange={menu || mobilemenu ? toggleTheme : undefined}
           />
           <label
             htmlFor="toggle"
