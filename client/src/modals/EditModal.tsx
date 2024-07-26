@@ -4,20 +4,14 @@ import SubtodoRepeater from "../components/SubtodoRepeater";
 import StatusSelectNew from "../components/StatusSelectNew";
 import { swapModal, updateTodo, updateSubtodos, getTodoById } from "../features/state/stateSlice";
 import useClickOutside from "../hooks/useClickOutside";
-import { AppDispatch, RootState } from "../store";
+import { AppDispatch } from "../store";
+import { Subtodo } from "../types";
 
 interface Todo {
   title: string;
   description: string;
-  subTodos: string[];
+  subTodos: Subtodo[];
   status: string;
-}
-
-interface Subtodo {
-  id: string;
-  todoId: string;
-  title: string;
-  completed: boolean;
 }
 
 interface Column {
@@ -70,7 +64,7 @@ const EditModal: React.FC = () => {
     }));
   };
 
-  const handleSubtodosChange = (subTodos: string[], hasErrors: boolean) => {
+  const handleSubtodosChange = (subTodos: Subtodo[], hasErrors: boolean) => {
     setFormData(prevData => ({
       ...prevData,
       subTodos,

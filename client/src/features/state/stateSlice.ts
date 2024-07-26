@@ -289,7 +289,7 @@ export const updateTodo = createAsyncThunk(
 
 export const updateSubtodos = createAsyncThunk(
   'state/updateSubtodos',
-  async ({ subTodos, todoId }: { subTodos: string[], todoId: string }, { rejectWithValue }) => {
+  async ({ subTodos, todoId }: { subTodos: any[], todoId: string }, { rejectWithValue }) => {
     try {
       const response = await fetch(`${API_URL}/subtodos/${todoId}`, {
         method: 'PUT',

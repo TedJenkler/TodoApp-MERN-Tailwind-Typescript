@@ -8,10 +8,12 @@ export interface Todo {
 }
 
 export interface Subtodo {
-    _id?: string;
-    title: string;
-    isCompleted: boolean;
-  }
+  _id?: string;
+  id?: string;
+  todoId?: string;
+  title: string;
+  isCompleted: boolean;
+}
   
   export interface Column {
     _id?: string;
